@@ -20,20 +20,28 @@
 
 BluetoothConnection::BluetoothConnection(QObject *parent) : QObject(parent)
 {
+    this->discoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
+    this->bluetoothSocket = new QBluetoothSocket(QBluetoothServiceInfo::RfcommProtocol);
 
+    connect(this->discoveryAgent, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),this, SLOT(vDeviceDiscovered(QBluetoothDeviceInfo)));
+    connect(this->discoveryAgent, SIGNAL(finished()), this, SLOT(vDiscoveryFinished()));
+    connect(this->discoveryAgent, SIGNAL(canceled()), this, SLOT(vDiscoveryFinished()));
 }
 
-void BluetoothConnection::vStartDeviceDiscovery()
+BluetoothConnection::~BluetoothConnection()
 {
-    // Create a discovery agent and connect to its signals
-    this->discoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
-    connect(this->discoveryAgent, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),
-            this, SLOT(vDeviceDiscovered(QBluetoothDeviceInfo)));
+    delete this->discoveryAgent;
+}
 
-    // Start a discovery
+
+void BluetoothConnection::vStartDeviceDiscovery()
+{      
+    qDebug() << "Scanning...";
+    if (this->discoveryAgent->isActive())
+        this->discoveryAgent->stop();
+
+    //this->discoveryAgent->setUuidFilter(uuid);
     this->discoveryAgent->start();
-
-    //...
 }
 
 void BluetoothConnection::vStopDeviceDiscovery()
@@ -45,4 +53,22 @@ void BluetoothConnection::vStopDeviceDiscovery()
 void BluetoothConnection::vDeviceDiscovered(const QBluetoothDeviceInfo &device)
 {
     qDebug() << "Found new device:" << device.name() << '(' << device.address().toString() << ')';
+
+    emit deviceFound(device.name(), device.address().toString());
+
+    //this->bluetoothSocket->connectToService(QBluetoothAddress(device.address()), 1);
+
+    /*
+    qDebug() << "Discovered service on" << serviceInfo.device().name() << serviceInfo.device().address().toString();
+    qDebug() << "\tService name:" << serviceInfo.serviceName();
+    qDebug() << "\tDescription:" << serviceInfo.attribute(QBluetoothServiceInfo::ServiceDescription).toString();
+    qDebug() << "\tProvider:" << serviceInfo.attribute(QBluetoothServiceInfo::ServiceProvider).toString();
+    qDebug() << "\tL2CAP protocol service multiplexer:" << serviceInfo.protocolServiceMultiplexer();
+    qDebug() << "\tRFCOMM server channel:" << serviceInfo.serverChannel();
+    */
+}
+
+void BluetoothConnection::vDiscoveryFinished()
+{
+    qDebug() << "Scanning finished";
 }

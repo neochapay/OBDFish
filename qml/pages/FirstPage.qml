@@ -35,6 +35,15 @@ import Sailfish.Silica 1.0
 Page {
     id: page
 
+    Connections
+    {
+        target: id_BluetoothConnection
+        onDeviceFound:
+        {
+           id_LBL_Devices.text = id_LBL_Devices.text + "\r\n" + sName + ", " + sAddress;
+        }
+    }
+
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
@@ -80,8 +89,13 @@ Page {
                 text: "Stop scanning for BT devices..."
                 onClicked:
                 {
-                    id_BluetoothConnection.vStartDeviceDiscovery();
+                    id_BluetoothConnection.vStopDeviceDiscovery();
                 }
+            }
+            Label
+            {
+                id: id_LBL_Devices
+                text : ""
             }
         }
     }

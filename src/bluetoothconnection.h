@@ -20,19 +20,24 @@
 
 #include <QObject>
 #include <QBluetoothDeviceDiscoveryAgent>
+#include <QBluetoothSocket>
 
 class BluetoothConnection : public QObject
 {
     Q_OBJECT
 public:
     explicit BluetoothConnection(QObject *parent = 0);
+    ~BluetoothConnection();
     Q_INVOKABLE void vStartDeviceDiscovery();
-    Q_INVOKABLE void vStopDeviceDiscovery();
+    Q_INVOKABLE void vStopDeviceDiscovery();       
 private:
     QBluetoothDeviceDiscoveryAgent *discoveryAgent;
+    QBluetoothSocket *bluetoothSocket;
 private slots:
     void vDeviceDiscovered(const QBluetoothDeviceInfo &device);
+    void vDiscoveryFinished();
+signals:
+    void deviceFound(QString sName, QString sAddress);
 };
 
 #endif // BLUETOOTHCONNECTION
-
