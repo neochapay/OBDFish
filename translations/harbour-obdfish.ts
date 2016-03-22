@@ -15,11 +15,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>UI Template</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hello Sailors</source>
+        <source>Bluetooth OBD Scanner</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

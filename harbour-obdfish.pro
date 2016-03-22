@@ -45,5 +45,6 @@ HEADERS += \
     src/bluetoothconnection.h
 
 DISTFILES += \
-    rpm/harbour-obdfish.spec
+    rpm/harbour-obdfish.spec \
+    qml/pages/SharedResources.js
 
