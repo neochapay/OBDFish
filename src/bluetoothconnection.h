@@ -20,7 +20,6 @@
 
 #include <QObject>
 #include <QBluetoothDeviceDiscoveryAgent>
-#include <QBluetoothSocket>
 
 class BluetoothConnection : public QObject
 {
@@ -32,7 +31,6 @@ public:
     Q_INVOKABLE void vStopDeviceDiscovery();       
 private:
     QBluetoothDeviceDiscoveryAgent *discoveryAgent;
-    QBluetoothSocket *bluetoothSocket;
 private slots:
     void vDeviceDiscovered(const QBluetoothDeviceInfo &device);
     void vDiscoveryFinished();

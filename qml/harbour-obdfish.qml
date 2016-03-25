@@ -21,11 +21,13 @@ import Sailfish.Silica 1.0
 import "pages"
 import org.nemomobile.notifications 1.0
 import bluetoothconnection 1.0
+import bluetoothdata 1.0
 
 ApplicationWindow
 {
     //Init C++ classes, libraries
     BluetoothConnection{ id: id_BluetoothConnection }
+    BluetoothData{ id: id_BluetoothData }
     Notification { id: mainPageNotification }
 
     initialPage: Component { FirstPage { } }

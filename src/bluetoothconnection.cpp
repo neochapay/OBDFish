@@ -21,7 +21,6 @@
 BluetoothConnection::BluetoothConnection(QObject *parent) : QObject(parent)
 {
     this->discoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
-    this->bluetoothSocket = new QBluetoothSocket(QBluetoothServiceInfo::RfcommProtocol);
 
     connect(this->discoveryAgent, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),this, SLOT(vDeviceDiscovered(QBluetoothDeviceInfo)));
     connect(this->discoveryAgent, SIGNAL(finished()), this, SLOT(vDiscoveryFinished()));
@@ -32,7 +31,6 @@ BluetoothConnection::~BluetoothConnection()
 {
     delete this->discoveryAgent;
 }
-
 
 void BluetoothConnection::vStartDeviceDiscovery()
 {      

@@ -12,7 +12,7 @@
     <name>FirstPage</name>
     <message>
         <source>Show Page 2</source>
-        <translation>Zur Seite 2</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Bluetooth OBD Scanner</source>

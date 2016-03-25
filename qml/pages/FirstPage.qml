@@ -58,6 +58,22 @@ Page {
                     id_BluetoothConnection.vStopDeviceDiscovery();
                 }
             }
+            Button
+            {
+                text: "Disconnect"
+                onClicked:
+                {
+                    id_BluetoothData.disconnect();
+                }
+            }
+            Button
+            {
+                text: "Send ATZ"
+                onClicked:
+                {
+                    id_BluetoothData.sendHex("ATZ");
+                }
+            }
             SectionHeader
             {
                 text: "Found Bluetooth devices:"
@@ -81,7 +97,12 @@ Page {
                         anchors.verticalCenter: parent.verticalCenter
                         color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
-                    onClicked: console.log("Clicked " + index)
+                    onClicked:
+                    {
+                        console.log("Clicked " + index);
+                        id_BluetoothData.connect(SharedResources.fncGetDeviceBTAddress(index), 1);
+
+                    }
                 }
                 VerticalScrollDecorator {}
             }

@@ -21,11 +21,13 @@
 
 #include <sailfishapp.h>
 #include "../src/bluetoothconnection.h"
+#include "../src/bluetoothdata.h"
 
 
 int main(int argc, char *argv[])
 {
     qmlRegisterType<BluetoothConnection,1>("bluetoothconnection", 1, 0, "BluetoothConnection");
+    qmlRegisterType<BluetoothData,1>("bluetoothdata", 1, 0, "BluetoothData");
     return SailfishApp::main(argc, argv);
 }
 
