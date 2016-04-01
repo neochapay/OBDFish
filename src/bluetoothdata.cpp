@@ -33,13 +33,15 @@ void BluetoothData::connect(QString address, int port)
 
 void BluetoothData::connected()
 {
-    qDebug() << "Connected: " << this->_socket->peerName();
+    qDebug() << "Connected";
 
-    //emit connected(socket->peerName());
+    emit this->sigConnected();
 }
 void BluetoothData::disconnected()
 {
     qDebug() << "Disconnected!";
+
+    emit this->sigDisconnected();
 }
 void BluetoothData::error(QBluetoothSocket::SocketError errorCode)
 {
@@ -69,23 +71,50 @@ void BluetoothData::readData()
     qDebug("Entering readData...");
 
     QByteArray data = _socket->readAll();
+
+    QString s_data = data.trimmed();
+
+    s_data = s_data.replace("\r", " ");
+    s_data = s_data.replace("\n", " ");
+
     qDebug() << "Data size:" << data.size();
     qDebug() << "Data[" + QString::number(_port) + "]:" << data.toHex();
 
-    //TODO!!!
+    qDebug() << "Text: " << s_data;
+
+    emit this->sigReadDataReady(s_data);
 }
 
-void BluetoothData::sendHex(QString hexString)
+void BluetoothData::sendHex(QString sString)
 {
-    QByteArray data = QByteArray::fromHex(hexString.toLatin1());
+    //qDebug() << "sString: " << sString;
+
+    QByteArray data = sString.toUtf8();
+
+    //qDebug() << "data1: " << data.toHex();
+
+    data.append("\r");
+
+    //qDebug() << "data2: " << data.toHex();
+
     this->write(data);
 }
 
 qint64 BluetoothData::write(QByteArray data)
 {
     qDebug() << "Writing:" << data.toHex();
-    //qint64 ret = this->_socket->write(data);
-    qint64 ret = this->_socket->write("ATZ\r\n");
+
+
+    qint64 ret = this->_socket->write(data);
+
+
+    //qint64 ret = this->_socket->write("ATZ\r");
+    //ret = this->_socket->write("AT RV\r");
+    //qint64 ret = this->_socket->write("AT L0\r");
+
     qDebug() << "Write returned:" << ret;
+
+
+
     return ret;
 }

@@ -30,6 +30,18 @@ ApplicationWindow
     BluetoothData{ id: id_BluetoothData }
     Notification { id: mainPageNotification }
 
+    //Define global functions
+    function fncViewMessage(sCategory, sMessage)
+    {
+        mainPageNotification.category = (sCategory === "error")
+            ? "x-sailfish.sailfish-utilities.error"
+            : "x-sailfish.sailfish-utilities.info";
+        mainPageNotification.previewBody = "MythOBD";
+        mainPageNotification.previewSummary = sMessage;
+        mainPageNotification.close();
+        mainPageNotification.publish();
+    }
+
     initialPage: Component { FirstPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: Orientation.All

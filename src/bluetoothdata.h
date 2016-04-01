@@ -12,7 +12,7 @@ public:
     explicit BluetoothData(QObject *parent = 0);
     ~BluetoothData();    
     Q_INVOKABLE void connect(QString address, int port);
-    Q_INVOKABLE void sendHex(QString hexString);
+    Q_INVOKABLE void sendHex(QString sString);
     Q_INVOKABLE void disconnect();
 private slots:
     void readData();
@@ -23,6 +23,10 @@ private:
     QBluetoothSocket *_socket;
     int _port;
     qint64 write(QByteArray data);
+signals:
+    void sigReadDataReady(QString sData);
+    void sigConnected();
+    void sigDisconnected();
 };
 
 

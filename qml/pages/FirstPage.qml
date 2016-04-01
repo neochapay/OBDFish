@@ -6,6 +6,23 @@ import "SharedResources.js" as SharedResources
 Page {
     id: page
 
+    property bool bFirstPage: true
+
+    onStatusChanged:
+    {
+        console.log("onStatusChanged");
+
+        if (status === PageStatus.Active && bFirstPage)
+        {
+            bFirstPage = false
+
+            console.log("PageStatus.Active");
+
+            SharedResources.fncAddDevice("Neuer Adapter", "88:18:56:68:98:EB");
+            id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
+        }
+    }
+
     Connections
     {
         target: id_BluetoothConnection
@@ -14,6 +31,22 @@ Page {
             //Add device to data array
             SharedResources.fncAddDevice(sName, sAddress);
             id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
+        }
+    }
+    Connections
+    {
+        target: id_BluetoothData
+        onSigReadDataReady:
+        {
+            id_LBL_ReadText.text = sData;
+        }
+        onSigConnected:
+        {
+            fncViewMessage("info", "Connected to OBD");
+        }
+        onSigDisconnected:
+        {
+            fncViewMessage("info", "Disconnected from OBD");
         }
     }
 
@@ -66,14 +99,44 @@ Page {
                     id_BluetoothData.disconnect();
                 }
             }
-            Button
+            Row
             {
-                text: "Send ATZ"
-                onClicked:
+                spacing: Theme.paddingSmall
+                width: parent.width
+                Button
                 {
-                    id_BluetoothData.sendHex("ATZ");
+                    width: parent.width/3;
+                    text: "ATZ"
+                    onClicked:
+                    {
+                        id_BluetoothData.sendHex("ATZ");
+                    }
+                }
+                Button
+                {
+                    width: parent.width/3;
+                    text: "No LF"
+                    onClicked:
+                    {
+                        id_BluetoothData.sendHex("AT L0");
+                    }
+                }
+                Button
+                {
+                    width: parent.width/3;
+                    text: "Voltage"
+                    onClicked:
+                    {
+                        id_BluetoothData.sendHex("AT RV");
+                    }
                 }
             }
+            Label
+            {
+                id: id_LBL_ReadText;
+                text: "";
+            }
+
             SectionHeader
             {
                 text: "Found Bluetooth devices:"
