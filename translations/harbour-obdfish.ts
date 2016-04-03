@@ -22,11 +22,11 @@
 <context>
     <name>SecondPage</name>
     <message>
-        <source>Nested Page</source>
+        <source>Item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Item</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

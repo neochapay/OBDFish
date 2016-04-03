@@ -47,6 +47,8 @@ void BluetoothData::error(QBluetoothSocket::SocketError errorCode)
 {
     qDebug() << "Error: " << this->_socket->errorString();
     qDebug() << "Errorcode: " << errorCode;
+
+    emit this->sigError(this->_socket->errorString());
 }
 
 

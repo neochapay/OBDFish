@@ -25,6 +25,9 @@ import bluetoothdata 1.0
 
 ApplicationWindow
 {
+    //Define global variables
+    property bool bConnected: false;
+
     //Init C++ classes, libraries
     BluetoothConnection{ id: id_BluetoothConnection }
     BluetoothData{ id: id_BluetoothData }

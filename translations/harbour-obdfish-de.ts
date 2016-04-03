@@ -22,12 +22,12 @@
 <context>
     <name>SecondPage</name>
     <message>
-        <source>Nested Page</source>
-        <translation>Unterseite</translation>
-    </message>
-    <message>
         <source>Item</source>
         <translation>Element</translation>
+    </message>
+    <message>
+        <source>Overview</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

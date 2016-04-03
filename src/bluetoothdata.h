@@ -27,6 +27,7 @@ signals:
     void sigReadDataReady(QString sData);
     void sigConnected();
     void sigDisconnected();
+    void sigError(QString sError);
 };
 
 

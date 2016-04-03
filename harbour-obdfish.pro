@@ -48,5 +48,6 @@ HEADERS += \
 
 DISTFILES += \
     rpm/harbour-obdfish.spec \
-    qml/pages/SharedResources.js
+    qml/pages/SharedResources.js \
+    qml/pages/OBDComm.js
 

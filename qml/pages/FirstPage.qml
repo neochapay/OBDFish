@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "SharedResources.js" as SharedResources
+import "OBDComm.js" as OBDComm
 
 
 Page {
@@ -9,14 +10,10 @@ Page {
     property bool bFirstPage: true
 
     onStatusChanged:
-    {
-        console.log("onStatusChanged");
-
+    {       
         if (status === PageStatus.Active && bFirstPage)
         {
             bFirstPage = false
-
-            console.log("PageStatus.Active");
 
             SharedResources.fncAddDevice("Neuer Adapter", "88:18:56:68:98:EB");
             id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
@@ -39,14 +36,24 @@ Page {
         onSigReadDataReady:
         {
             id_LBL_ReadText.text = sData;
+            //OBDComm.fncGetData(sData);
         }
         onSigConnected:
-        {
-            fncViewMessage("info", "Connected to OBD");
+        {            
+            fncViewMessage("info", "Connected");
+            bConnected = true;
+
+            pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
+            //pageStack.navigateForward();
         }
         onSigDisconnected:
         {
-            fncViewMessage("info", "Disconnected from OBD");
+            fncViewMessage("info", "Disconnected");
+            bConnected = false;
+        }
+        onSigError:
+        {
+            fncViewMessage("error", "Error: " + sError);
         }
     }
 
@@ -127,7 +134,8 @@ Page {
                     text: "Voltage"
                     onClicked:
                     {
-                        id_BluetoothData.sendHex("AT RV");
+                        //id_BluetoothData.sendHex("AT RV");
+                        OBDComm.fncReadVoltage();
                     }
                 }
             }
