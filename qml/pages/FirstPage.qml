@@ -8,6 +8,7 @@ Page {
     id: page
 
     property bool bFirstPage: true
+    property bool bWaitForCommandSequenceEnd: false
 
     onStatusChanged:
     {       
@@ -36,7 +37,7 @@ Page {
         onSigReadDataReady:
         {
             id_LBL_ReadText.text = sData;
-            //OBDComm.fncGetData(sData);
+            OBDComm.fncGetData(sData);
         }
         onSigConnected:
         {            
@@ -54,6 +55,26 @@ Page {
         onSigError:
         {
             fncViewMessage("error", "Error: " + sError);
+        }
+    }
+    Timer
+    {
+        id: timWaitForCommandSequenceEnd
+        interval: 200
+        running: bWaitForCommandSequenceEnd
+        repeat: true
+        onTriggered:
+        {
+            //Wait until command sequence has ended
+            if (!OBDComm.bCommandRunning)
+            {
+                if (OBDComm.bCommandOK)
+                    fncViewMessage("info", "Command successful.");
+                else
+                    fncViewMessage("error", "Command not successful.");
+
+                bWaitForCommandSequenceEnd = false;
+            }
         }
     }
 
@@ -122,10 +143,14 @@ Page {
                 Button
                 {
                     width: parent.width/3;
-                    text: "No LF"
+                    text: "Init"
                     onClicked:
                     {
-                        id_BluetoothData.sendHex("AT L0");
+                        if (!OBDComm.bCommandRunning)
+                        {
+                            OBDComm.fncStartCommand("init");
+                            bWaitForCommandSequenceEnd = true;
+                        }
                     }
                 }
                 Button
@@ -134,15 +159,39 @@ Page {
                     text: "Voltage"
                     onClicked:
                     {
-                        //id_BluetoothData.sendHex("AT RV");
-                        OBDComm.fncReadVoltage();
+                        if (!OBDComm.bCommandRunning)
+                        {
+                            OBDComm.fncStartCommand("voltage");
+                            bWaitForCommandSequenceEnd = true;
+                        }
                     }
                 }
             }
             Label
             {
+                width: parent.width;
                 id: id_LBL_ReadText;
                 text: "";
+            }
+            Row
+            {
+                spacing: Theme.paddingSmall
+                width: parent.width;
+                Label
+                {
+                    width: parent.width/3;
+                    text: OBDComm.sVoltage;
+                }
+                Label
+                {
+                    width: parent.width/3;
+                    text: OBDComm.sAdapterInfo;
+                }
+                Label
+                {
+                    width: parent.width/3;
+                    text: "";
+                }
             }
 
             SectionHeader
