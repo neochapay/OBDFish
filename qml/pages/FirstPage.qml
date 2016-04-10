@@ -16,7 +16,8 @@ Page {
         {
             bFirstPage = false
 
-            SharedResources.fncAddDevice("Neuer Adapter", "88:18:56:68:98:EB");
+            SharedResources.fncAddDevice("Neuer Adapter v2.1", "88:18:56:68:98:EB");
+            SharedResources.fncAddDevice("Alter Adapter v1.5", "98:76:54:32:10:00");
             id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
         }
     }
@@ -72,6 +73,10 @@ Page {
                     fncViewMessage("info", "Command successful.");
                 else
                     fncViewMessage("error", "Command not successful.");
+
+                //It's weird that this is needed here...  :-(((
+                id_LBL_Voltage.text = OBDComm.sVoltage;
+                id_LBL_AdapterInfo.text = OBDComm.sAdapterInfo;
 
                 bWaitForCommandSequenceEnd = false;
             }
@@ -134,10 +139,14 @@ Page {
                 Button
                 {
                     width: parent.width/3;
-                    text: "ATZ"
+                    text: "Info"
                     onClicked:
-                    {
-                        id_BluetoothData.sendHex("ATZ");
+                    {                      
+                        if (!OBDComm.bCommandRunning)
+                        {
+                            OBDComm.fncStartCommand("adapterinfo");
+                            bWaitForCommandSequenceEnd = true;
+                        }
                     }
                 }
                 Button
@@ -167,6 +176,38 @@ Page {
                     }
                 }
             }
+            Row
+            {
+                spacing: Theme.paddingSmall
+                width: parent.width
+                Button
+                {
+                    width: parent.width/3;
+                    text: "L0"
+                    onClicked:
+                    {
+                        id_BluetoothData.sendHex("AT L0");
+                    }
+                }
+                Button
+                {
+                    width: parent.width/3;
+                    text: "H0"
+                    onClicked:
+                    {
+                        id_BluetoothData.sendHex("AT H0");
+                    }
+                }
+                Button
+                {
+                    width: parent.width/3;
+                    text: "D"
+                    onClicked:
+                    {
+                        id_BluetoothData.sendHex("AT D");
+                    }
+                }
+            }
             Label
             {
                 width: parent.width;
@@ -179,18 +220,18 @@ Page {
                 width: parent.width;
                 Label
                 {
+                    id: id_LBL_Voltage;
+                    width: parent.width/3;                    
+                }
+                Label
+                {
+                    id: id_LBL_AdapterInfo;
                     width: parent.width/3;
-                    text: OBDComm.sVoltage;
                 }
                 Label
                 {
                     width: parent.width/3;
-                    text: OBDComm.sAdapterInfo;
-                }
-                Label
-                {
-                    width: parent.width/3;
-                    text: "";
+                    text: OBDComm.sCommandStateMachine;
                 }
             }
 
