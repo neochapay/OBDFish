@@ -164,7 +164,34 @@ function fncGetData(sData)
         break;
         //*****END command sequence: voltage*****
 
+        //*****START command sequence: find protocol*****
+        case "findprotocol":
+            sCommandStateMachine = "findprotocol_step1";
+            iRepeatCommand = 3;
+            sLastATcommand = "ATSP01";
+        break;
+        case "findprotocol_step1":
+            if (fncCheckCurrentCommand(sData) === true)     //Command OK, next one...
+            {
+                //Sequence is done now. Extract value.
+                sVoltage = fncGetValue(sData);
 
+                sCommandStateMachine = "";
+                sLastATcommand = "";
+                bCommandOK = true;
+                bCommandRunning = false;
+                return;
+            }
+            else if(iRepeatCommand > 0)
+                iRepeatCommand--;
+            else
+            {
+                bCommandOK = false;
+                bCommandRunning = false;
+                return;
+            }
+        break;
+        //*****END command sequence: find protocol*****
     }
 
     //Finally send the command to ELM327
