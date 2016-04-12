@@ -22,6 +22,7 @@ import "pages"
 import org.nemomobile.notifications 1.0
 import bluetoothconnection 1.0
 import bluetoothdata 1.0
+import filewriter 1.0
 
 ApplicationWindow
 {
@@ -31,6 +32,7 @@ ApplicationWindow
     //Init C++ classes, libraries
     BluetoothConnection{ id: id_BluetoothConnection }
     BluetoothData{ id: id_BluetoothData }
+    FileWriter{ id: id_FileWriter }
     Notification { id: mainPageNotification }
 
     //Define global functions

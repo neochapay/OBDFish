@@ -23,9 +23,12 @@ function fncStartCommand(sCommand)
 //Receive data from OBD adapter
 //This is the OBD command state machine
 function fncGetData(sData)
-{           
+{
     //Get rid of any spaces
     sData = sData.trim();
+
+    //Write to file
+    id_FileWriter.vWriteData(sData);
 
     switch(sCommandStateMachine)
     {
@@ -168,28 +171,34 @@ function fncGetData(sData)
         case "findprotocol":
             sCommandStateMachine = "findprotocol_step1";
             iRepeatCommand = 3;
-            sLastATcommand = "ATSP01";
+            sLastATcommand = "ATSP03";
         break;
         case "findprotocol_step1":
-            if (fncCheckCurrentCommand(sData) === true)     //Command OK, next one...
-            {
-                //Sequence is done now. Extract value.
-                sVoltage = fncGetValue(sData);
+            sCommandStateMachine = "findprotocol_step2";
+            sLastATcommand = "0100";
+        break;
+        case "findprotocol_step2":
+            sCommandStateMachine = "findprotocol_step3";
+            sLastATcommand = "0120";
 
-                sCommandStateMachine = "";
-                sLastATcommand = "";
-                bCommandOK = true;
-                bCommandRunning = false;
-                return;
-            }
-            else if(iRepeatCommand > 0)
-                iRepeatCommand--;
-            else
-            {
-                bCommandOK = false;
-                bCommandRunning = false;
-                return;
-            }
+        break;
+        case "findprotocol_step3":
+            sCommandStateMachine = "findprotocol_step4";
+            sLastATcommand = "0140";
+        break;
+        case "findprotocol_step4":
+            sCommandStateMachine = "findprotocol_step5";
+            sLastATcommand = "0160";
+        break;
+        case "findprotocol_step5":
+            sCommandStateMachine = "findprotocol_step6";
+            sLastATcommand = "0180";
+        break;
+        case "findprotocol_step6":
+            sCommandStateMachine = "";
+            sLastATcommand = "";
+            bCommandOK = true;
+            bCommandRunning = false;
         break;
         //*****END command sequence: find protocol*****
     }
@@ -215,6 +224,26 @@ function fncCheckCurrentCommand(sData)
         return true;
     else
         return false;
+}
+
+//This function checks if the PID request is ready.
+//"ready" -> request is ready, data is OK
+//"wait"  -> request is not ready, e.g bus gets initialized or ELM is searching
+//"error" -> request returned error, e.g. the mode is not supported
+function fncWaitForPIDRequest(sData)
+{
+    var iMode = parseInt(sLastATcommand.substr(0, 2));
+    var iAnswerMode = iMode + 40;
+
+   // hexString === "NO DATA" || hexString === "OK" || hexString === "?" || hexString === "UNABLE TO CONNECT" || hexString === "SEARCHING...") {
+    if (sData === "NO DATA" || sData === "UNABLE TO CONNECT" || sData === "BUS INIT: ... ERROR")
+        return "error";
+    else if (sData === "SEARCHING..." || sData === "BUS INIT: OK")
+        return "wait";
+    else if (sData.substr(0,2) === iAnswerMode.toString())
+        return "ready";
+    else
+        return "error";
 }
 
 //This function extracts data from an answer string from the ELM327.

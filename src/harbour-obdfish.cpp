@@ -22,12 +22,14 @@
 #include <sailfishapp.h>
 #include "../src/bluetoothconnection.h"
 #include "../src/bluetoothdata.h"
+#include "../src/filewriter.h"
 
 
 int main(int argc, char *argv[])
 {
     qmlRegisterType<BluetoothConnection,1>("bluetoothconnection", 1, 0, "BluetoothConnection");
     qmlRegisterType<BluetoothData,1>("bluetoothdata", 1, 0, "BluetoothData");
+    qmlRegisterType<FileWriter,1>("filewriter", 1, 0, "FileWriter");
     return SailfishApp::main(argc, argv);
 }
 

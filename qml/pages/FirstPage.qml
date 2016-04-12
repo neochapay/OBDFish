@@ -138,7 +138,7 @@ Page {
                 width: parent.width
                 Button
                 {
-                    width: parent.width/3;
+                    width: parent.width/4;
                     text: "Info"
                     onClicked:
                     {                      
@@ -151,7 +151,7 @@ Page {
                 }
                 Button
                 {
-                    width: parent.width/3;
+                    width: parent.width/4;
                     text: "Init"
                     onClicked:
                     {
@@ -164,13 +164,26 @@ Page {
                 }
                 Button
                 {
-                    width: parent.width/3;
-                    text: "Voltage"
+                    width: parent.width/4;
+                    text: "Volt"
                     onClicked:
                     {
                         if (!OBDComm.bCommandRunning)
                         {
                             OBDComm.fncStartCommand("voltage");
+                            bWaitForCommandSequenceEnd = true;
+                        }
+                    }
+                }
+                Button
+                {
+                    width: parent.width/4;
+                    text: "Proto"
+                    onClicked:
+                    {
+                        if (!OBDComm.bCommandRunning)
+                        {
+                            OBDComm.fncStartCommand("findprotocol");
                             bWaitForCommandSequenceEnd = true;
                         }
                     }
