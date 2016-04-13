@@ -24,6 +24,9 @@ function fncStartCommand(sCommand)
 //This is the OBD command state machine
 function fncGetData(sData)
 {
+    var sPIDRequest = "";
+    var bWaitForNewData = false;
+
     //Get rid of any spaces
     sData = sData.trim();
 
@@ -174,45 +177,148 @@ function fncGetData(sData)
             sLastATcommand = "ATSP03";
         break;
         case "findprotocol_step1":
-            sCommandStateMachine = "findprotocol_step2";
-            sLastATcommand = "0100";
+            if (fncCheckProtocolRequest(sData) === true)     //Command OK, next one...
+            {
+                sCommandStateMachine = "findprotocol_step2";
+                iRepeatCommand = 3;
+                sLastATcommand = "0100";
+            }
+            else if(iRepeatCommand > 0)
+                iRepeatCommand--;
+            else
+            {
+                bCommandOK = false;
+                bCommandRunning = false;
+                return;
+            }
         break;
-        case "findprotocol_step2":
-            sCommandStateMachine = "findprotocol_step3";
-            sLastATcommand = "0120";
-
+        case "findprotocol_step2":           
+            sPIDRequest = fncCheckPIDRequest(sData);
+            if (sPIDRequest === "ready" || sPIDRequest === "error")
+            {
+                sCommandStateMachine = "findprotocol_step3";
+                bWaitForNewData = false;
+                iRepeatCommand = 3;
+                sLastATcommand = "0120";
+            }
+            else if (sPIDRequest === "wait")
+            {
+                //We have to wait for further data.
+                bWaitForNewData = true;
+            }
+            else if(sPIDRequest === "command_error" && iRepeatCommand > 0)
+                iRepeatCommand--;
+            else
+            {
+                bCommandOK = false;
+                bCommandRunning = false;
+                return;
+            }
         break;
         case "findprotocol_step3":
-            sCommandStateMachine = "findprotocol_step4";
-            sLastATcommand = "0140";
+            sPIDRequest = fncCheckPIDRequest(sData);
+            if (sPIDRequest === "ready" || sPIDRequest === "error")
+            {
+                sCommandStateMachine = "findprotocol_step4";
+                bWaitForNewData = false;
+                iRepeatCommand = 3;
+                sLastATcommand = "0140";
+            }
+            else if (sPIDRequest === "wait")
+            {
+                bWaitForNewData = true;
+            }
+            else if(sPIDRequest === "command_error" && iRepeatCommand > 0)
+                iRepeatCommand--;
+            else
+            {
+                bCommandOK = false;
+                bCommandRunning = false;
+                return;
+            }
         break;
         case "findprotocol_step4":
-            sCommandStateMachine = "findprotocol_step5";
-            sLastATcommand = "0160";
+            sPIDRequest = fncCheckPIDRequest(sData);
+            if (sPIDRequest === "ready" || sPIDRequest === "error")
+            {
+                sCommandStateMachine = "findprotocol_step5";
+                bWaitForNewData = false;
+                iRepeatCommand = 3;
+                sLastATcommand = "0160";
+            }
+            else if (sPIDRequest === "wait")
+            {
+                bWaitForNewData = true;
+            }
+            else if(sPIDRequest === "command_error" && iRepeatCommand > 0)
+                iRepeatCommand--;
+            else
+            {
+                bCommandOK = false;
+                bCommandRunning = false;
+                return;
+            }
         break;
         case "findprotocol_step5":
-            sCommandStateMachine = "findprotocol_step6";
-            sLastATcommand = "0180";
+            sPIDRequest = fncCheckPIDRequest(sData);
+            if (sPIDRequest === "ready" || sPIDRequest === "error")
+            {
+                sCommandStateMachine = "findprotocol_step6";
+                bWaitForNewData = false;
+                iRepeatCommand = 3;
+                sLastATcommand = "0180";
+            }
+            else if (sPIDRequest === "wait")
+            {
+                bWaitForNewData = true;
+            }
+            else if(sPIDRequest === "command_error" && iRepeatCommand > 0)
+                iRepeatCommand--;
+            else
+            {
+                bCommandOK = false;
+                bCommandRunning = false;
+                return;
+            }
         break;
         case "findprotocol_step6":
-            sCommandStateMachine = "";
-            sLastATcommand = "";
-            bCommandOK = true;
-            bCommandRunning = false;
+            sPIDRequest = fncCheckPIDRequest(sData);
+            if (sPIDRequest === "ready" || sPIDRequest === "error")
+            {
+                sCommandStateMachine = "";
+                bWaitForNewData = false;
+                sLastATcommand = "";
+                bCommandOK = true;
+                bCommandRunning = false;
+            }
+            else if (sPIDRequest === "wait")
+            {
+                bWaitForNewData = true;
+            }
+            else if(sPIDRequest === "command_error" && iRepeatCommand > 0)
+                iRepeatCommand--;
+            else
+            {
+                bCommandOK = false;
+                bCommandRunning = false;
+                return;
+            }
         break;
         //*****END command sequence: find protocol*****
     }
 
     //Finally send the command to ELM327
-    if (sLastATcommand !== "")
-    {
-        console.log("Send Command: " + sLastATcommand);
-        id_BluetoothData.sendHex(sLastATcommand);
-    }
-    else
+    if (bWaitForNewData)        //Don't send any command. There will be more data coming in soon.
+        console.log("Send Command: wait for new data...");
+    else if(sLastATcommand === "")
     {
         console.log("Send ready. Leaving...");
         bCommandRunning = false;    //We are ready. No more AT commands to send.
+    }
+    else
+    {
+        console.log("Send Command: " + sLastATcommand);
+        id_BluetoothData.sendHex(sLastATcommand);
     }
 }
 
@@ -226,22 +332,34 @@ function fncCheckCurrentCommand(sData)
         return false;
 }
 
-//This function checks if the PID request is ready.
-//"ready" -> request is ready, data is OK
-//"wait"  -> request is not ready, e.g bus gets initialized or ELM is searching
-//"error" -> request returned error, e.g. the mode is not supported
-function fncWaitForPIDRequest(sData)
+//This function checks if the protocol request was successful
+function fncCheckProtocolRequest(sData)
 {
+    //The AT command must be at the beginning of answer of the ELM
+    if (sData.indexOf(sLastATcommand) === 0 && sData.indexOf("OK") !== -1)
+        return true;
+    else
+        return false;
+}
+
+//This function checks if the PID request is ready.
+//"ready"         -> request is ready, data is OK
+//"wait"          -> request is not ready, e.g bus gets initialized or ELM is searching
+//"error"         -> request returned error, e.g. the mode is not supported
+//"command_error" -> ELM did not understand the command
+function fncCheckPIDRequest(sData)
+{        
     var iMode = parseInt(sLastATcommand.substr(0, 2));
     var iAnswerMode = iMode + 40;
 
-   // hexString === "NO DATA" || hexString === "OK" || hexString === "?" || hexString === "UNABLE TO CONNECT" || hexString === "SEARCHING...") {
-    if (sData === "NO DATA" || sData === "UNABLE TO CONNECT" || sData === "BUS INIT: ... ERROR")
+    if (sData.indexOf("NO DATA") !== -1 || sData.indexOf("UNABLE TO CONNECT") !== -1 || sData.indexOf("BUS INIT: ... ERROR") !== -1)
         return "error";
-    else if (sData === "SEARCHING..." || sData === "BUS INIT: OK")
+    else if (sData.indexOf("SEARCHING...") !== -1 || sData.indexOf("BUS INIT: OK") !== -1)
         return "wait";
     else if (sData.substr(0,2) === iAnswerMode.toString())
         return "ready";
+    else if (sData.indexOf(sLastATcommand) === -1)
+        return "command_error";
     else
         return "error";
 }
