@@ -3,6 +3,7 @@ var bCommandRunning = false;
 var bCommandOK = false;
 var sLastATcommand = "";
 var iRepeatCommand = 0;
+var sReceiveBuffer = "";
 
 var sVoltage = "Voltage";
 var sAdapterInfo = "Info";
@@ -14,6 +15,7 @@ function fncStartCommand(sCommand)
     if (bCommandRunning) return;
     bCommandRunning = true;
 
+    sReceiveBuffer = "";
     sCommandStateMachine = sCommand;
 
     //Call the state machine to decide what to do next
@@ -24,11 +26,12 @@ function fncStartCommand(sCommand)
 //This is the OBD command state machine
 function fncGetData(sData)
 {
-    var sPIDRequest = "";
-    var bWaitForNewData = false;
-
     //Get rid of any spaces
     sData = sData.trim();
+
+    sReceiveBuffer = sReceiveBuffer + sData;
+    var sPIDRequest = "";
+    var bWaitForNewData = false;   
 
     //Write to file
     id_FileWriter.vWriteData(sData);
@@ -38,58 +41,49 @@ function fncGetData(sData)
         //*****START command sequence: init*****
         case "init":           
             sCommandStateMachine = "init_step1";
-            iRepeatCommand = 3;
             sLastATcommand = "AT Z";            
         break;
         case "init_step1":
-            if (fncCheckCurrentCommand(sData) === true)     //Command OK, next one...
+            if (fncCheckCurrentCommand(sData) === true)
             {
                 sCommandStateMachine = "init_step2";
-                iRepeatCommand = 3;
-                sLastATcommand = "AT D";                
+                sLastATcommand = "ATS0";
+                bWaitForNewData = false;
             }
-            else if(iRepeatCommand > 0)                 //Not OK. Repeat same command.
-                iRepeatCommand--;
-            else                                        //Multiple times not OK.
-            {
-                bCommandOK = false;
-                bCommandRunning = false;
-                return;
-            }
+            else
+                bWaitForNewData = true;
         break;
         case "init_step2":
             if (fncCheckCurrentCommand(sData) === true)
             {
                 sCommandStateMachine = "init_step3";
-                iRepeatCommand = 3;
-                sLastATcommand = "AT L0";
+                sLastATcommand = "ATL0";
+                bWaitForNewData = false;
             }
-            else if(iRepeatCommand > 0)
-                iRepeatCommand--;
             else
-            {
-                bCommandOK = false;
-                bCommandRunning = false;
-                return;
-            }
+                bWaitForNewData = true;
         break;
-        case "init_step3":                       
+        case "init_step3":
             if (fncCheckCurrentCommand(sData) === true)
             {
                 sCommandStateMachine = "init_step4";
-                iRepeatCommand = 3;
-                sLastATcommand = "AT H0";
+                sLastATcommand = "ATH0";
+                bWaitForNewData = false;
             }
-            else if(iRepeatCommand > 0)
-                iRepeatCommand--;
             else
-            {
-                bCommandOK = false;
-                bCommandRunning = false;
-                return;
-            }
+                bWaitForNewData = true;
         break;
-        case "init_step4":                       
+        case "init_step4":
+            if (fncCheckCurrentCommand(sData) === true)
+            {
+                sCommandStateMachine = "init_step5";
+                sLastATcommand = "ATE0";
+                bWaitForNewData = false;
+            }
+            else
+                bWaitForNewData = true;
+        break;
+        case "init_step5":
             if (fncCheckCurrentCommand(sData) === true)
             {
                 //Sequence is done now. Everything good.
@@ -97,76 +91,55 @@ function fncGetData(sData)
                 sLastATcommand = "";
                 bCommandOK = true;
                 bCommandRunning = false;
+                bWaitForNewData = false;
                 return;
             }
-            else if(iRepeatCommand > 0)
-                iRepeatCommand--;
             else
-            {
-                bCommandOK = false;
-                bCommandRunning = false;
-                return;
-            }
+                bWaitForNewData = true;
         break;
         //*****END command sequence: init*****
 
         //*****START command sequence: adapterinfo*****       
         case "adapterinfo":
             sCommandStateMachine = "adapterinfo_step1";
-            iRepeatCommand = 3;
             sLastATcommand = "AT I";
         break;
         case "adapterinfo_step1":
-            //Example: AT I   ELM327 v2.1  >
-            if (fncCheckCurrentCommand(sData) === true)     //Command OK, next one...
+            if (fncCheckCurrentCommand(sData) === true)
             {
                 //Sequence is done now. Extract value.
                 sAdapterInfo = fncGetValue(sData);
-
                 sCommandStateMachine = "";
                 sLastATcommand = "";
                 bCommandOK = true;
                 bCommandRunning = false;
+                bWaitForNewData = false;
                 return;
             }
-            else if(iRepeatCommand > 0)
-                iRepeatCommand--;
             else
-            {
-                bCommandOK = false;
-                bCommandRunning = false;
-                return;
-            }
+                bWaitForNewData = true;
         break;
         //*****END command sequence: adapterinfo*****
 
         //*****START command sequence: voltage*****
         case "voltage":
             sCommandStateMachine = "voltage_step1";
-            iRepeatCommand = 3;
             sLastATcommand = "AT RV";
         break;
         case "voltage_step1":
-             //AT RV 11.4  >
-            if (fncCheckCurrentCommand(sData) === true)     //Command OK, next one...
+            if (fncCheckCurrentCommand(sData) === true)
             {
                 //Sequence is done now. Extract value.
                 sVoltage = fncGetValue(sData);
-
                 sCommandStateMachine = "";
                 sLastATcommand = "";
                 bCommandOK = true;
                 bCommandRunning = false;
+                bWaitForNewData = false;
                 return;
             }
-            else if(iRepeatCommand > 0)
-                iRepeatCommand--;
             else
-            {
-                bCommandOK = false;
-                bCommandRunning = false;
-                return;
-            }
+                bWaitForNewData = true;
         break;
         //*****END command sequence: voltage*****
 
@@ -174,7 +147,7 @@ function fncGetData(sData)
         case "findprotocol":
             sCommandStateMachine = "findprotocol_step1";
             iRepeatCommand = 3;
-            sLastATcommand = "ATSP03";
+            sLastATcommand = "ATSP0";
         break;
         case "findprotocol_step1":
             if (fncCheckProtocolRequest(sData) === true)     //Command OK, next one...
@@ -322,14 +295,13 @@ function fncGetData(sData)
     }
 }
 
-//This function checks if the ELM understood the given AT command or not.
+//Check if ELM is ready with current command
 function fncCheckCurrentCommand(sData)
 {  
-    //The AT command must be at the beginning of answer of the ELM
-    if (sData.indexOf(sLastATcommand) === 0)
-        return true;
-    else
+    if (sData.search(/\r\r>/g) === -1)
         return false;
+    else
+        return true;
 }
 
 //This function checks if the protocol request was successful
@@ -369,17 +341,9 @@ function fncGetValue(sData)
 {
     var sReturnValue = "";
 
-    console.log("fncGetValue: " + sData);
-
-    sReturnValue = sData.substr(sLastATcommand.length); //cut off command at the beginning
-    console.log("fncGetValue: " + sReturnValue);
-
-    sReturnValue = sReturnValue.substring(0, (sReturnValue.lastIndexOf(">") - 1));
-    console.log("fncGetValue: " + sReturnValue);
+    sReturnValue = sData.substring(0, sData.search(/\r/g));
 
     sReturnValue = sReturnValue.trim();
-    console.log("fncGetValue: " + sReturnValue);
-
 
     return sReturnValue;
 }

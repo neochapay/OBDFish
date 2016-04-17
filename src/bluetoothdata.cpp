@@ -76,8 +76,8 @@ void BluetoothData::readData()
 
     QString s_data = data.trimmed();
 
-    s_data = s_data.replace("\r", " ");
-    s_data = s_data.replace("\n", " ");
+    //s_data = s_data.replace("\r", " ");
+    //s_data = s_data.replace("\n", " ");
 
     qDebug() << "Data size:" << data.size();
     qDebug() << "Data[" + QString::number(_port) + "]:" << data.toHex();
