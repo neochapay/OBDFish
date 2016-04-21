@@ -38,10 +38,34 @@ function fncGetData(sData)
 
     switch(sCommandStateMachine)
     {
+        //*****START command sequence: queryadapter*****
+        case "queryadapter":
+            sCommandStateMachine = "queryadapter_step1";
+            sLastATcommand = "ATZ";
+        break;
+        case "queryadapter_step1":
+            if (fncCheckCurrentCommand(sData) === true)
+            {
+                //Sequence is done now. Extract value.
+                sAdapterInfo = fncGetValue(sData);
+                sCommandStateMachine = "";
+                sLastATcommand = "";
+                bCommandOK = true;
+                bCommandRunning = false;
+                bWaitForNewData = false;
+                return;
+            }
+            else
+                bWaitForNewData = true;
+        break;
+        //*****END command sequence: adapterinfo*****
+
+
+
         //*****START command sequence: init*****
         case "init":           
             sCommandStateMachine = "init_step1";
-            sLastATcommand = "AT Z";            
+            sLastATcommand = "ATE0";
         break;
         case "init_step1":
             if (fncCheckCurrentCommand(sData) === true)
@@ -72,18 +96,8 @@ function fncGetData(sData)
             }
             else
                 bWaitForNewData = true;
-        break;
+        break;        
         case "init_step4":
-            if (fncCheckCurrentCommand(sData) === true)
-            {
-                sCommandStateMachine = "init_step5";
-                sLastATcommand = "ATE0";
-                bWaitForNewData = false;
-            }
-            else
-                bWaitForNewData = true;
-        break;
-        case "init_step5":
             if (fncCheckCurrentCommand(sData) === true)
             {
                 //Sequence is done now. Everything good.
@@ -102,7 +116,7 @@ function fncGetData(sData)
         //*****START command sequence: adapterinfo*****       
         case "adapterinfo":
             sCommandStateMachine = "adapterinfo_step1";
-            sLastATcommand = "AT I";
+            sLastATcommand = "ATI";
         break;
         case "adapterinfo_step1":
             if (fncCheckCurrentCommand(sData) === true)
@@ -124,7 +138,7 @@ function fncGetData(sData)
         //*****START command sequence: voltage*****
         case "voltage":
             sCommandStateMachine = "voltage_step1";
-            sLastATcommand = "AT RV";
+            sLastATcommand = "ATRV";
         break;
         case "voltage_step1":
             if (fncCheckCurrentCommand(sData) === true)

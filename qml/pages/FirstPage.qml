@@ -9,6 +9,7 @@ Page {
 
     property bool bFirstPage: true
     property bool bWaitForCommandSequenceEnd: false
+    property int iInit: 0
 
     onStatusChanged:
     {       
@@ -45,8 +46,14 @@ Page {
             fncViewMessage("info", "Connected");
             bConnected = true;
 
-            pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
-            //pageStack.navigateForward();
+            //Now start with initialize progress
+            iInit = 1;
+            progressBarInit.valueText = "Checking OBD Adapter...";
+            progressBarInit.value = 1;
+
+            //Start with adapter query.
+            OBDComm.fncStartCommand("queryadapter");
+            bWaitForCommandSequenceEnd = true;
         }
         onSigDisconnected:
         {
@@ -69,6 +76,43 @@ Page {
             //Wait until command sequence has ended
             if (!OBDComm.bCommandRunning)
             {
+                //Init first step. This is after sending ATZ
+                if (iInit == 1)
+                {
+                    //Check if this is an ELM327
+                    if (sAdapterInfo.indexOf("ELM327") !== -1)
+                    {
+                        //This is not ELM327!!!
+                        //Skip now and disconect from bluetooth device
+                        fncViewMessage("error", "Unknown OBD Adapter!!!");
+                        id_BluetoothData.disconnect();
+                        iInit = 0;
+                    }
+                    else
+                    {
+                        //Now, this is an ELM327. So far so good.
+                        //Let's initialize this baby...
+                        iInit = 2;
+
+                        /*
+                        TODO
+                        ----
+                        Die Kommandos sollen in der richtigen Reihenfolge von hier aus angestossen und abgearbeitet werden.
+                        Die OBDComm soll generisch sein und Kommandos von hier bekommen und einzeln abarbeiten.
+                        Die Ergebnisse werden dann auch hier ausgewertet. Das ist auch besser wegen dem schreiben auf QML Elemente!!!
+                        */
+                    }
+
+                    //Prepare step 2
+
+
+                }
+
+                //Finally stop this timer.
+                bWaitForCommandSequenceEnd = false;
+
+
+                /*
                 if (OBDComm.bCommandOK)
                     fncViewMessage("info", "Command successful.");
                 else
@@ -79,6 +123,7 @@ Page {
                 id_LBL_AdapterInfo.text = OBDComm.sAdapterInfo;
 
                 bWaitForCommandSequenceEnd = false;
+                */
             }
         }
     }
@@ -246,6 +291,25 @@ Page {
                     width: parent.width/3;
                     text: OBDComm.sCommandStateMachine;
                 }
+            }
+
+            SectionHeader
+            {
+                id: sectionHeaderInit
+                text: "Initialization"
+                visible: (iInit > 0)
+            }
+            //First step: check if it's an ELM327
+            //Second step: send 4 init commands to ELM327
+            ProgressBar
+            {
+                id: progressBarInit
+                width: parent.width
+                maximumValue: 5
+                valueText: value
+                label: "Progress"
+                visible: (iInit > 0)
+                value: 0
             }
 
             SectionHeader
