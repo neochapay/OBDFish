@@ -10,6 +10,8 @@ Page {
     property bool bFirstPage: true
     property bool bWaitForCommandSequenceEnd: false
     property int iInit: 0
+    property inf iWaitForCommand: 0
+    property string sELMVersion: ""
 
     onStatusChanged:
     {       
@@ -17,6 +19,7 @@ Page {
         {
             bFirstPage = false
 
+            //DEBUG!!!
             SharedResources.fncAddDevice("Neuer Adapter v2.1", "88:18:56:68:98:EB");
             SharedResources.fncAddDevice("Alter Adapter v1.5", "98:76:54:32:10:00");
             id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
@@ -26,7 +29,7 @@ Page {
     Connections
     {
         target: id_BluetoothConnection
-        onDeviceFound:
+        onDeviceFound:      //This is called from C++ if a bluetooth device was found
         {
             //Add device to data array
             SharedResources.fncAddDevice(sName, sAddress);
@@ -36,51 +39,55 @@ Page {
     Connections
     {
         target: id_BluetoothData
-        onSigReadDataReady:
+        onSigReadDataReady:     //This is called from C++ if there is data via bluetooth
         {
-            id_LBL_ReadText.text = sData;
+            //Check received data
             OBDComm.fncGetData(sData);
         }
-        onSigConnected:
+        onSigConnected:         //This is called from C++ if a connection was established
         {            
             fncViewMessage("info", "Connected");
             bConnected = true;
 
-            //Now start with initialize progress
+            //Now start with initialize process
             iInit = 1;
-            progressBarInit.valueText = "Checking OBD Adapter...";
-            progressBarInit.value = 1;
+            progressBarInit.valueText = "Checking OBD adapter...";
 
-            //Start with adapter query.
-            OBDComm.fncStartCommand("queryadapter");
+            //Send command to check if this is an ELM327
+            iWaitForCommand = 0;
+            OBDComm.fncStartCommand("ATZ");
             bWaitForCommandSequenceEnd = true;
         }
-        onSigDisconnected:
+        onSigDisconnected:      //This is called from C++ if an established bluetooth connection gets disconnected
         {
             fncViewMessage("info", "Disconnected");
             bConnected = false;
         }
-        onSigError:
+        onSigError:             //This is called from C++ if there was an error while establishing a bluetooth connection
         {
             fncViewMessage("error", "Error: " + sError);
         }
     }
     Timer
     {
+        //This is called, everytime an AT command is send.
+        //The timer waits for ELM to answer the command.
         id: timWaitForCommandSequenceEnd
         interval: 200
         running: bWaitForCommandSequenceEnd
         repeat: true
         onTriggered:
         {
-            //Wait until command sequence has ended
-            if (!OBDComm.bCommandRunning)
+            //Check if ELM has answered correctly to current AT command
+            if (OBDComm.bCommandRunning == false)
             {
+                iWaitForCommand = 0;
+            
                 //Init first step. This is after sending ATZ
                 if (iInit == 1)
                 {
                     //Check if this is an ELM327
-                    if (sAdapterInfo.indexOf("ELM327") !== -1)
+                    if (OBDComm.sReceiveBuffer.indexOf("ELM327") !== -1)
                     {
                         //This is not ELM327!!!
                         //Skip now and disconect from bluetooth device
@@ -91,40 +98,87 @@ Page {
                     else
                     {
                         //Now, this is an ELM327. So far so good.
+                        //Extract the version number.
+                        sELMVersion = (OBDComm.sReceiveBuffer.substr(OBDComm.sReceiveBuffer.indexOf(" v"))).trim();
+                        
                         //Let's initialize this baby...
                         iInit = 2;
-
-                        /*
-                        TODO
-                        ----
-                        Die Kommandos sollen in der richtigen Reihenfolge von hier aus angestossen und abgearbeitet werden.
-                        Die OBDComm soll generisch sein und Kommandos von hier bekommen und einzeln abarbeiten.
-                        Die Ergebnisse werden dann auch hier ausgewertet. Das ist auch besser wegen dem schreiben auf QML Elemente!!!
-                        */
+                        progressBarInit.valueText = "Switch echo off...";                        
+                        OBDComm.fncStartCommand("ATE0");
                     }
-
-                    //Prepare step 2
-
-
                 }
-
-                //Finally stop this timer.
-                bWaitForCommandSequenceEnd = false;
-
-
-                /*
-                if (OBDComm.bCommandOK)
-                    fncViewMessage("info", "Command successful.");
-                else
-                    fncViewMessage("error", "Command not successful.");
-
-                //It's weird that this is needed here...  :-(((
-                id_LBL_Voltage.text = OBDComm.sVoltage;
-                id_LBL_AdapterInfo.text = OBDComm.sAdapterInfo;
-
-                bWaitForCommandSequenceEnd = false;
-                */
+                else if (iInit == 2)
+                {
+                    //Just send next init command
+                    iInit = 3;
+                    progressBarInit.valueText = "Switch linefeed off...";                        
+                    OBDComm.fncStartCommand("ATL0");
+                }
+                else if (iInit == 3)
+                {
+                    iInit = 4;
+                    progressBarInit.valueText = "Switch headers off...";                        
+                    OBDComm.fncStartCommand("ATH0");
+                }
+                else if (iInit == 4)
+                {
+                    iInit = 5;
+                    progressBarInit.valueText = "Set protocol...";                        
+                    OBDComm.fncStartCommand("ATSP0");                    
+                }
+                else if (iInit == 5)
+                {
+                    iInit = 6;
+                    progressBarInit.valueText = "Supported PID's 01-20...";                    
+                    OBDComm.fncStartCommand("0100");                    
+                }
+                else if (iInit == 6)
+                {
+                    iInit = 7;
+                    
+                    //Finish for now
+                    bWaitForCommandSequenceEnd = false; 
+                    
+                    fncViewMessage("info", "Init is ready now!!!");
+                    
+                    pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
+                    //pageStack.navigateForward();
+                    //TODO
+                }                
             }
+            else
+            {
+                //ELM has not yet answered. Or the answer is not complete.
+                //Check if wait time is over.
+                if (iWaitForCommand == 8)
+                {
+                    //Now it depends on which command we are waiting.                                       
+                    if (iInit == 1)
+                    {
+                        //If we wait for ELM to identify itself, break and disconnect.                        
+                        fncViewMessage("error", "Unknown OBD Adapter!!!");
+                        iInit = 0; 
+                    }
+                    else if (iInit > 1 && iInit != 6)
+                    {
+                        //If we are in init procedure, reset init progress
+                        iInit = 0; 
+                    }
+                    else if (iInit == 6)
+                    {
+                        //Here we are after the first PID request.
+                        //This may last longer because the ELM needs some time to find the correct protocol.
+                        
+                    }
+                    
+                    //Skip now and disconect from bluetooth device                       
+                    bWaitForCommandSequenceEnd = false;                        
+                    fncViewMessage("error", "Communication timeout!!!");
+                    id_BluetoothData.disconnect();                                        
+                }
+                else
+                    iWaitForCommand++;
+            }            
         }
     }
 
@@ -134,8 +188,10 @@ Page {
         anchors.fill: parent
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-        PullDownMenu {
-            MenuItem {
+        PullDownMenu 
+        {
+            MenuItem 
+            {
                 text: qsTr("Show Page 2")
                 onClicked: pageStack.push(Qt.resolvedUrl("SecondPage.qml"))
             }
@@ -149,7 +205,8 @@ Page {
 
             width: page.width
             spacing: Theme.paddingLarge
-            PageHeader {
+            PageHeader 
+            {
                 title: qsTr("Bluetooth OBD Scanner")
             }            
             Button
@@ -177,122 +234,7 @@ Page {
                     id_BluetoothData.disconnect();
                 }
             }
-            Row
-            {
-                spacing: Theme.paddingSmall
-                width: parent.width
-                Button
-                {
-                    width: parent.width/4;
-                    text: "Info"
-                    onClicked:
-                    {                      
-                        if (!OBDComm.bCommandRunning)
-                        {
-                            OBDComm.fncStartCommand("adapterinfo");
-                            bWaitForCommandSequenceEnd = true;
-                        }
-                    }
-                }
-                Button
-                {
-                    width: parent.width/4;
-                    text: "Init"
-                    onClicked:
-                    {
-                        if (!OBDComm.bCommandRunning)
-                        {
-                            OBDComm.fncStartCommand("init");
-                            bWaitForCommandSequenceEnd = true;
-                        }
-                    }
-                }
-                Button
-                {
-                    width: parent.width/4;
-                    text: "Volt"
-                    onClicked:
-                    {
-                        if (!OBDComm.bCommandRunning)
-                        {
-                            OBDComm.fncStartCommand("voltage");
-                            bWaitForCommandSequenceEnd = true;
-                        }
-                    }
-                }
-                Button
-                {
-                    width: parent.width/4;
-                    text: "Proto"
-                    onClicked:
-                    {
-                        if (!OBDComm.bCommandRunning)
-                        {
-                            OBDComm.fncStartCommand("findprotocol");
-                            bWaitForCommandSequenceEnd = true;
-                        }
-                    }
-                }
-            }
-            Row
-            {
-                spacing: Theme.paddingSmall
-                width: parent.width
-                Button
-                {
-                    width: parent.width/3;
-                    text: "L0"
-                    onClicked:
-                    {
-                        id_BluetoothData.sendHex("AT L0");
-                    }
-                }
-                Button
-                {
-                    width: parent.width/3;
-                    text: "H0"
-                    onClicked:
-                    {
-                        id_BluetoothData.sendHex("AT H0");
-                    }
-                }
-                Button
-                {
-                    width: parent.width/3;
-                    text: "D"
-                    onClicked:
-                    {
-                        id_BluetoothData.sendHex("AT D");
-                    }
-                }
-            }
-            Label
-            {
-                width: parent.width;
-                id: id_LBL_ReadText;
-                text: "";
-            }
-            Row
-            {
-                spacing: Theme.paddingSmall
-                width: parent.width;
-                Label
-                {
-                    id: id_LBL_Voltage;
-                    width: parent.width/3;                    
-                }
-                Label
-                {
-                    id: id_LBL_AdapterInfo;
-                    width: parent.width/3;
-                }
-                Label
-                {
-                    width: parent.width/3;
-                    text: OBDComm.sCommandStateMachine;
-                }
-            }
-
+           
             SectionHeader
             {
                 id: sectionHeaderInit
@@ -305,16 +247,17 @@ Page {
             {
                 id: progressBarInit
                 width: parent.width
-                maximumValue: 5
-                valueText: value
+                maximumValue: 30
+                valueText: value + "/" + maximumValue
                 label: "Progress"
                 visible: (iInit > 0)
-                value: 0
+                value: iInit
             }
 
             SectionHeader
             {
                 text: "Found Bluetooth devices:"
+                visible: true
             }
             SilicaListView
             {
@@ -323,6 +266,7 @@ Page {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: parent.height / 3
+                visible: true
 
                 delegate: BackgroundItem
                 {
@@ -347,5 +291,3 @@ Page {
         }
     }
 }
-
-
