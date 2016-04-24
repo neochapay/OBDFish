@@ -72,19 +72,14 @@ void BluetoothData::readData()
 {
     qDebug("Entering readData...");
 
-    QByteArray data = _socket->readAll();
-
-    QString s_data = data.trimmed();
-
-    //s_data = s_data.replace("\r", " ");
-    //s_data = s_data.replace("\n", " ");
+    QByteArray data = _socket->readAll();   
 
     qDebug() << "Data size:" << data.size();
     qDebug() << "Data[" + QString::number(_port) + "]:" << data.toHex();
 
-    qDebug() << "Text: " << s_data;
+    qDebug() << "Text: " << data;
 
-    emit this->sigReadDataReady(s_data);
+    emit this->sigReadDataReady(data);
 }
 
 void BluetoothData::sendHex(QString sString)

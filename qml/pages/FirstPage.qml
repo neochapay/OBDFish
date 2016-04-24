@@ -130,36 +130,42 @@ Page
                 else if (iInit == 4)
                 {
                     iInit = 5;
-                    progressBarInit.label = "Set protocol...";
-                    OBDComm.fncStartCommand("ATSP0");                    
+                    progressBarInit.label = "Switch spaces off...";
+                    OBDComm.fncStartCommand("ATS0");
                 }
                 else if (iInit == 5)
                 {
                     iInit = 6;
-                    progressBarInit.label = "Supported PID's 0101-0120...";
-                    OBDComm.fncStartCommand("0100");                    
+                    progressBarInit.label = "Set protocol...";
+                    OBDComm.fncStartCommand("ATSP0");                    
                 }
                 else if (iInit == 6)
                 {
                     iInit = 7;
+                    progressBarInit.label = "Supported PID's 0101-0120...";
+                    OBDComm.fncStartCommand("0100");                    
+                }
+                else if (iInit == 7)
+                {
+                    iInit = 8;
                     //Evaluate and save answer from ELM
                     OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0100");
 
                     progressBarInit.label = "Supported PID's 0121-0140...";
                     OBDComm.fncStartCommand("0120");
                 }
-                else if (iInit == 7)
+                else if (iInit == 8)
                 {
-                    iInit = 8;
+                    iInit = 9;
                     //Evaluate answer from ELM
                     OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0120");
 
                     progressBarInit.label = "Supported PID's 0900-0920...";
                     OBDComm.fncStartCommand("0900");
                 }
-                else if (iInit == 8)
+                else if (iInit == 9)
                 {
-                    iInit = 9;
+                    iInit = 10;
                     //Evaluate answer from ELM
                     OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0900");
 
@@ -170,7 +176,7 @@ Page
                     if (OBDDataObject.fncGetFoundSupportedPIDs())
                     {
                         fncViewMessage("info", "Init is ready now!!!");
-                        labelInitOutcome.text = OBDDataObject.arrayOBDData["0100"] + " " + OBDDataObject.arrayOBDData["0120"] + " " + OBDDataObject.arrayOBDData["0900"];
+                        labelInitOutcome.text = "Masks: " + OBDDataObject.arrayOBDSupportedPIDs.length.toString();
                     }
                     else
                     {
@@ -286,7 +292,7 @@ Page
             {
                 id: progressBarInit
                 width: parent.width
-                maximumValue: 9
+                maximumValue: 10
                 valueText: value + "/" + maximumValue
                 label: ""
                 visible: (iInit > 0)

@@ -20,11 +20,14 @@ function fncStartCommand(sCommand)
 //Data which is received via bluetooth is passed into this function
 function fncGetData(sData)
 {
-    //Get rid of any leading/trailing spaces
-    sData = sData.trim();
+    //WARNING: Don't trim here. ELM might send leading/trailing spaces/carriage returns.
+    //They might get lost but are needed!!!
 
     //Fill in new data into buffer
     sReceiveBuffer = sReceiveBuffer + sData;       
+
+    console.log("fncGetData, sReceiveBuffer: " + sReceiveBuffer);
+
 
     //If the ELM is ready with sending a command, it always sends the same end characters.
     //These are three characters: two carriage returns (\r) followed by >
@@ -32,8 +35,8 @@ function fncGetData(sData)
     if (sReceiveBuffer.search(/\r>/g) !== -1)
     {
         //The ELM has completely answered the command.
-        //Received data is now in sReceiveBuffer.
-        
+        //Received data is now in sReceiveBuffer.                
+
         //Cut off the end characters
         sReceiveBuffer = sReceiveBuffer.substring(0, sReceiveBuffer.search(/\r>/g));
         sReceiveBuffer = sReceiveBuffer.trim();
