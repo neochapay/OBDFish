@@ -2,16 +2,17 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "SharedResources.js" as SharedResources
 import "OBDComm.js" as OBDComm
+import "OBDDataObject.js" as OBDDataObject
 
 
-Page {
+Page
+{
     id: page
 
     property bool bFirstPage: true
     property bool bWaitForCommandSequenceEnd: false
     property int iInit: 0
-    property inf iWaitForCommand: 0
-    property string sELMVersion: ""
+    property int iWaitForCommand: 0   
 
     onStatusChanged:
     {       
@@ -51,7 +52,7 @@ Page {
 
             //Now start with initialize process
             iInit = 1;
-            progressBarInit.valueText = "Checking OBD adapter...";
+            progressBarInit.label = "Checking OBD adapter...";
 
             //Send command to check if this is an ELM327
             iWaitForCommand = 0;
@@ -83,27 +84,33 @@ Page {
             {
                 iWaitForCommand = 0;
             
+                console.log("timWaitForCommandSequenceEnd step:  " + iInit);
+
                 //Init first step. This is after sending ATZ
                 if (iInit == 1)
                 {
+                    //Get rid of all the carriage returns
+                    var sAnswer = OBDComm.sReceiveBuffer.replace(/\r/g, " ");
+
                     //Check if this is an ELM327
-                    if (OBDComm.sReceiveBuffer.indexOf("ELM327") !== -1)
+                    if (sAnswer.indexOf("ELM327") === -1)
                     {
                         //This is not ELM327!!!
                         //Skip now and disconect from bluetooth device
                         fncViewMessage("error", "Unknown OBD Adapter!!!");
                         id_BluetoothData.disconnect();
+                        bWaitForCommandSequenceEnd = false;
                         iInit = 0;
                     }
                     else
                     {
                         //Now, this is an ELM327. So far so good.
                         //Extract the version number.
-                        sELMVersion = (OBDComm.sReceiveBuffer.substr(OBDComm.sReceiveBuffer.indexOf(" v"))).trim();
+                        OBDDataObject.sELMVersion = (sAnswer.substr(OBDComm.sReceiveBuffer.indexOf(" v"))).trim();
                         
                         //Let's initialize this baby...
                         iInit = 2;
-                        progressBarInit.valueText = "Switch echo off...";                        
+                        progressBarInit.label = "Switch echo off...";
                         OBDComm.fncStartCommand("ATE0");
                     }
                 }
@@ -111,46 +118,76 @@ Page {
                 {
                     //Just send next init command
                     iInit = 3;
-                    progressBarInit.valueText = "Switch linefeed off...";                        
+                    progressBarInit.label = "Switch linefeed off...";
                     OBDComm.fncStartCommand("ATL0");
                 }
                 else if (iInit == 3)
                 {
                     iInit = 4;
-                    progressBarInit.valueText = "Switch headers off...";                        
+                    progressBarInit.label = "Switch headers off...";
                     OBDComm.fncStartCommand("ATH0");
                 }
                 else if (iInit == 4)
                 {
                     iInit = 5;
-                    progressBarInit.valueText = "Set protocol...";                        
+                    progressBarInit.label = "Set protocol...";
                     OBDComm.fncStartCommand("ATSP0");                    
                 }
                 else if (iInit == 5)
                 {
                     iInit = 6;
-                    progressBarInit.valueText = "Supported PID's 01-20...";                    
+                    progressBarInit.label = "Supported PID's 0101-0120...";
                     OBDComm.fncStartCommand("0100");                    
                 }
                 else if (iInit == 6)
                 {
                     iInit = 7;
-                    
+                    //Evaluate and save answer from ELM
+                    OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0100");
+
+                    progressBarInit.label = "Supported PID's 0121-0140...";
+                    OBDComm.fncStartCommand("0120");
+                }
+                else if (iInit == 7)
+                {
+                    iInit = 8;
+                    //Evaluate answer from ELM
+                    OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0120");
+
+                    progressBarInit.label = "Supported PID's 0900-0920...";
+                    OBDComm.fncStartCommand("0900");
+                }
+                else if (iInit == 8)
+                {
+                    iInit = 9;
+                    //Evaluate answer from ELM
+                    OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0900");
+
                     //Finish for now
-                    bWaitForCommandSequenceEnd = false; 
-                    
-                    fncViewMessage("info", "Init is ready now!!!");
-                    
+                    bWaitForCommandSequenceEnd = false;
+
+                    //Evaluate if ELM found any supported PID
+                    if (OBDDataObject.fncGetFoundSupportedPIDs())
+                    {
+                        fncViewMessage("info", "Init is ready now!!!");
+                        labelInitOutcome.text = OBDDataObject.arrayOBDData["0100"] + " " + OBDDataObject.arrayOBDData["0120"] + " " + OBDDataObject.arrayOBDData["0900"];
+                    }
+                    else
+                    {
+                        fncViewMessage("error", "No supported PID's!!!");
+                        labelInitOutcome.text = "Keine PID's!!!";
+                    }
+
                     pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
                     //pageStack.navigateForward();
                     //TODO
-                }                
+                }
             }
             else
             {
                 //ELM has not yet answered. Or the answer is not complete.
                 //Check if wait time is over.
-                if (iWaitForCommand == 8)
+                if (iWaitForCommand == 20)
                 {
                     //Now it depends on which command we are waiting.                                       
                     if (iInit == 1)
@@ -159,17 +196,11 @@ Page {
                         fncViewMessage("error", "Unknown OBD Adapter!!!");
                         iInit = 0; 
                     }
-                    else if (iInit > 1 && iInit != 6)
+                    else if (iInit > 1)
                     {
                         //If we are in init procedure, reset init progress
                         iInit = 0; 
-                    }
-                    else if (iInit == 6)
-                    {
-                        //Here we are after the first PID request.
-                        //This may last longer because the ELM needs some time to find the correct protocol.
-                        
-                    }
+                    }                    
                     
                     //Skip now and disconect from bluetooth device                       
                     bWaitForCommandSequenceEnd = false;                        
@@ -203,53 +234,61 @@ Page {
         {
             id: column
 
-            width: page.width
-            spacing: Theme.paddingLarge
+            width: parent.width
+            spacing: Theme.paddingMedium
             PageHeader 
             {
                 title: qsTr("Bluetooth OBD Scanner")
-            }            
-            Button
+            }
+            Row
             {
-                text: "Start scanning for BT devices..."
-                onClicked:
+                width: parent.width
+
+                Button
                 {
-                    SharedResources.fncDeleteDevices();
-                    id_BluetoothConnection.vStartDeviceDiscovery();
+                    width: parent.width/3
+                    text: "Start Scan"
+                    onClicked:
+                    {
+                        SharedResources.fncDeleteDevices();
+                        id_BluetoothConnection.vStartDeviceDiscovery();
+                    }
+                }
+                Button
+                {
+                    width: parent.width/3
+                    text: "Stop Scan"
+                    onClicked:
+                    {
+                        id_BluetoothConnection.vStopDeviceDiscovery();
+                    }
+                }
+                Button
+                {
+                    width: parent.width/3
+                    text: "Disconnect"
+                    onClicked:
+                    {
+                        id_BluetoothData.disconnect();
+                    }
                 }
             }
-            Button
+            Label
             {
-                text: "Stop scanning for BT devices..."
-                onClicked:
-                {
-                    id_BluetoothConnection.vStopDeviceDiscovery();
-                }
+                id: labelInitOutcome
+                text:""
             }
-            Button
-            {
-                text: "Disconnect"
-                onClicked:
-                {
-                    id_BluetoothData.disconnect();
-                }
-            }
-           
-            SectionHeader
-            {
-                id: sectionHeaderInit
-                text: "Initialization"
-                visible: (iInit > 0)
-            }
+
+
             //First step: check if it's an ELM327
             //Second step: send 4 init commands to ELM327
             ProgressBar
             {
                 id: progressBarInit
                 width: parent.width
-                maximumValue: 30
+                maximumValue: 9
                 valueText: value + "/" + maximumValue
-                label: "Progress"
+                label: ""
                 visible: (iInit > 0)
                 value: iInit
             }
@@ -280,10 +319,8 @@ Page {
                         color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                     onClicked:
-                    {
-                        console.log("Clicked " + index);
+                    {                        
                         id_BluetoothData.connect(SharedResources.fncGetDeviceBTAddress(index), 1);
-
                     }
                 }
                 VerticalScrollDecorator {}
