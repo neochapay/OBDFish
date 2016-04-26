@@ -176,7 +176,12 @@ Page
                     if (OBDDataObject.fncGetFoundSupportedPIDs())
                     {
                         fncViewMessage("info", "Init is ready now!!!");
-                        labelInitOutcome.text = "Masks: " + OBDDataObject.arrayOBDSupportedPIDs.length.toString();
+                        console.log(OBDDataObject.arrayLookupPID["0104"].supported.toString());
+                        console.log(OBDDataObject.arrayLookupPID["0105"].supported.toString());
+                        console.log(OBDDataObject.arrayLookupPID["010a"].supported.toString());
+                        console.log(OBDDataObject.arrayLookupPID["010e"].supported.toString());
+
+                        labelInitOutcome.text = "Found masks";
                     }
                     else
                     {

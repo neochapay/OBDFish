@@ -22,11 +22,7 @@
 <context>
     <name>SecondPage</name>
     <message>
-        <source>Item</source>
-        <translation>Element</translation>
-    </message>
-    <message>
-        <source>Overview</source>
+        <source>OBD Drive</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

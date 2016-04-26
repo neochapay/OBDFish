@@ -52,5 +52,6 @@ DISTFILES += \
     rpm/harbour-obdfish.spec \
     qml/pages/SharedResources.js \
     qml/pages/OBDComm.js \
-    qml/pages/OBDDataObject.js
+    qml/pages/OBDDataObject.js \
+    qml/pages/OBDComm2.js
 
