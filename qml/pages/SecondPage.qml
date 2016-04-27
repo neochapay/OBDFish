@@ -17,7 +17,6 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "OBDComm2.js" as OBDComm2
 import "OBDDataObject.js" as OBDDataObject
 
 Page
@@ -49,7 +48,7 @@ Page
             console.log("Timer second page");
 
             //Check if ELM has answered correctly to current AT command
-            if (OBDComm2.bCommandRunning == false)
+            if (bCommandRunning == false)
             {
                 iWaitForCommand = 0;
 
@@ -58,12 +57,12 @@ Page
                 if (iCommandQuery == 0)
                 {
                     iCommandQuery = 1;
-                    OBDComm2.fncStartCommand("01051");
+                    fncStartCommand("01051");
                 }
                 else if (iCommandQuery == 1)
                 {
                     //Evaluate answer from ELM
-                    var iValue = OBDDataObject.fncEvaluatePIDQuery(OBDComm2.sReceiveBuffer, "0105");
+                    var iValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0105");
                     if (iValue !== null)
                         labelEngineTemp.text = iValue;
 
@@ -78,7 +77,7 @@ Page
                 if (iWaitForCommand == 10)
                 {
                     //Skip now.
-                    OBDComm2.bCommandRunning = false;
+                    bCommandRunning = false;
                 }
                 else
                     iWaitForCommand++;

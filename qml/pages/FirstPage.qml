@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "SharedResources.js" as SharedResources
-import "OBDComm.js" as OBDComm
 import "OBDDataObject.js" as OBDDataObject
 
 
@@ -39,12 +38,7 @@ Page
     }
     Connections
     {
-        target: id_BluetoothData
-        onSigReadDataReady:     //This is called from C++ if there is data via bluetooth
-        {
-            //Check received data
-            OBDComm.fncGetData(sData);
-        }
+        target: id_BluetoothData        
         onSigConnected:         //This is called from C++ if a connection was established
         {            
             fncViewMessage("info", "Connected");
@@ -56,7 +50,7 @@ Page
 
             //Send command to check if this is an ELM327
             iWaitForCommand = 0;
-            OBDComm.fncStartCommand("ATZ");
+            fncStartCommand("ATZ");
             bWaitForCommandSequenceEnd = true;
         }
         onSigDisconnected:      //This is called from C++ if an established bluetooth connection gets disconnected
@@ -80,7 +74,7 @@ Page
         onTriggered:
         {
             //Check if ELM has answered correctly to current AT command
-            if (OBDComm.bCommandRunning == false)
+            if (bCommandRunning == false)
             {
                 iWaitForCommand = 0;
             
@@ -90,7 +84,7 @@ Page
                 if (iInit == 1)
                 {
                     //Get rid of all the carriage returns
-                    var sAnswer = OBDComm.sReceiveBuffer.replace(/\r/g, " ");
+                    var sAnswer = sReceiveBuffer.replace(/\r/g, " ");
 
                     //Check if this is an ELM327
                     if (sAnswer.indexOf("ELM327") === -1)
@@ -106,12 +100,12 @@ Page
                     {
                         //Now, this is an ELM327. So far so good.
                         //Extract the version number.
-                        OBDDataObject.sELMVersion = (sAnswer.substr(OBDComm.sReceiveBuffer.indexOf(" v"))).trim();
+                        OBDDataObject.sELMVersion = (sAnswer.substr(sReceiveBuffer.indexOf(" v"))).trim();
                         
                         //Let's initialize this baby...
                         iInit = 2;
                         progressBarInit.label = "Switch echo off...";
-                        OBDComm.fncStartCommand("ATE0");
+                        fncStartCommand("ATE0");
                     }
                 }
                 else if (iInit == 2)
@@ -119,55 +113,55 @@ Page
                     //Just send next init command
                     iInit = 3;
                     progressBarInit.label = "Switch linefeed off...";
-                    OBDComm.fncStartCommand("ATL0");
+                    fncStartCommand("ATL0");
                 }
                 else if (iInit == 3)
                 {
                     iInit = 4;
                     progressBarInit.label = "Switch headers off...";
-                    OBDComm.fncStartCommand("ATH0");
+                    fncStartCommand("ATH0");
                 }
                 else if (iInit == 4)
                 {
                     iInit = 5;
                     progressBarInit.label = "Switch spaces off...";
-                    OBDComm.fncStartCommand("ATS0");
+                    fncStartCommand("ATS0");
                 }
                 else if (iInit == 5)
                 {
                     iInit = 6;
                     progressBarInit.label = "Set protocol...";
-                    OBDComm.fncStartCommand("ATSP0");                    
+                    fncStartCommand("ATSP0");
                 }
                 else if (iInit == 6)
                 {
                     iInit = 7;
                     progressBarInit.label = "Supported PID's 0101-0120...";
-                    OBDComm.fncStartCommand("0100");                    
+                    fncStartCommand("0100");
                 }
                 else if (iInit == 7)
                 {
                     iInit = 8;
                     //Evaluate and save answer from ELM
-                    OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0100");
+                    OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0100");
 
                     progressBarInit.label = "Supported PID's 0121-0140...";
-                    OBDComm.fncStartCommand("0120");
+                    fncStartCommand("0120");
                 }
                 else if (iInit == 8)
                 {
                     iInit = 9;
                     //Evaluate answer from ELM
-                    OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0120");
+                    OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0120");
 
                     progressBarInit.label = "Supported PID's 0900-0920...";
-                    OBDComm.fncStartCommand("0900");
+                    fncStartCommand("0900");
                 }
                 else if (iInit == 9)
                 {
                     iInit = 10;
                     //Evaluate answer from ELM
-                    OBDDataObject.fncSetSupportedPIDs(OBDComm.sReceiveBuffer, "0900");
+                    OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0900");
 
                     //Finish for now
                     bWaitForCommandSequenceEnd = false;
