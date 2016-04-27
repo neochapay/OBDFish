@@ -57,6 +57,14 @@ function fncEvaluatePIDQuery(sData, sPID)
     //Ich brauche hier eine Erkennung, wie viele Bytes die Antwort enthält.
     //Die Anzahld der Bytes muss im Array stehen!!!
     //Die nächste Abfrage muss entsprechend umgestaltet werden!!!   TODO
+    var sSearchPattern = parseInt(sPID.substr(0,2));
+    sSearchPattern = (sSearchPattern + 40).toString();
+    sSearchPattern = sSearchPattern + sPID.substr(2);
+
+    console.log("fncEvaluatePIDQuery, sSearchPattern" + sSearchPattern);
+
+    //TODO: Suche nach dem Searchpattern
+
 
     console.log("fncEvaluatePIDQuery, sData" + sData);
     console.log(sData.indexOf("4105").toString());
@@ -66,6 +74,10 @@ function fncEvaluatePIDQuery(sData, sPID)
         return null;
 
     sData = sData.substring((sData.indexOf("4105") + 4), 2);
+    sData = sData.trim();
+
+    //Extract number of bytes from data
+    var iBytes = sData.length / 2;
 
     console.log("Cooling temp: " + arrayLookupPID["0105"].fncConvert(sData));
 
@@ -141,4 +153,12 @@ function fncLeadingZeros( number, width )
 function fncConvertTemp(data)
 {
     return (parseInt(data, 16) - 40).toString();
+}
+function fncConvertRPM(data1, data2)
+{
+    return ((parseInt(data1, 16) * 256) + parseInt(data2, 16)) / 4;
+}
+function fncConvertSpeed(data)
+{
+    return parseInt(byte, 16);
 }
