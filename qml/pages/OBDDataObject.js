@@ -54,33 +54,36 @@ function fncSetSupportedPIDs(sData, sPID)
 
 function fncEvaluatePIDQuery(sData, sPID)
 {
-    //Ich brauche hier eine Erkennung, wie viele Bytes die Antwort enthält.
-    //Die Anzahld der Bytes muss im Array stehen!!!
-    //Die nächste Abfrage muss entsprechend umgestaltet werden!!!   TODO
+    //Make search pattern out of the query PID
     var sSearchPattern = parseInt(sPID.substr(0,2));
     sSearchPattern = (sSearchPattern + 40).toString();
     sSearchPattern = sSearchPattern + sPID.substr(2);
 
-    console.log("fncEvaluatePIDQuery, sSearchPattern" + sSearchPattern);
+    console.log("fncEvaluatePIDQuery, sData " + sData);
 
-    //TODO: Suche nach dem Searchpattern
-
-
-    console.log("fncEvaluatePIDQuery, sData" + sData);
-    console.log(sData.indexOf("4105").toString());
-
-
-    if (sData.indexOf("4105") === -1)
+    //Check if the search pattern is there. If this is not the case, we have incorrect data. Exit then...
+    if (sData.indexOf(sSearchPattern) === -1)
         return null;
 
-    sData = sData.substring((sData.indexOf("4105") + 4), 2);
+    //Read out how many data bytes there should be within the data.
+    //MEMO TO MYSELF: one byte consists of two characters. This is not ASCII!!!
+    var iBytesCount = arrayLookupPID[sPID.toLowerCase()].bytescount;
+
+    console.log("fncEvaluatePIDQuery, iBytesCount " + iBytesCount.toString());
+
+    //Get the real data. This comes behind the search pattern. Length is bytes multiplied by 2.
+    sData = sData.substr((sData.indexOf(sSearchPattern) + 4), (iBytesCount * 2));
     sData = sData.trim();
 
-    //Extract number of bytes from data
-    var iBytes = sData.length / 2;
+    console.log("fncEvaluatePIDQuery, real sData " + sData);
 
-    console.log("Cooling temp: " + arrayLookupPID["0105"].fncConvert(sData));
+    //Check if we have the expected length.
+    //If this is not the case, we have incorrect data. Exit then...
+    //It also might be that there is no data, e.g. the vehicle stands still and there is no speed or RPM.
+    if (sData.length !== (iBytesCount * 2))
+        return null;
 
+    return arrayLookupPID[sPID.toLowerCase()].fncConvert(sData);
 }
 
 
@@ -101,18 +104,18 @@ var sVoltage = "";
 
 var arrayPIDs =
 [
-    { pid: "0101", supported: false, fncConvert: "" },
-    { pid: "0104", supported: false, fncConvert: "" },
-    { pid: "0105", supported: false, fncConvert: fncConvertTemp },
-    { pid: "010a", supported: false, fncConvert: "" },
-    { pid: "010b", supported: false, fncConvert: "" },
-    { pid: "010c", supported: false, fncConvert: "" },
-    { pid: "010d", supported: false, fncConvert: "" },
-    { pid: "010e", supported: false, fncConvert: "" },
-    { pid: "010f", supported: false, fncConvert: "" },
-    { pid: "0110", supported: false, fncConvert: "" },
-    { pid: "0111", supported: false, fncConvert: "" },
-    { pid: "011c", supported: false, fncConvert: "" },
+    { pid: "0101", supported: false, bytescount: 4, fncConvert: "" },
+    { pid: "0104", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "0105", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
+    { pid: "010a", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "010b", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "010c", supported: false, bytescount: 2, fncConvert: fncConvertRPM },
+    { pid: "010d", supported: false, bytescount: 1, fncConvert: fncConvertSpeed },
+    { pid: "010e", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "010f", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
+    { pid: "0110", supported: false, bytescount: 2, fncConvert: "" },
+    { pid: "0111", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "011c", supported: false, bytescount: 1, fncConvert: "" },
 ];
 
 //Create lokup table for PID's.
@@ -151,14 +154,18 @@ function fncLeadingZeros( number, width )
 
 //Here come functions to convert PID hex strings into usable values.
 function fncConvertTemp(data)
-{
+{   
     return (parseInt(data, 16) - 40).toString();
 }
-function fncConvertRPM(data1, data2)
+function fncConvertRPM(data)
 {
-    return ((parseInt(data1, 16) * 256) + parseInt(data2, 16)) / 4;
+    //We expect two bytes here. Extract them from data.
+    var sByte1 = data.substr(0, 2);
+    var sByte2 = data.substr(2, 2);
+
+    return (((parseInt(sByte1, 16) * 256) + parseInt(sByte2, 16)) / 4).toString();
 }
 function fncConvertSpeed(data)
 {
-    return parseInt(byte, 16);
+    return (parseInt(data, 16)).toString();
 }

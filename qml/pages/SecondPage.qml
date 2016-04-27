@@ -26,6 +26,10 @@ Page
     property bool bPushSecondPage: true
     property int iWaitForCommand: 0
     property int iCommandQuery: 0
+    property string sEngineTemp: ""
+    property string sEngineRPM: ""
+    property string sVehicleSpeed: ""
+    property string sIntakeTemp: ""
 
     onStatusChanged:
     {
@@ -40,12 +44,13 @@ Page
     {
         //This timer is called cyclically to query ELM
         id: timQueryELMParameters
-        interval: 1000
+        interval: 500
         running: (status === PageStatus.Active)
         repeat: true
         onTriggered:
         {
             console.log("Timer second page");
+            var sReadValue = "";
 
             //Check if ELM has answered correctly to current AT command
             if (bCommandRunning == false)
@@ -62,12 +67,46 @@ Page
                 else if (iCommandQuery == 1)
                 {
                     //Evaluate answer from ELM
-                    var iValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0105");
-                    if (iValue !== null)
-                        labelEngineTemp.text = iValue;
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0105");
+                    if (sReadValue !== null)
+                        sEngineTemp = sReadValue;
 
                     //Send next command
-                    iCommandQuery = 0;
+                    iCommandQuery = 2;
+                    fncStartCommand("010C1");
+                }
+                else if (iCommandQuery == 2)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010C");
+                    if (sReadValue !== null)
+                        sEngineRPM = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 3;
+                    fncStartCommand("010D1");
+                }
+                else if (iCommandQuery == 3)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010D");
+                    if (sReadValue !== null)
+                        sVehicleSpeed = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 4;
+                    fncStartCommand("010F1");
+                }
+                else if (iCommandQuery == 4)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010F");
+                    if (sReadValue !== null)
+                        sVehicleSpeed = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 1;
+                    fncStartCommand("01051");
                 }
             }
             else
@@ -103,13 +142,21 @@ Page
 
             Label
             {
-                text: "Engine Temp:"
+                text: "Engine Temp: " + sEngineTemp + "C°";
             }
             Label
             {
-                id: labelEngineTemp
-                text: "Tester"
+                text: "Engine RPM: " + sEngineRPM;
             }
+            Label
+            {
+                text: "Vehicle Speed: " + sVehicleSpeed + "km/h";
+            }
+            Label
+            {
+                text: "Intake Air Temp: " + sIntakeTemp + "C°";
+            }
+
         }
     }
 }
