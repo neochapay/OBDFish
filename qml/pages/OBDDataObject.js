@@ -105,16 +105,16 @@ var sVoltage = "";
 var arrayPIDs =
 [
     { pid: "0101", supported: false, bytescount: 4, fncConvert: "" },
-    { pid: "0104", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "0104", supported: false, bytescount: 1, fncConvert: fncConvertLoad },
     { pid: "0105", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
     { pid: "010a", supported: false, bytescount: 1, fncConvert: "" },
-    { pid: "010b", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "010b", supported: false, bytescount: 1, fncConvert: fncConvertIntakePressure },
     { pid: "010c", supported: false, bytescount: 2, fncConvert: fncConvertRPM },
     { pid: "010d", supported: false, bytescount: 1, fncConvert: fncConvertSpeed },
-    { pid: "010e", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "010e", supported: false, bytescount: 1, fncConvert: fncConvertTimingAdvance },
     { pid: "010f", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
-    { pid: "0110", supported: false, bytescount: 2, fncConvert: "" },
-    { pid: "0111", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "0110", supported: false, bytescount: 2, fncConvert: fncConvertAirFlow },
+    { pid: "0111", supported: false, bytescount: 1, fncConvert: fncConvertThrottlePosition },
     { pid: "011c", supported: false, bytescount: 1, fncConvert: "" },
 ];
 
@@ -128,7 +128,7 @@ for (var i = 0; i < arrayPIDs.length; i++)
 
 
 //Here come helper functions. Eventually outsource to other file.
-//The function names should speak for themselves.
+//The function names should speak for themselves.0
 function fncIsValueHex(n)
 {
     return/^[0-9A-Fa-f]{1,64}$/.test(n);
@@ -168,4 +168,27 @@ function fncConvertRPM(data)
 function fncConvertSpeed(data)
 {
     return (parseInt(data, 16)).toString();
+}
+function fncConvertLoad(data)
+{
+    return (parseInt(data, 16) * (100 / 256)).toString();
+}
+function fncConvertIntakePressure(data)
+{
+    return (parseInt(data, 16)).toString();
+}
+function fncConvertTimingAdvance(data)
+{
+    return ((parseInt(data, 16) / 2) - 64).toString();
+}
+function fncConvertAirFlow(data)
+{
+    //We expect two bytes here. Extract them from data.
+    var sByte1 = data.substr(0, 2);
+    var sByte2 = data.substr(2, 2);
+    return (((parseInt(sByte1, 16) * 256.0) + parseInt(sByte2, 16)) / 100).toString();
+}
+function fncConvertThrottlePosition(data)
+{
+    return ((parseInt(data, 16) * 100) / 255).toString();
 }

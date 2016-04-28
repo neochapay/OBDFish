@@ -26,10 +26,15 @@ Page
     property bool bPushSecondPage: true
     property int iWaitForCommand: 0
     property int iCommandQuery: 0
+    property string sEngineLoad: ""
     property string sEngineTemp: ""
+    property string sIntakePressure: ""
     property string sEngineRPM: ""
     property string sVehicleSpeed: ""
-    property string sIntakeTemp: ""
+    property string sTimingAdvance: ""
+    property string sIntakeTemp: ""    
+    property string sAirFlowRate: ""
+    property string sThrottlePosition: ""
 
     onStatusChanged:
     {
@@ -62,9 +67,20 @@ Page
                 if (iCommandQuery == 0)
                 {
                     iCommandQuery = 1;
-                    fncStartCommand("01051");
+                    fncStartCommand("01041");
                 }
                 else if (iCommandQuery == 1)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0104");
+                    if (sReadValue !== null)
+                        sEngineLoad = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 2;
+                    fncStartCommand("01051");
+                }
+                else if (iCommandQuery == 2)
                 {
                     //Evaluate answer from ELM
                     sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0105");
@@ -72,10 +88,21 @@ Page
                         sEngineTemp = sReadValue;
 
                     //Send next command
-                    iCommandQuery = 2;
+                    iCommandQuery = 3;
+                    fncStartCommand("010B1");
+                }
+                else if (iCommandQuery == 3)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010B");
+                    if (sReadValue !== null)
+                        sIntakePressure = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 4;
                     fncStartCommand("010C1");
                 }
-                else if (iCommandQuery == 2)
+                else if (iCommandQuery == 4)
                 {
                     //Evaluate answer from ELM
                     sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010C");
@@ -83,10 +110,10 @@ Page
                         sEngineRPM = sReadValue;
 
                     //Send next command
-                    iCommandQuery = 3;
+                    iCommandQuery = 5;
                     fncStartCommand("010D1");
                 }
-                else if (iCommandQuery == 3)
+                else if (iCommandQuery == 5)
                 {
                     //Evaluate answer from ELM
                     sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010D");
@@ -94,19 +121,52 @@ Page
                         sVehicleSpeed = sReadValue;
 
                     //Send next command
-                    iCommandQuery = 4;
+                    iCommandQuery = 6;
+                    fncStartCommand("010E1");
+                }
+                else if (iCommandQuery == 6)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010E");
+                    if (sReadValue !== null)
+                        sTimingAdvance = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 7;
                     fncStartCommand("010F1");
                 }
-                else if (iCommandQuery == 4)
+                else if (iCommandQuery == 7)
                 {
                     //Evaluate answer from ELM
                     sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010F");
                     if (sReadValue !== null)
-                        sVehicleSpeed = sReadValue;
+                        sIntakeTemp = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 8;
+                    fncStartCommand("01101");
+                }
+                else if (iCommandQuery == 8)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0110");
+                    if (sReadValue !== null)
+                        sAirFlowRate = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 9;
+                    fncStartCommand("01111");
+                }
+                else if (iCommandQuery == 9)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0111");
+                    if (sReadValue !== null)
+                        sThrottlePosition = sReadValue;
 
                     //Send next command
                     iCommandQuery = 1;
-                    fncStartCommand("01051");
+                    fncStartCommand("01041");
                 }
             }
             else
@@ -142,11 +202,19 @@ Page
 
             Label
             {
+                text: "Engine Load: " + sEngineLoad + "%";
+            }
+            Label
+            {
                 text: "Engine Temp: " + sEngineTemp + "C°";
             }
             Label
             {
-                text: "Engine RPM: " + sEngineRPM;
+                text: "Intake Air Pressure: " + sIntakePressure + "kPa";
+            }
+            Label
+            {
+                text: "Engine RPM: " + sEngineRPM + "rpm";
             }
             Label
             {
@@ -154,9 +222,20 @@ Page
             }
             Label
             {
+                text: "Timing Advance: " + sTimingAdvance + "°";
+            }
+            Label
+            {
                 text: "Intake Air Temp: " + sIntakeTemp + "C°";
             }
-
+            Label
+            {
+                text: "Air Flow Rate: " + sAirFlowRate + "grams/sec";
+            }
+            Label
+            {
+                text: "Throttle Position: " + sThrottlePosition + "%";
+            }
         }
     }
 }
