@@ -41,7 +41,7 @@ Page
         if (status === PageStatus.Active && bPushSecondPage)
         {
             bPushSecondPage = false;
-            //pageStack.pushAttached(Qt.resolvedUrl("NumbersPage.qml"));
+            //pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
         }
     }
 
@@ -49,7 +49,7 @@ Page
     {
         //This timer is called cyclically to query ELM
         id: timQueryELMParameters
-        interval: 500
+        interval: 75
         running: (status === PageStatus.Active)
         repeat: true
         onTriggered:

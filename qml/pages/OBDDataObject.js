@@ -41,6 +41,8 @@ function fncSetSupportedPIDs(sData, sPID)
                     //Calculate
                     var sCurrentPID = sPID.substr(0,2) + fncLeadingZeros(iLoopVar.toString(16), 2);
 
+                    sSupportedPIDs0100 = sSupportedPIDs0100 + fncLeadingZeros(iLoopVar.toString(16), 2) + ", ";
+
                     //Write supported value to PID array
                     if (arrayLookupPID[sCurrentPID] !== undefined)
                         arrayLookupPID[sCurrentPID].supported = (sBinary === "1");
@@ -99,9 +101,6 @@ function fncGetFoundSupportedPIDs()
 }
 
 //Here come data variables or arrays
-var sELMVersion = "";
-var sVoltage = "";
-
 var arrayPIDs =
 [
     { pid: "0101", supported: false, bytescount: 4, fncConvert: "" },

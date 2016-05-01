@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2016 Jens Drescher, Germany
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "SharedResources.js" as SharedResources
@@ -6,12 +23,13 @@ import "OBDDataObject.js" as OBDDataObject
 
 Page
 {
-    id: page
+    id: id_page_mainpage
 
     property bool bFirstPage: true
     property bool bWaitForCommandSequenceEnd: false
     property int iInit: 0
     property int iWaitForCommand: 0   
+    property bool bBluetoothScanning: false
 
     onStatusChanged:
     {       
@@ -34,6 +52,11 @@ Page
             //Add device to data array
             SharedResources.fncAddDevice(sName, sAddress);
             id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
+        }
+        onScanFinished:
+        {
+            //Scan is finished now
+            bBluetoothScanning = false;
         }
     }
     Connections
@@ -100,7 +123,7 @@ Page
                     {
                         //Now, this is an ELM327. So far so good.
                         //Extract the version number.
-                        OBDDataObject.sELMVersion = (sAnswer.substr(sReceiveBuffer.indexOf(" v"))).trim();
+                        sELMVersion = (sAnswer.substr(sReceiveBuffer.indexOf(" v"))).trim();
                         
                         //Let's initialize this baby...
                         iInit = 2;
@@ -169,18 +192,11 @@ Page
                     //Evaluate if ELM found any supported PID
                     if (OBDDataObject.fncGetFoundSupportedPIDs())
                     {
-                        fncViewMessage("info", "Init is ready now!!!");
-                        console.log(OBDDataObject.arrayLookupPID["0104"].supported.toString());
-                        console.log(OBDDataObject.arrayLookupPID["0105"].supported.toString());
-                        console.log(OBDDataObject.arrayLookupPID["010a"].supported.toString());
-                        console.log(OBDDataObject.arrayLookupPID["010e"].supported.toString());
-
-                        labelInitOutcome.text = "Found masks";
+                        fncViewMessage("info", "Init is ready now!!!");                        
                     }
                     else
                     {
                         fncViewMessage("error", "No supported PID's!!!");
-                        labelInitOutcome.text = "Keine PID's!!!";
                     }
 
                     pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
@@ -223,67 +239,82 @@ Page
     {
         anchors.fill: parent
 
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-        PullDownMenu 
-        {
-            MenuItem 
-            {
-                text: qsTr("Show Page 2")
-                onClicked: pageStack.push(Qt.resolvedUrl("SecondPage.qml"))
-            }
-        }
-
-        contentHeight: column.height
+        contentHeight: id_Column_FirstCol.height + Theme.paddingLarge;
 
         Column
         {
-            id: column
+            id: id_Column_FirstCol
 
             width: parent.width
             spacing: Theme.paddingMedium
             PageHeader 
             {
-                title: qsTr("Bluetooth OBD Scanner")
+                title: qsTr("Welcome to OBDFish")
             }
-            Row
+
+            SectionHeader
+            {
+                text: qsTr("Scan for Bluetooth devices...")
+            }
+            Button
             {
                 width: parent.width
-
-                Button
+                text: qsTr("Start Scanning...")
+                visible: !bBluetoothScanning
+                onClicked:
                 {
-                    width: parent.width/3
-                    text: "Start Scan"
-                    onClicked:
-                    {
-                        SharedResources.fncDeleteDevices();
-                        id_BluetoothConnection.vStartDeviceDiscovery();
-                    }
+                    bBluetoothScanning = true;
+                    SharedResources.fncDeleteDevices();
+                    id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
+                    id_BluetoothConnection.vStartDeviceDiscovery();
                 }
-                Button
+                Image
                 {
-                    width: parent.width/3
-                    text: "Stop Scan"
-                    onClicked:
-                    {
-                        id_BluetoothConnection.vStopDeviceDiscovery();
-                    }
-                }
-                Button
-                {
-                    width: parent.width/3
-                    text: "Disconnect"
-                    onClicked:
-                    {
-                        id_BluetoothData.disconnect();
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: "image://theme/icon-m-bluetooth"
                 }
             }
-            Label
+            Button
             {
-                id: labelInitOutcome
-                text:""
+                width: parent.width
+                text: qsTr("Cancel")
+                visible: bBluetoothScanning
+                onClicked:
+                {
+                    id_BluetoothConnection.vStopDeviceDiscovery();
+                }
+                Image
+                {
+                    source: "image://theme/icon-m-sync"
+                    anchors.verticalCenter: parent.verticalCenter
+                    smooth: true
+                    NumberAnimation on rotation
+                    {
+                      running: bBluetoothScanning
+                      from: 0
+                      to: 360
+                      loops: Animation.Infinite
+                      duration: 2000
+                    }
+                }
             }
-
+            Button
+            {
+                width: parent.width
+                text: qsTr("Disconnect")
+                visible: bConnected
+                onClicked:
+                {
+                    //Save received data to file
+                    id_FileWriter.vWriteData(sDebugFileBuffer);
+                    id_BluetoothData.disconnect();
+                }
+                Image
+                {
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: "image://theme/icon-m-dismiss"
+                }
+            }
 
             //First step: check if it's an ELM327
             //Second step: send 4 init commands to ELM327
@@ -324,7 +355,12 @@ Page
                         color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                     onClicked:
-                    {                        
+                    {
+                        //Connect here. Prepeare some things.
+                        sSupportedPIDs0100 = "";
+                        sDebugFileBuffer= "";
+                        sELMVersion= "";
+
                         id_BluetoothData.connect(SharedResources.fncGetDeviceBTAddress(index), 1);
                     }
                 }

@@ -23,7 +23,6 @@ QT += bluetooth
 
 OTHER_FILES += qml/harbour-obdfish.qml \
     qml/cover/CoverPage.qml \
-    qml/pages/FirstPage.qml \
     qml/pages/SecondPage.qml \
     rpm/harbour-obdfish.changes.in \
     rpm/harbour-obdfish.spec \
@@ -51,5 +50,7 @@ HEADERS += \
 DISTFILES += \
     rpm/harbour-obdfish.spec \
     qml/pages/SharedResources.js \
-    qml/pages/OBDDataObject.js
+    qml/pages/OBDDataObject.js \
+    qml/pages/GeneralInfo.qml \
+    qml/pages/MainPage.qml
 

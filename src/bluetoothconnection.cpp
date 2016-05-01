@@ -34,11 +34,10 @@ BluetoothConnection::~BluetoothConnection()
 
 void BluetoothConnection::vStartDeviceDiscovery()
 {      
-    qDebug() << "Scanning...";
+    //qDebug() << "Scanning...";
     if (this->discoveryAgent->isActive())
         this->discoveryAgent->stop();
 
-    //this->discoveryAgent->setUuidFilter(uuid);
     this->discoveryAgent->start();
 }
 
@@ -47,14 +46,12 @@ void BluetoothConnection::vStopDeviceDiscovery()
     this->discoveryAgent->stop();
 }
 
-// In your local slot, read information about the found devices
+//Read information about the found devices
 void BluetoothConnection::vDeviceDiscovered(const QBluetoothDeviceInfo &device)
 {
-    qDebug() << "Found new device:" << device.name() << '(' << device.address().toString() << ')';
+    //qDebug() << "Found new device:" << device.name() << '(' << device.address().toString() << ')';
 
     emit deviceFound(device.name(), device.address().toString());
-
-    //this->bluetoothSocket->connectToService(QBluetoothAddress(device.address()), 1);
 
     /*
     qDebug() << "Discovered service on" << serviceInfo.device().name() << serviceInfo.device().address().toString();
@@ -68,5 +65,5 @@ void BluetoothConnection::vDeviceDiscovered(const QBluetoothDeviceInfo &device)
 
 void BluetoothConnection::vDiscoveryFinished()
 {
-    qDebug() << "Scanning finished";
+    emit this->scanFinished();
 }

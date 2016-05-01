@@ -10,7 +10,7 @@ void FileWriter::vWriteData(const QString &msg)
 {
     QFile file("/home/nemo/Documents/obd_log.txt");
 
-    if(file.open(QIODevice::Append))
+    if(file.open(QIODevice::WriteOnly))
     {
         QTextStream stream(&file);
         stream << msg << endl;

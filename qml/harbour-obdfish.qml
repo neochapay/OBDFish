@@ -30,6 +30,9 @@ ApplicationWindow
     property bool bConnected: false;
     property bool bCommandRunning: false;
     property string sReceiveBuffer: "";
+    property string sDebugFileBuffer: "";
+    property string sELMVersion: "";
+    property string sSupportedPIDs0100: "";
 
     //Init C++ classes, libraries
     BluetoothConnection{ id: id_BluetoothConnection }
@@ -43,6 +46,7 @@ ApplicationWindow
         onSigReadDataReady:     //This is called from C++ if there is data via bluetooth
         {
             //Check received data
+            sDebugFileBuffer = sDebugFileBuffer + sData;
             fncGetData(sData);
         }
     }
@@ -104,7 +108,7 @@ ApplicationWindow
     }
 
 
-    initialPage: Component { FirstPage { } }
+    initialPage: Component { MainPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: Orientation.All
     _defaultPageOrientations: Orientation.All

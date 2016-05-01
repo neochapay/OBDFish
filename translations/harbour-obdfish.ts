@@ -9,13 +9,44 @@
     </message>
 </context>
 <context>
-    <name>FirstPage</name>
+    <name>GeneralInfo</name>
     <message>
-        <source>Show Page 2</source>
+        <source>General Informations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Bluetooth OBD Scanner</source>
+        <source>OBD Adapter: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Battery Voltage: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supported PID&apos;s, Mode 01:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MainPage</name>
+    <message>
+        <source>Welcome to OBDFish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan for Bluetooth devices...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Scanning...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disconnect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
