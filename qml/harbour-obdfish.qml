@@ -28,6 +28,7 @@ ApplicationWindow
 {
     //Define global variables
     property bool bConnected: false;
+    property bool bConnecting: false;
     property bool bCommandRunning: false;
     property string sReceiveBuffer: "";
     property string sDebugFileBuffer: "";

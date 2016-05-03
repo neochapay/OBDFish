@@ -19,6 +19,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "SharedResources.js" as SharedResources
 import "OBDDataObject.js" as OBDDataObject
+import "../tools";
 
 
 Page
@@ -66,6 +67,7 @@ Page
         {            
             fncViewMessage("info", "Connected");
             bConnected = true;
+            bConnecting = false;
 
             //Now start with initialize process
             iInit = 1;
@@ -80,10 +82,12 @@ Page
         {
             fncViewMessage("info", "Disconnected");
             bConnected = false;
+            bConnecting = false;
         }
         onSigError:             //This is called from C++ if there was an error while establishing a bluetooth connection
         {
             fncViewMessage("error", "Error: " + sError);
+            bConnecting = false;
         }
     }
     Timer
@@ -199,7 +203,7 @@ Page
                         fncViewMessage("error", "No supported PID's!!!");
                     }
 
-                    pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
+                    pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
                     //pageStack.navigateForward();
                     //TODO
                 }
@@ -232,6 +236,15 @@ Page
                     iWaitForCommand++;
             }            
         }
+    }
+
+    Messagebox
+    {
+        id: messagebox
+        rotation: rotationSensor.angle
+        width: Math.abs(rotationSensor.angle) == 90 ? parent.height : parent.width
+        Behavior on rotation { SmoothedAnimation { duration: 500 } }
+        Behavior on width { SmoothedAnimation { duration: 500 } }
     }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
@@ -315,9 +328,27 @@ Page
                     source: "image://theme/icon-m-dismiss"
                 }
             }
+            Button
+            {
+                text: "MessageBox Test"
+                width: parent.width
+                onClicked:
+                {
+                    messagebox.showMessage("Hallo Welt!!!", 2000);
+                }
+            }
 
-            //First step: check if it's an ELM327
-            //Second step: send 4 init commands to ELM327
+
+
+
+            ProgressBar
+            {
+                id: progressBarConnectBT
+                width: parent.width
+                visible: bConnecting
+                indeterminate: true
+                label: "Connecting to OBD adapter..."
+            }
             ProgressBar
             {
                 id: progressBarInit
@@ -360,6 +391,7 @@ Page
                         sSupportedPIDs0100 = "";
                         sDebugFileBuffer= "";
                         sELMVersion= "";
+                        bConnecting = true;
 
                         id_BluetoothData.connect(SharedResources.fncGetDeviceBTAddress(index), 1);
                     }

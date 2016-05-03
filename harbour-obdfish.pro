@@ -52,5 +52,6 @@ DISTFILES += \
     qml/pages/SharedResources.js \
     qml/pages/OBDDataObject.js \
     qml/pages/GeneralInfo.qml \
-    qml/pages/MainPage.qml
+    qml/pages/MainPage.qml \
+    qml/tools/Messagebox.qml
 
