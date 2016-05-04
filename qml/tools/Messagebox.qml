@@ -6,8 +6,9 @@ BackgroundItem
     id: messagebox
     z: 20
     visible: messageboxVisibility.running
-    height: Theme.itemSizeSmall + Theme.paddingSmall
+    height: Theme.itemSizeSmall + Theme.paddingSmall + messageboxText.height
     anchors.centerIn: parent
+    width: parent.width
     onClicked: messageboxVisibility.stop()
 
     Rectangle
@@ -33,6 +34,8 @@ BackgroundItem
     Label
     {
         id: messageboxText
+        width: parent.width
+        wrapMode: Text.WordWrap
         color: Theme.primaryColor
         text: ""
         anchors.centerIn: parent

@@ -19,6 +19,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "SharedResources.js" as SharedResources
 import "OBDDataObject.js" as OBDDataObject
+import QtSensors 5.0 as Sensors
 import "../tools";
 
 
@@ -39,7 +40,8 @@ Page
             bFirstPage = false
 
             //DEBUG!!!
-            SharedResources.fncAddDevice("Neuer Adapter v2.1", "88:18:56:68:98:EB");
+            SharedResources.fncAddDevice("Neuer Adapter v1.5", "12:34:56:88:C7:B1");
+            SharedResources.fncAddDevice("Adapter v2.1", "88:18:56:68:98:EB");
             SharedResources.fncAddDevice("Alter Adapter v1.5", "98:76:54:32:10:00");
             id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
         }
@@ -200,7 +202,11 @@ Page
                     }
                     else
                     {
-                        fncViewMessage("error", "No supported PID's!!!");
+                        //fncViewMessage("error", "No supported PID's!!!");
+                        messagebox.showMessage("No supported PID's! Either turn on ignition/engine or your OBD adapter is faulty!", 10000);
+                        id_BluetoothData.disconnect();
+                        bWaitForCommandSequenceEnd = false;
+                        iInit = 0;
                     }
 
                     pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
@@ -212,7 +218,7 @@ Page
             {
                 //ELM has not yet answered. Or the answer is not complete.
                 //Check if wait time is over.
-                if (iWaitForCommand == 20)
+                if (iWaitForCommand == 40)
                 {
                     //Now it depends on which command we are waiting.                                       
                     if (iInit == 1)
@@ -235,6 +241,27 @@ Page
                 else
                     iWaitForCommand++;
             }            
+        }
+    }
+
+    Sensors.OrientationSensor
+    {
+        id: rotationSensor
+        active: true
+        property int angle: reading.orientation ? _getOrientation(reading.orientation) : 0
+        function _getOrientation(value)
+        {
+            switch (value)
+            {
+                case 2:
+                    return 180
+                case 3:
+                    return -90
+                case 4:
+                    return 90
+                default:
+                    return 0
+            }
         }
     }
 
@@ -327,19 +354,7 @@ Page
                     anchors.verticalCenter: parent.verticalCenter
                     source: "image://theme/icon-m-dismiss"
                 }
-            }
-            Button
-            {
-                text: "MessageBox Test"
-                width: parent.width
-                onClicked:
-                {
-                    messagebox.showMessage("Hallo Welt!!!", 2000);
-                }
-            }
-
-
-
+            }           
 
             ProgressBar
             {

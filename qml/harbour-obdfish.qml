@@ -94,13 +94,17 @@ ApplicationWindow
         //If the ELM is ready with sending a command, it always sends the same end characters.
         //These are three characters: two carriage returns (\r) followed by >
         //Check if the end characters are already in the buffer.
-        if (sReceiveBuffer.search(/\r>/g) !== -1)
+        if (sReceiveBuffer.search(/\r>/g) !== -1 || sReceiveBuffer.search(/\n>/g) !== -1)
         {
             //The ELM has completely answered the command.
             //Received data is now in sReceiveBuffer.
 
             //Cut off the end characters
-            sReceiveBuffer = sReceiveBuffer.substring(0, sReceiveBuffer.search(/\r>/g));
+            if (sReceiveBuffer.search(/\r>/g) !== -1)
+                sReceiveBuffer = sReceiveBuffer.substring(0, sReceiveBuffer.search(/\r>/g));
+            else if (sReceiveBuffer.search(/\n>/g) !== -1)
+                sReceiveBuffer = sReceiveBuffer.substring(0, sReceiveBuffer.search(/\n>/g));
+
             sReceiveBuffer = sReceiveBuffer.trim();
 
             //Set ready bit
