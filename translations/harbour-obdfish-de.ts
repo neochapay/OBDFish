@@ -2,6 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>AboutPage</name>
+    <message>
+        <source>About OBDFish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD ELM327 car diagnostic reader application for Sailfish OS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date: 07.05.2016</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>License: GPLv3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source code:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CoverPage</name>
     <message>
         <source>My Cover</source>
@@ -47,6 +70,10 @@
     </message>
     <message>
         <source>Disconnect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -19,8 +19,6 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "SharedResources.js" as SharedResources
 import "OBDDataObject.js" as OBDDataObject
-import QtSensors 5.0 as Sensors
-import "../tools";
 
 
 Page
@@ -203,7 +201,7 @@ Page
                     else
                     {
                         //fncViewMessage("error", "No supported PID's!!!");
-                        messagebox.showMessage("No supported PID's! Either turn on ignition/engine or your OBD adapter is faulty!", 10000);
+                        fncShowMessage("No supported PID's! Either turn on ignition/engine or your OBD adapter is faulty!", 10000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
@@ -244,43 +242,21 @@ Page
         }
     }
 
-    Sensors.OrientationSensor
-    {
-        id: rotationSensor
-        active: true
-        property int angle: reading.orientation ? _getOrientation(reading.orientation) : 0
-        function _getOrientation(value)
-        {
-            switch (value)
-            {
-                case 2:
-                    return 180
-                case 3:
-                    return -90
-                case 4:
-                    return 90
-                default:
-                    return 0
-            }
-        }
-    }
-
-    Messagebox
-    {
-        id: messagebox
-        rotation: rotationSensor.angle
-        width: Math.abs(rotationSensor.angle) == 90 ? parent.height : parent.width
-        Behavior on rotation { SmoothedAnimation { duration: 500 } }
-        Behavior on width { SmoothedAnimation { duration: 500 } }
-    }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable
     {
         anchors.fill: parent
-
         contentHeight: id_Column_FirstCol.height + Theme.paddingLarge;
 
+        PullDownMenu
+        {
+            MenuItem
+            {
+                text: qsTr("About")
+                onClicked: {pageStack.push(Qt.resolvedUrl("AboutPage.qml"))}
+            }
+        }
         Column
         {
             id: id_Column_FirstCol
@@ -300,7 +276,7 @@ Page
             {
                 width: parent.width
                 text: qsTr("Start Scanning...")
-                visible: !bBluetoothScanning
+                visible: !bBluetoothScanning && !bConnecting && !bConnected
                 onClicked:
                 {
                     bBluetoothScanning = true;

@@ -53,5 +53,7 @@ DISTFILES += \
     qml/pages/OBDDataObject.js \
     qml/pages/GeneralInfo.qml \
     qml/pages/MainPage.qml \
-    qml/tools/Messagebox.qml
+    qml/tools/Messagebox.qml \
+    qml/pages/AboutPage.qml \
+    qml/obdfish.png
 

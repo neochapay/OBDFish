@@ -23,6 +23,8 @@ import org.nemomobile.notifications 1.0
 import bluetoothconnection 1.0
 import bluetoothdata 1.0
 import filewriter 1.0
+import QtSensors 5.0 as Sensors
+import "tools"
 
 ApplicationWindow
 {
@@ -112,6 +114,40 @@ ApplicationWindow
         }
     }
 
+    function fncShowMessage(sMessage, iTime)
+    {
+        messagebox.showMessage(sMessage, iTime);
+    }
+
+    Sensors.OrientationSensor
+    {
+        id: rotationSensor
+        active: true
+        property int angle: reading.orientation ? _getOrientation(reading.orientation) : 0
+        function _getOrientation(value)
+        {
+            switch (value)
+            {
+                case 2:
+                    return 180
+                case 3:
+                    return -90
+                case 4:
+                    return 90
+                default:
+                    return 0
+            }
+        }
+    }
+
+    Messagebox
+    {
+        id: messagebox
+        rotation: rotationSensor.angle
+        width: Math.abs(rotationSensor.angle) == 90 ? parent.height : parent.width
+        Behavior on rotation { SmoothedAnimation { duration: 500 } }
+        Behavior on width { SmoothedAnimation { duration: 500 } }
+    }
 
     initialPage: Component { MainPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
