@@ -35,7 +35,6 @@ ApplicationWindow
     property string sReceiveBuffer: "";
     property string sDebugFileBuffer: "";
     property string sELMVersion: "";
-    property string sSupportedPIDs0100: "";
 
     //Init C++ classes, libraries
     BluetoothConnection{ id: id_BluetoothConnection }

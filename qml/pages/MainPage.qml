@@ -379,7 +379,7 @@ Page
                     onClicked:
                     {
                         //Connect here. Prepeare some things.
-                        sSupportedPIDs0100 = "";
+                        OBDDataObject.sSupportedPIDs0100 = "";
                         sDebugFileBuffer= "";
                         sELMVersion= "";
                         bConnecting = true;

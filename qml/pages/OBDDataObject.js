@@ -18,12 +18,12 @@ function fncSetSupportedPIDs(sData, sPID)
         var iFirstByte = parseInt(sPID.substr(0,2));
         iFirstByte = iFirstByte + 40;
 
-        //console.log("Looking for first byte: " + iFirstByte);
+        console.log("Looking for first byte: " + iFirstByte);
 
         //Try to find that first byte in the ELM answer.
         sData = sData.substring(sData.indexOf(iFirstByte.toString()));
 
-        //console.log("Found supported PID: " + sPID + " " + sData);
+        console.log("Found supported PID: " + sPID + " " + sData);
 
         //Now, if this is a PID in the 0100 area, we can sort this into the corresponding array.
         if (sPID.substr(0, 2) === "01")
@@ -31,7 +31,9 @@ function fncSetSupportedPIDs(sData, sPID)
             //Separate the mask bytes into an array. Leave out the first four bytes.
             var sHexString = sData.substring(4).split('');
             //LoopVar is an index for the last two characters of the PID
-            var iLoopVar = parseInt(sPID.substr(2,2)) + 1;
+            var iLoopVar = (parseInt(sPID.substr(2,2), 16)) + 1;
+
+            console.log("iLoopVar: " + iLoopVar);
 
             sHexString.forEach(function(hex)
             {
@@ -41,7 +43,15 @@ function fncSetSupportedPIDs(sData, sPID)
                     //Calculate
                     var sCurrentPID = sPID.substr(0,2) + fncLeadingZeros(iLoopVar.toString(16), 2);
 
-                    sSupportedPIDs0100 = sSupportedPIDs0100 + fncLeadingZeros(iLoopVar.toString(16), 2) + ", ";
+                    //TODO: Das letzte Byte, z.B. 20 bekommt man hier auch. Daher weiss man ob man 0120 überhaupt benötigt!!!
+                    //Das sollte ich noch einbauen. So kann man die INIT Sequenz verkürzen!!!
+
+                    console.log("iLoopVar: " + iLoopVar);
+                    console.log("sCurrentPID: " + sCurrentPID);
+                    console.log("sBinary: " + sBinary);
+
+                    if (sBinary === "1")
+                      sSupportedPIDs0100 = sSupportedPIDs0100 + fncLeadingZeros(iLoopVar.toString(16), 2) + ", ";
 
                     //Write supported value to PID array
                     if (arrayLookupPID[sCurrentPID] !== undefined)
@@ -101,6 +111,9 @@ function fncGetFoundSupportedPIDs()
 }
 
 //Here come data variables or arrays
+
+var sSupportedPIDs0100 = "";
+
 var arrayPIDs =
 [
     { pid: "0101", supported: false, bytescount: 4, fncConvert: "" },
@@ -117,7 +130,7 @@ var arrayPIDs =
     { pid: "011c", supported: false, bytescount: 1, fncConvert: "" },
 ];
 
-//Create lokup table for PID's.
+//Create lookup table for PID's.
 //This is a helper table to easier access the main PID table.
 var arrayLookupPID = {};
 for (var i = 0; i < arrayPIDs.length; i++)

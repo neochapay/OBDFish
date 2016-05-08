@@ -69,7 +69,7 @@ Page
                     fncShowMessage("executing Whte_rbt.obj...", 1000);
                 else if (iCountWhtRbbt == 10)
                 {
-                    fncShowMessage("Developed by Integrated Computer Systems, Inc. Cambnridge Mass<br>Project Supervisor: Dennis Nedry<br>Chief Programmer: Jens Drescher<br>\u00A9 Jurassic Parc Inc. All Rights Reserved", 16000);
+                    fncShowMessage("Developed by Integrated Computer Systems, Inc. Cambridge Mass<br>Project Supervisor: Dennis Nedry<br>Chief Programmer: Jens Drescher<br>\u00A9 Jurassic Parc Inc. All Rights Reserved", 16000);
                     iCountWhtRbbt = 1;
                 }
 

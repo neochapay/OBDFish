@@ -17,6 +17,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "OBDDataObject.js" as OBDDataObject
 
 Page
 {
@@ -70,7 +71,7 @@ Page
                 width: parent.width
                 font.pixelSize: Theme.fontSizeExtraSmall
                 wrapMode: Text.WordWrap
-                text: sSupportedPIDs0100;
+                text: OBDDataObject.sSupportedPIDs0100;
             }
         }
     }
