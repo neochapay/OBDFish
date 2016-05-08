@@ -1,0 +1,20 @@
+- Supported PID's 0100:
+	Am Ende jeden Bereichs ist bekannt ob der jeweils nächste unterstützt ist.
+	Es muss in der Funktion fncSetSupportedPIDs zurückgeliefert werden, ob der nächste Block gelesen werden muss.
+	In der Init-Sequenz in MainPage.qml muss dann einiges umgebaut werden.
+
+- Auf der Hauptseite MainPage.qml einbau einer Liste: bekannte OBD Adapter
+	Bekannte OBD Adapter in eine Liste eintragen und Speichern
+	Beim Starten der App bekannte Adapter aus der Liste laden und anzeigen.
+
+- Eine Seite für Statische Daten
+	- Adapter ID
+	- 
+- Mehrere Seiten für Dynamische Daten
+	- Diese Seiten haben je 6 Parameter
+	- Die Seiten sind konfigurierbar (6 DropDown Boxen)
+	- Wenn ein Parameter nicht unterstüzt ist: "Nicht unterstüzt" anzeigen
+	- 
+
+- Profile für Autos anlegen
+	- Die Konfiguration der Dynamischen Seiten wird hier abgespeichert

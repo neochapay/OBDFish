@@ -169,7 +169,6 @@ Page
                 else if (iInit == 7)
                 {
                     iInit = 8;
-                    //Evaluate and save answer from ELM
                     OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0100");
 
                     progressBarInit.label = "Supported PID's 0121-0140...";
@@ -178,15 +177,23 @@ Page
                 else if (iInit == 8)
                 {
                     iInit = 9;
-                    //Evaluate answer from ELM
                     OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0120");
 
-                    progressBarInit.label = "Supported PID's 0900-0920...";
-                    fncStartCommand("0900");
+                    progressBarInit.label = "Supported PID's 0141-0160...";
+                    fncStartCommand("0140");
                 }
                 else if (iInit == 9)
                 {
                     iInit = 10;
+                    //Evaluate answer from ELM
+                    OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0140");
+
+                    progressBarInit.label = "Supported PID's 0900-0920...";
+                    fncStartCommand("0900");
+                }
+                else if (iInit == 10)
+                {
+                    iInit = 11;
                     //Evaluate answer from ELM
                     OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0900");
 
@@ -344,7 +351,7 @@ Page
             {
                 id: progressBarInit
                 width: parent.width
-                maximumValue: 10
+                maximumValue: 11
                 valueText: value + "/" + maximumValue
                 label: ""
                 visible: (iInit > 0)
