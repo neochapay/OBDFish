@@ -13,7 +13,9 @@ function fncSetSupportedPIDs(sData, sPID)
         //console.log("No supported PID's: " + sPID);
     }
     else
-    {                        
+    {
+        var sNextSectionIsSupported = false;
+
         //Calculate first byte of PID mask
         var iFirstByte = parseInt(sPID.substr(0,2));
         iFirstByte = iFirstByte + 40;
@@ -35,20 +37,26 @@ function fncSetSupportedPIDs(sData, sPID)
 
             console.log("iLoopVar: " + iLoopVar);
 
-            sHexString.forEach(function(hex)
+            sHexString.forEach(function(hex, hex_index)
             {
                 var sBinString = fncHexToBin(hex).split('');
-                sBinString.forEach(function(sBinary)
+                sBinString.forEach(function(sBinary, sBinary_index)
                 {
                     //Calculate
                     var sCurrentPID = sPID.substr(0,2) + fncLeadingZeros(iLoopVar.toString(16), 2);
 
-                    //TODO: Das letzte Byte, z.B. 20 bekommt man hier auch. Daher weiss man ob man 0120 überhaupt benötigt!!!
-                    //Das sollte ich noch einbauen. So kann man die INIT Sequenz verkürzen!!!
+                    //Check if this is the last iteration.
+                    if (hex_index === (sHexString.length - 1) && sBinary_index === (sBinString.length - 1))
+                    {
+                        //So this is the last bit.
+                        //It shows if the next section is supported.
+                        //Give this information back.
+                        sNextSectionIsSupported = (sBinary === "1");
+                    }
 
                     console.log("iLoopVar: " + iLoopVar);
                     console.log("sCurrentPID: " + sCurrentPID);
-                    console.log("sBinary: " + sBinary);
+                    console.log("sBinary: " + sBinary);                    
 
                     if (sBinary === "1")
                       sSupportedPIDs0100 = sSupportedPIDs0100 + fncLeadingZeros(iLoopVar.toString(16), 2) + ", ";
@@ -60,6 +68,9 @@ function fncSetSupportedPIDs(sData, sPID)
                     iLoopVar++;
                 });
             });
+
+            console.log("sNextSectionIsSupported: " + sNextSectionIsSupported.toString());
+            return sNextSectionIsSupported;
         }
     }
 }
@@ -127,8 +138,56 @@ var arrayPIDs =
     { pid: "010f", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
     { pid: "0110", supported: false, bytescount: 2, fncConvert: fncConvertAirFlow },
     { pid: "0111", supported: false, bytescount: 1, fncConvert: fncConvertThrottlePosition },
-    { pid: "011c", supported: false, bytescount: 1, fncConvert: "" },
+    { pid: "011c", supported: false, bytescount: 1, fncConvert: fncConvertBits },
 ];
+
+//Here come some enums for PID data
+var OBDStandards =
+{
+    1: "OBD-II as defined by the CARB",
+    2: "OBD as defined by the EPA",
+    3: "OBD and OBD-II",
+    4: "OBD-I",
+    5: "Not OBD compliant",
+    6: "EOBD (Europe)",
+    7: "EOBD and OBD-II",
+    8: "EOBD and OBD",
+    9: "EOBD, OBD and OBD II",
+    10: "JOBD (Japan)",
+    11: "JOBD and OBD II",
+    12: "JOBD and EOBD",
+    13: "JOBD, EOBD, and OBD II",
+    14: "Reserved",
+    15: "Reserved",
+    16: "Reserved",
+    17: "Engine Manufacturer Diagnostics (EMD)",
+    18: "Engine Manufacturer Diagnostics Enhanced (EMD+)",
+    19: "Heavy Duty On-Board Diagnostics (Child/Partial) (HD OBD-C)",
+    20: "Heavy Duty On-Board Diagnostics (HD OBD)",
+    21: "World Wide Harmonized OBD (WWH OBD)",
+    22: "Reserved",
+    23: "Heavy Duty Euro OBD Stage I without NOx control (HD EOBD-I)",
+    24: "Heavy Duty Euro OBD Stage I with NOx control (HD EOBD-I N)",
+    25: "Heavy Duty Euro OBD Stage II without NOx control (HD EOBD-II)",
+    26: "Heavy Duty Euro OBD Stage II with NOx control (HD EOBD-II N)",
+    27: "Reserved",
+    28: "Brazil OBD Phase 1 (OBDBr-1)",
+    29: "Brazil OBD Phase 2 (OBDBr-2)",
+    30: "Korean OBD (KOBD)",
+    31: "India OBD I (IOBD I)",
+    32: "India OBD II (IOBD II)",
+    33: "Heavy Duty Euro OBD Stage VI (HD EOBD-IV)",
+    34: "Undefined"
+}
+
+var FuelSystem =
+{
+    1: "Open loop due to insufficient engine temperature",
+    2: "Closed loop, using oxygen sensor feedback to determine fuel mix",
+    4: "Open loop due to engine load OR fuel cut due to deceleration",
+    8: "Open loop due to system failure",
+    16: "Closed loop, using at least one oxygen sensor but there is a fault in the feedback system"
+}
 
 //Create lookup table for PID's.
 //This is a helper table to easier access the main PID table.
@@ -203,4 +262,8 @@ function fncConvertAirFlow(data)
 function fncConvertThrottlePosition(data)
 {
     return ((parseInt(data, 16) * 100) / 255).toString();
+}
+function fncConvertBits(data)
+{
+    return parseInt(data, 2);
 }

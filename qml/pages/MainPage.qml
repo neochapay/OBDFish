@@ -88,6 +88,7 @@ Page
         {
             fncViewMessage("error", "Error: " + sError);
             bConnecting = false;
+            bConnecting = false;
         }
     }
     Timer

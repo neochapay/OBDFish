@@ -42,11 +42,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Battery Voltage: </source>
+        <source>Supported PID&apos;s, Mode 01:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Supported PID&apos;s, Mode 01:</source>
+        <source>OBD Standard: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

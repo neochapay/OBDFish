@@ -54,7 +54,6 @@ Page
         repeat: true
         onTriggered:
         {
-            console.log("Timer second page");
             var sReadValue = "";
 
             //Check if ELM has answered correctly to current AT command

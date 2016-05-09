@@ -24,7 +24,10 @@ Page
     allowedOrientations: Orientation.All
     id: id_page_generalinfo
     property bool bPushGeneralInfoPage: true
-    property string sVoltage: ""
+    property int iCommandSequence: 0
+    property bool bWaitForCommandSequenceEnd: false
+    property int iWaitForCommand: 0
+    property string sOBDStandard: ""
 
     onStatusChanged:
     {
@@ -32,6 +35,66 @@ Page
         {
             bPushGeneralInfoPage = false;
             pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
+
+            //Now start with reading static data from ELM
+            //TODO: Abfrage ob supported!!!
+            iCommandSequence = 1;
+            iWaitForCommand = 0;
+            fncStartCommand("011C1");
+            bWaitForCommandSequenceEnd = true;
+        }
+    }
+
+    Timer
+    {
+        //This is called, everytime an AT command is send.
+        //The timer waits for ELM to answer the command.
+        id: timWaitForCommandSequenceEnd
+        interval: 100
+        running: bWaitForCommandSequenceEnd
+        repeat: true
+        onTriggered:
+        {
+            var sReadValue = "";
+
+            //Check if ELM has answered correctly to current AT command
+            if (bCommandRunning == false)
+            {
+                iWaitForCommand = 0;
+
+                console.log("timWaitForCommandSequenceEnd step:  " + iCommandSequence);
+
+                if (iCommandSequence == 1)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceivsReadValueeBuffer, "011C");
+                    if (sReadValue !== null)
+                    {
+                        sReadValue = parseInt(sReadValue);
+
+                        if (sReadValue >= 1 && sReadValue <= 33)
+                           sOBDStandard = OBDDataObject.OBDStandards[sReadValue];
+                        else
+                           sOBDStandard = OBDDataObject.OBDStandards[34]; //That's undefined
+                    }
+
+                    //Finish for now
+                    bWaitForCommandSequenceEnd = false;
+                }
+            }
+            else
+            {
+                //ELM has not yet answered. Or the answer is not complete.
+                //Check if wait time is over.
+                if (iWaitForCommand == 40)
+                {
+                    iCommandSequence = 0;
+                    bWaitForCommandSequenceEnd = false;
+                    fncViewMessage("error", "Communication timeout!!!");
+                }
+                else
+                    iWaitForCommand++;
+            }
         }
     }
 
@@ -55,11 +118,11 @@ Page
             {
                 width: parent.width
                 text: qsTr("OBD Adapter: ") + sELMVersion;
-            }
+            }            
             Label
             {
                 width: parent.width
-                text: qsTr("Battery Voltage: ") + sVoltage + "V";
+                text: qsTr("OBD Standard: ") + sOBDStandard;
             }
             Label
             {
