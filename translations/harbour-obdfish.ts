@@ -32,13 +32,23 @@
     </message>
 </context>
 <context>
+    <name>Dyn1Page</name>
+    <message>
+        <source>Dynamic Values 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Dyn2Page</name>
+    <message>
+        <source>Dynamic Values 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeneralInfo</name>
     <message>
         <source>General Informations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OBD Adapter: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -47,6 +57,14 @@
     </message>
     <message>
         <source>OBD Standard: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD Adapter: ELM327 </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vehicle Identification Number: &lt;br&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -74,13 +92,6 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>SecondPage</name>
-    <message>
-        <source>OBD Drive</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

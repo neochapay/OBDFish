@@ -27,20 +27,19 @@ Page
     property int iCommandSequence: 0
     property bool bWaitForCommandSequenceEnd: false
     property int iWaitForCommand: 0
-    property string sOBDStandard: ""
+    property string sOBDStandard: "Not supported"
+    property string sVIN: "Not supported"
 
     onStatusChanged:
     {
         if (status === PageStatus.Active && bPushGeneralInfoPage)
         {
             bPushGeneralInfoPage = false;
-            pageStack.pushAttached(Qt.resolvedUrl("SecondPage.qml"));
+            pageStack.pushAttached(Qt.resolvedUrl("Dyn1Page.qml"));
 
             //Now start with reading static data from ELM
-            //TODO: Abfrage ob supported!!!
             iCommandSequence = 1;
             iWaitForCommand = 0;
-            fncStartCommand("011C1");
             bWaitForCommandSequenceEnd = true;
         }
     }
@@ -50,7 +49,7 @@ Page
         //This is called, everytime an AT command is send.
         //The timer waits for ELM to answer the command.
         id: timWaitForCommandSequenceEnd
-        interval: 100
+        interval: 250
         running: bWaitForCommandSequenceEnd
         repeat: true
         onTriggered:
@@ -62,26 +61,41 @@ Page
             {
                 iWaitForCommand = 0;
 
-                console.log("timWaitForCommandSequenceEnd step:  " + iCommandSequence);
+                console.log("timWaitForCommandSequenceEnd step: " + iCommandSequence);
 
                 if (iCommandSequence == 1)
                 {
+                    iCommandSequence = 2;
+                    fncStartCommand("011C1");
+                }
+                else if (iCommandSequence == 2)
+                {                                        
                     //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceivsReadValueeBuffer, "011C");
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "011C");
                     if (sReadValue !== null)
-                    {
-                        sReadValue = parseInt(sReadValue);
+                        sOBDStandard = sReadValue;
 
-                        if (sReadValue >= 1 && sReadValue <= 33)
-                           sOBDStandard = OBDDataObject.OBDStandards[sReadValue];
-                        else
-                           sOBDStandard = OBDDataObject.OBDStandards[34]; //That's undefined
-                    }
+                    iCommandSequence = 3;
+                    fncStartCommand("09011");
+                }
+                else if (iCommandSequence == 3)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0901");
+                    console.log("sReadValue: " + sReadValue);
+
+                    iCommandSequence = 4;
+                    fncStartCommand("09021");
+                }
+                else if (iCommandSequence == 4)
+                {
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0902");
+                    console.log("sReadValue: " + sReadValue);                    
 
                     //Finish for now
                     bWaitForCommandSequenceEnd = false;
                 }
-            }
+            }            
             else
             {
                 //ELM has not yet answered. Or the answer is not complete.
@@ -117,12 +131,17 @@ Page
             Label
             {
                 width: parent.width
-                text: qsTr("OBD Adapter: ") + sELMVersion;
+                text: qsTr("OBD Adapter: ELM327 ") + sELMVersion;
             }            
             Label
             {
                 width: parent.width
                 text: qsTr("OBD Standard: ") + sOBDStandard;
+            }
+            Label
+            {
+                width: parent.width
+                text: qsTr("Vehicle Identification Number: <br>") + sVIN;
             }
             Label
             {

@@ -2,9 +2,11 @@
 	Am Ende jeden Bereichs ist bekannt ob der jeweils nächste unterstützt ist.
 	Es muss in der Funktion fncSetSupportedPIDs zurückgeliefert werden, ob der nächste Block gelesen werden muss.
 	In der Init-Sequenz in MainPage.qml muss dann einiges umgebaut werden.
-	NEUE ERKENNTNIS: Eigentlich ist das doof. Kann man sicher sein, das nicht zwischendrin ein Bereich ausgelassen wird?
+	NEUE ERKENNTNIS: Eigentlich ist das doof. Kann man sicher sein, das nicht zwischendrin ein Bereich ausgelassen wird? Habs wieder gelöscht!!!
 
 - Die "Supported Info" wird noch nicht ausgewertet. Beim Lesen von PID's muss zuerst geschaut werden, ob die jeweilige PID überhaupt unterstützt wird.
+	Das sollte in der Funktion fncStartCommand realisiert werden. Diese Funktion liefert dann zurück ob die PID unterstützt wird.
+	Wenn die Funktion feststellt, das die PID nicht unterstützt wird, kann sie in den ReceiveBuffer "NoData" schreiben. Dann ist alles generisch!!!
 
 - Auf der Hauptseite MainPage.qml einbau einer Liste: bekannte OBD Adapter
 	Bekannte OBD Adapter in eine Liste eintragen und Speichern
@@ -12,7 +14,9 @@
 
 - Eine Seite für Statische Daten
 	- Adapter ID
-	- 
+	- OBD Standard
+	- VIN mit Auswertung über Webseite
+
 - Mehrere Seiten für Dynamische Daten
 	- Diese Seiten haben je 6 Parameter
 	- Die Seiten sind konfigurierbar (6 DropDown Boxen)

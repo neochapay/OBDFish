@@ -13,9 +13,7 @@ function fncSetSupportedPIDs(sData, sPID)
         //console.log("No supported PID's: " + sPID);
     }
     else
-    {
-        var sNextSectionIsSupported = false;
-
+    {      
         //Calculate first byte of PID mask
         var iFirstByte = parseInt(sPID.substr(0,2));
         iFirstByte = iFirstByte + 40;
@@ -37,22 +35,13 @@ function fncSetSupportedPIDs(sData, sPID)
 
             console.log("iLoopVar: " + iLoopVar);
 
-            sHexString.forEach(function(hex, hex_index)
+            sHexString.forEach(function(hex)
             {
                 var sBinString = fncHexToBin(hex).split('');
-                sBinString.forEach(function(sBinary, sBinary_index)
+                sBinString.forEach(function(sBinary)
                 {
                     //Calculate
-                    var sCurrentPID = sPID.substr(0,2) + fncLeadingZeros(iLoopVar.toString(16), 2);
-
-                    //Check if this is the last iteration.
-                    if (hex_index === (sHexString.length - 1) && sBinary_index === (sBinString.length - 1))
-                    {
-                        //So this is the last bit.
-                        //It shows if the next section is supported.
-                        //Give this information back.
-                        sNextSectionIsSupported = (sBinary === "1");
-                    }
+                    var sCurrentPID = sPID.substr(0,2) + fncLeadingZeros(iLoopVar.toString(16), 2);                    
 
                     console.log("iLoopVar: " + iLoopVar);
                     console.log("sCurrentPID: " + sCurrentPID);
@@ -67,10 +56,7 @@ function fncSetSupportedPIDs(sData, sPID)
 
                     iLoopVar++;
                 });
-            });
-
-            console.log("sNextSectionIsSupported: " + sNextSectionIsSupported.toString());
-            return sNextSectionIsSupported;
+            });          
         }
     }
 }
@@ -103,8 +89,10 @@ function fncEvaluatePIDQuery(sData, sPID)
     //Check if we have the expected length.
     //If this is not the case, we have incorrect data. Exit then...
     //It also might be that there is no data, e.g. the vehicle stands still and there is no speed or RPM.
+    //TODO: Schlecht, das hier ein NULL zurückgegeben wird. Erst mal einen leeren String zurückgeben.
+    //Ausserdem sollte das vorher abgefangen werden, wenn eine PID nicht unterstützt wird!!!
     if (sData.length !== (iBytesCount * 2))
-        return null;
+        return "";
 
     return arrayLookupPID[sPID.toLowerCase()].fncConvert(sData);
 }
@@ -138,7 +126,9 @@ var arrayPIDs =
     { pid: "010f", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
     { pid: "0110", supported: false, bytescount: 2, fncConvert: fncConvertAirFlow },
     { pid: "0111", supported: false, bytescount: 1, fncConvert: fncConvertThrottlePosition },
-    { pid: "011c", supported: false, bytescount: 1, fncConvert: fncConvertBits },
+    { pid: "011c", supported: false, bytescount: 1, fncConvert: fncConvertOBDStandard },
+    { pid: "0901", supported: false, bytescount: 1, fncConvert: fncConvertVINCount },
+    { pid: "0902", supported: false, bytescount: 1, fncConvert: fncConvertVIN }
 ];
 
 //Here come some enums for PID data
@@ -242,6 +232,7 @@ function fncConvertSpeed(data)
 }
 function fncConvertLoad(data)
 {
+    //TODO: Here round to one decimal place
     return (parseInt(data, 16) * (100 / 256)).toString();
 }
 function fncConvertIntakePressure(data)
@@ -261,9 +252,47 @@ function fncConvertAirFlow(data)
 }
 function fncConvertThrottlePosition(data)
 {
+    //TODO: Here round to one decimal place
     return ((parseInt(data, 16) * 100) / 255).toString();
 }
-function fncConvertBits(data)
+function fncConvertOBDStandard(data)
 {
-    return parseInt(data, 2);
+    data = parseInt(data);
+
+    if (data >= 1 && data <= 33)
+       return OBDStandards[data];
+    else
+       return OBDStandards[34]; //That's undefined
+}
+function fncConvertVINCount(data)
+{
+    data = parseInt(data);
+
+    //Set byte count for the VIN number
+    arrayLookupPID["0902"].bytescount = data;
+
+    return data.toString();
+}
+function fncConvertVIN(data)
+{
+    var sVIN = "";
+
+    console.log("fncConvertVIN, data: " + data);
+
+    data = data.split('');
+
+    data.forEach(function(sTMP)
+    {
+        console.log("fncConvertVIN, sTMP: " + sTMP);
+
+        var sTester = String.fromCharCode(sTMP);
+
+        console.log("fncConvertVIN, sTester: " + sTester);
+
+        sVIN = sVIN + sTester;
+    });
+
+    console.log("fncConvertVIN, sVIN: " + sVIN);
+
+    return sVIN;
 }

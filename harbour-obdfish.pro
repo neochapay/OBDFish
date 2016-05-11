@@ -23,7 +23,6 @@ QT += bluetooth
 
 OTHER_FILES += qml/harbour-obdfish.qml \
     qml/cover/CoverPage.qml \
-    qml/pages/SecondPage.qml \
     rpm/harbour-obdfish.changes.in \
     rpm/harbour-obdfish.spec \
     rpm/harbour-obdfish.yaml \
@@ -55,5 +54,7 @@ DISTFILES += \
     qml/pages/MainPage.qml \
     qml/tools/Messagebox.qml \
     qml/pages/AboutPage.qml \
-    qml/obdfish.png
+    qml/obdfish.png \
+    qml/pages/Dyn1Page.qml \
+    qml/pages/Dyn2Page.qml
 
