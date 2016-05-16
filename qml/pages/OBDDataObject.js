@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2016 Jens Drescher, Germany
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 .pragma library
 
 //This function receives an answer from the ELM and tries to extract supported PID's
@@ -26,10 +43,15 @@ function fncSetSupportedPIDs(sData, sPID)
         console.log("Found supported PID: " + sPID + " " + sData);
 
         //Now, if this is a PID in the 0100 area, we can sort this into the corresponding array.
-        if (sPID.substr(0, 2) === "01")
+        if (sPID.substr(0, 2) === "01" || sPID.substr(0, 2) === "09")
         {
-            //Separate the mask bytes into an array. Leave out the first four bytes.
-            var sHexString = sData.substring(4).split('');
+            //Separate the mask bytes into an array. Use last eight characters.
+            var sHexString = sData.slice(-8);
+            console.log("sHexString: " + sHexString);
+
+            //Separate characters.
+            sHexString = sHexString.split('');
+
             //LoopVar is an index for the last two characters of the PID
             var iLoopVar = (parseInt(sPID.substr(2,2), 16)) + 1;
 
@@ -47,8 +69,10 @@ function fncSetSupportedPIDs(sData, sPID)
                     console.log("sCurrentPID: " + sCurrentPID);
                     console.log("sBinary: " + sBinary);                    
 
-                    if (sBinary === "1")
+                    if (sBinary === "1" && sPID.substr(0, 2) === "01")
                       sSupportedPIDs0100 = sSupportedPIDs0100 + fncLeadingZeros(iLoopVar.toString(16), 2) + ", ";
+                    if (sBinary === "1" && sPID.substr(0, 2) === "09")
+                      sSupportedPIDs0900 = sSupportedPIDs0900 + fncLeadingZeros(iLoopVar.toString(16), 2) + ", ";
 
                     //Write supported value to PID array
                     if (arrayLookupPID[sCurrentPID] !== undefined)
@@ -59,6 +83,12 @@ function fncSetSupportedPIDs(sData, sPID)
             });          
         }
     }
+}
+
+function fncEvaluateVINQuery(sData)
+{
+    //TODO here!!!
+    return (sData);
 }
 
 function fncEvaluatePIDQuery(sData, sPID)
@@ -112,6 +142,7 @@ function fncGetFoundSupportedPIDs()
 //Here come data variables or arrays
 
 var sSupportedPIDs0100 = "";
+var sSupportedPIDs0900 = "";
 
 var arrayPIDs =
 [
@@ -127,11 +158,40 @@ var arrayPIDs =
     { pid: "0110", supported: false, bytescount: 2, fncConvert: fncConvertAirFlow },
     { pid: "0111", supported: false, bytescount: 1, fncConvert: fncConvertThrottlePosition },
     { pid: "011c", supported: false, bytescount: 1, fncConvert: fncConvertOBDStandard },
+    { pid: "0151", supported: false, bytescount: 1, fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, fncConvert: fncConvertVINCount },
     { pid: "0902", supported: false, bytescount: 1, fncConvert: fncConvertVIN }
 ];
 
 //Here come some enums for PID data
+var FuelTypes =
+{
+    0: "Not available",
+    1: "Gasoline",
+    2: "Methanol",
+    3: "Ethanol",
+    4: "Diesel",
+    5: "LPG",
+    6: "CNG",
+    7: "Propane",
+    8: "Electric",
+    9: "Bifuel running Gasoline",
+    10: "Bifuel running Methanol",
+    11: "Bifuel running Ethanol",
+    12: "Bifuel running LPG",
+    13: "Bifuel running CNG",
+    14: "Bifuel running Propane",
+    15: "Bifuel running Electricity",
+    16: "Bifuel running electric and combustion engine",
+    17: "Hybrid gasoline",
+    18: "Hybrid Ethanol",
+    19: "Hybrid Diesel",
+    20: "Hybrid Electric",
+    21: "Hybrid running electric and combustion engine",
+    22: "Hybrid Regenerative",
+    23: "Bifuel running diesel",
+    24: "Undefined"
+}
 var OBDStandards =
 {
     1: "OBD-II as defined by the CARB",
@@ -263,6 +323,15 @@ function fncConvertOBDStandard(data)
        return OBDStandards[data];
     else
        return OBDStandards[34]; //That's undefined
+}
+function fncConvertFuelType(data)
+{
+    data = parseInt(data);
+
+    if (data >= 0 && data <= 23)
+       return FuelTypes[data];
+    else
+       return FuelTypes[24]; //That's undefined
 }
 function fncConvertVINCount(data)
 {

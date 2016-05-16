@@ -25,13 +25,6 @@
     </message>
 </context>
 <context>
-    <name>CoverPage</name>
-    <message>
-        <source>My Cover</source>
-        <translation>Mein Cover</translation>
-    </message>
-</context>
-<context>
     <name>Dyn1Page</name>
     <message>
         <source>Dynamic Values 1</source>
@@ -52,19 +45,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Supported PID&apos;s, Mode 01:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OBD Standard: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OBD Adapter: ELM327 </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Vehicle Identification Number: &lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD adapter: ELM327 </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD standard: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD protocol: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Battery voltage: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuel type: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

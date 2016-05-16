@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
@@ -25,6 +24,7 @@ import bluetoothdata 1.0
 import filewriter 1.0
 import QtSensors 5.0 as Sensors
 import "tools"
+import "pages/OBDDataObject.js" as OBDDataObject
 
 ApplicationWindow
 {
@@ -68,17 +68,42 @@ ApplicationWindow
     //This function accepts an AT command to be send to the ELM
     function fncStartCommand(sCommand)
     {
-        //Don't do anything if there is already an active command.
-        if (bCommandRunning) return;
+        console.log("fncStartCommand, sCommand: " + sCommand);
 
-        //Set active command bit
-        bCommandRunning = true;
+        //Don't do anything if there is already an active command.
+        if (bCommandRunning)
+        {
+            console.log("fncStartCommand, bCommandRunning is true!");
+            return false;
+        }
 
         //Cleare receive buffer
         sReceiveBuffer = "";
 
+        //Here we have to check if this is PID request, e.g. 011C1.
+        //If this is the case, check if the PID is in the PID table and is supported.
+        //If it is not supported, don't send the command and return with false.
+        var sPID = sCommand.substr(0, 4);
+
+        console.log("fncStartCommand, sPID: " + sPID);
+
+        if (OBDDataObject.arrayLookupPID[sPID] !== undefined)
+        {
+            var bSupported = OBDDataObject.arrayLookupPID[sPID.toLowerCase()].supported;
+
+            console.log("fncStartCommand, PID supported: " + bSupported.toString());
+
+            if (bSupported === false)
+                return false;
+        }
+
+        //Set active command bit
+        bCommandRunning = true;
+
         //Send the AT command via bluetooth
         id_BluetoothData.sendHex(sCommand);
+
+        return true;
     }
 
     //Data which is received via bluetooth is passed into this function

@@ -158,7 +158,7 @@ Page
         {
             id: id_Column_FirstCol
 
-            spacing: Theme.paddingSmall
+            spacing: Theme.paddingLarge
             width: parent.width
 
             PageHeader { title: qsTr("Dynamic Values 1") }
