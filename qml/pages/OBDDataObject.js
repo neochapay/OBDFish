@@ -87,8 +87,55 @@ function fncSetSupportedPIDs(sData, sPID)
 
 function fncEvaluateVINQuery(sData)
 {
-    //TODO here!!!
-    return (sData);
+    //49020100000057
+    //49020256575A5A
+    //4902035A36455A
+    //49020431573030
+    //49020530373733
+    //
+    //>
+
+    var iExpectedDataPackets = arrayLookupPID["0902"].bytescount;
+    console.log("fncEvaluateVINQuery, iExpectedDataPackets" + iExpectedDataPackets.toString());
+
+
+    //Split data string
+    sData = sData.split(/\r/);
+    var iFoundPackets = 0;
+    var sVINString = "";
+
+    for (var i = 0; i < sData.length; i++)
+    {
+        if (sData.substr[i](0,4) === "4902")
+        {
+            sVINString = sVINString + sData[i].substr(6).trim();
+            iFoundPackets++;
+        }
+    }
+
+    console.log("fncEvaluateVINQuery, iFoundPackets" + iFoundPackets.toString());
+    console.log("fncEvaluateVINQuery, sVINString" + sVINString);
+
+    var sReturnVIN = "";
+
+    if (iFoundPackets === iExpectedDataPackets)
+    {
+        sVINString = sVINString.match(new RegExp('.{1,2}', 'g'));
+
+        sVINString.forEach(function(hex)
+        {
+            sReturnVIN = sReturnVIN + String.fromCharCode(parseInt(hex, 16).toString());
+
+        });
+
+        console.log("fncEvaluateVINQuery, sReturnVIN" + sReturnVIN);
+    }
+    else
+    {
+        //Return something to repeat!!!
+    }
+
+    return (sReturnVIN);
 }
 
 function fncEvaluatePIDQuery(sData, sPID)
@@ -160,7 +207,7 @@ var arrayPIDs =
     { pid: "011c", supported: false, bytescount: 1, fncConvert: fncConvertOBDStandard },
     { pid: "0151", supported: false, bytescount: 1, fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, fncConvert: fncConvertVINCount },
-    { pid: "0902", supported: false, bytescount: 1, fncConvert: fncConvertVIN }
+    { pid: "0902", supported: false, bytescount: 1, fncConvert: "" }
 ];
 
 //Here come some enums for PID data
@@ -341,27 +388,4 @@ function fncConvertVINCount(data)
     arrayLookupPID["0902"].bytescount = data;
 
     return data.toString();
-}
-function fncConvertVIN(data)
-{
-    var sVIN = "";
-
-    console.log("fncConvertVIN, data: " + data);
-
-    data = data.split('');
-
-    data.forEach(function(sTMP)
-    {
-        console.log("fncConvertVIN, sTMP: " + sTMP);
-
-        var sTester = String.fromCharCode(sTMP);
-
-        console.log("fncConvertVIN, sTester: " + sTester);
-
-        sVIN = sVIN + sTester;
-    });
-
-    console.log("fncConvertVIN, sVIN: " + sVIN);
-
-    return sVIN;
 }

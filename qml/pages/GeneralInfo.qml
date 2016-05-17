@@ -143,13 +143,13 @@ Page
                         break;
                     case 14:
                         sReadValue = OBDDataObject.fncEvaluateVINQuery(sReceiveBuffer);
-                        console.log("sReadValue: " + sReadValue);
+                        sVIN = sReadValue;
                         iCommandSequence++;
                         break;
                     case 15:
                         if (fncStartCommand("ATST128"))
                             iCommandSequence++;
-                        else
+                        elsesReadValue
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 16:
