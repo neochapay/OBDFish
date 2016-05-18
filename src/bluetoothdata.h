@@ -14,6 +14,7 @@ public:
     Q_INVOKABLE void connect(QString address, int port);
     Q_INVOKABLE void sendHex(QString sString);
     Q_INVOKABLE void disconnect();
+    Q_INVOKABLE QString convertHex2Unicode(QString sHexString);
 private slots:
     void readData();
     void connected();

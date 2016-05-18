@@ -106,36 +106,20 @@ function fncEvaluateVINQuery(sData)
 
     for (var i = 0; i < sData.length; i++)
     {
-        if (sData.substr[i](0,4) === "4902")
+        if (sData[i].substr(0,4) === "4902")
         {
             sVINString = sVINString + sData[i].substr(6).trim();
             iFoundPackets++;
         }
     }
 
-    console.log("fncEvaluateVINQuery, iFoundPackets" + iFoundPackets.toString());
-    console.log("fncEvaluateVINQuery, sVINString" + sVINString);
-
-    var sReturnVIN = "";
+    console.log("fncEvaluateVINQuery, iFoundPackets: " + iFoundPackets.toString());
+    console.log("fncEvaluateVINQuery, sVINString: " + sVINString);
 
     if (iFoundPackets === iExpectedDataPackets)
-    {
-        sVINString = sVINString.match(new RegExp('.{1,2}', 'g'));
-
-        sVINString.forEach(function(hex)
-        {
-            sReturnVIN = sReturnVIN + String.fromCharCode(parseInt(hex, 16).toString());
-
-        });
-
-        console.log("fncEvaluateVINQuery, sReturnVIN" + sReturnVIN);
-    }
+        return (sVINString);
     else
-    {
-        //Return something to repeat!!!
-    }
-
-    return (sReturnVIN);
+        return false;
 }
 
 function fncEvaluatePIDQuery(sData, sPID)

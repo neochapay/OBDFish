@@ -143,13 +143,33 @@ Page
                         break;
                     case 14:
                         sReadValue = OBDDataObject.fncEvaluateVINQuery(sReceiveBuffer);
-                        sVIN = sReadValue;
+
+                        var sVINString = sReadValue.match(new RegExp('.{1,2}', 'g'));
+                        var sReturnVIN = "";
+                        sVINString.forEach(function(sHex)
+                        {
+                            console.log("sHex: " + sHex);
+
+                            var sTester = parseInt(sHex, 16).toString();
+
+                            console.log("sTester: " + sTester);
+
+                            sTester = id_BluetoothData.convertHex2Unicode(sTester);
+
+                            //So ein Scheiss, das funktioniert nicht in QML!!!
+                            //String.fromCharCode(sTester);
+
+                            console.log("sTester: " + sTester);
+
+                            sReturnVIN = sReturnVIN + id_BluetoothData.convertHex2Unicode(sTester);
+                        });
+                        sVIN = sReturnVIN;
                         iCommandSequence++;
                         break;
                     case 15:
                         if (fncStartCommand("ATST128"))
                             iCommandSequence++;
-                        elsesReadValue
+                        else
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 16:
@@ -163,7 +183,7 @@ Page
             {
                 //ELM has not yet answered. Or the answer is not complete.
                 //Check if wait time is over.
-                if (iWaitForCommand == 40)
+                if (iWaitForCommand == 100)
                 {
                     iCommandSequence = 0;
                     bWaitForCommandSequenceEnd = false;
