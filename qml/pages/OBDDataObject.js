@@ -86,17 +86,9 @@ function fncSetSupportedPIDs(sData, sPID)
 }
 
 function fncEvaluateVINQuery(sData)
-{
-    //49020100000057
-    //49020256575A5A
-    //4902035A36455A
-    //49020431573030
-    //49020530373733
-    //
-    //>
-
+{   
     var iExpectedDataPackets = arrayLookupPID["0902"].bytescount;
-    console.log("fncEvaluateVINQuery, iExpectedDataPackets" + iExpectedDataPackets.toString());
+    console.log("fncEvaluateVINQuery, iExpectedDataPackets: " + iExpectedDataPackets.toString());
 
 
     //Split data string
@@ -117,9 +109,30 @@ function fncEvaluateVINQuery(sData)
     console.log("fncEvaluateVINQuery, sVINString: " + sVINString);
 
     if (iFoundPackets === iExpectedDataPackets)
-        return (sVINString);
+    {
+        var sReturnString = "";
+        sVINString = sVINString.match(new RegExp('.{1,2}', 'g'));
+
+        sVINString.forEach(function(sHex)
+        {
+            console.log("sHex: " + sHex);
+
+            var iValue = parseInt(sHex, 16);
+
+            console.log("iValue: " + iValue.toString());
+
+            if (iValue === 0)
+                return;
+
+            sReturnString = sReturnString + String.fromCharCode(iValue);
+
+            console.log("sReturnString: " + sReturnString);
+        });
+
+        return (sReturnString);
+    }
     else
-        return false;
+        return null;
 }
 
 function fncEvaluatePIDQuery(sData, sPID)

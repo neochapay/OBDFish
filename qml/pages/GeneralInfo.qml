@@ -136,34 +136,18 @@ Page
                         break;
                     case 13:
                         //The number behind the PID is the number of packets expected from ELM
-                        if (fncStartCommand("09025"))
+                        //TODO: get the number of packets from 0901
+                        if (fncStartCommand("0902" + OBDDataObject.arrayLookupPID["0902"].bytescount.toString()))
                             iCommandSequence++;
                         else
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 14:
                         sReadValue = OBDDataObject.fncEvaluateVINQuery(sReceiveBuffer);
-
-                        var sVINString = sReadValue.match(new RegExp('.{1,2}', 'g'));
-                        var sReturnVIN = "";
-                        sVINString.forEach(function(sHex)
-                        {
-                            console.log("sHex: " + sHex);
-
-                            var sTester = parseInt(sHex, 16).toString();
-
-                            console.log("sTester: " + sTester);
-
-                            sTester = id_BluetoothData.convertHex2Unicode(sTester);
-
-                            //So ein Scheiss, das funktioniert nicht in QML!!!
-                            //String.fromCharCode(sTester);
-
-                            console.log("sTester: " + sTester);
-
-                            sReturnVIN = sReturnVIN + id_BluetoothData.convertHex2Unicode(sTester);
-                        });
-                        sVIN = sReturnVIN;
+                        if (sReadValue !== null)
+                            sVIN = sReadValue;
+                        else
+                            iCommandSequence--;
                         iCommandSequence++;
                         break;
                     case 15:

@@ -25,3 +25,5 @@
 
 - Profile für Autos anlegen
 	- Die Konfiguration der Dynamischen Seiten wird hier abgespeichert
+
+- Debug Datei anlegen. Alle Console.logs müssen da rein!!!

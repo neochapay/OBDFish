@@ -12,20 +12,6 @@ BluetoothData::~BluetoothData ()
         delete this->_socket;
 }
 
-QString BluetoothData::convertHex2Unicode(QString sHexString)
-{
-    //Geht nicht die scheisse...
-    //Scheiss C++
-
-    QByteArray qaData = sHexString.toUtf8();
-
-    QString sNew = QString::fromLocal8Bit(qaData);
-
-    qDebug() << "sNew: " << sNew;
-
-    return sNew;
-}
-
 void BluetoothData::connect(QString address, int port)
 {
     this->_port = port;

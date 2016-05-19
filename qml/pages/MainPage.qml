@@ -209,7 +209,7 @@ Page
                     else
                     {
                         //fncViewMessage("error", "No supported PID's!!!");
-                        fncShowMessage("No supported PID's! Either turn on ignition/engine or your OBD adapter is faulty!", 10000);
+                        fncShowMessage("No supported PID's found!<br>- turn on ignition/engine<br>- reconnect OBD adapter", 10000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
@@ -279,7 +279,7 @@ Page
             SectionHeader
             {
                 text: qsTr("Scan for Bluetooth devices...")
-            }
+            }           
             Button
             {
                 width: parent.width
@@ -361,7 +361,7 @@ Page
 
             SectionHeader
             {
-                text: "Found Bluetooth devices:"
+                text: "Bluetooth devices (press to connect):"
                 visible: true
             }
             SilicaListView
