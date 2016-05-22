@@ -29,6 +29,8 @@ Page
     property string sIntakePressure: "Not supported"
     property string sIntakeTemp: "Not supported"
     property string sAirFlowRate: "Not supported"
+    property string sEngineLight: "Not supported"
+    property string sFuelSystem: "Not supported"
 
     onStatusChanged:
     {
@@ -82,9 +84,31 @@ Page
 
                     //Send next command
                     iCommandQuery = 3;
-                    fncStartCommand("01101");
+                    fncStartCommand("01011");
                 }
                 else if (iCommandQuery == 3)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0101");
+                    if (sReadValue !== null)
+                        sEngineLight = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 4;
+                    fncStartCommand("01031");
+                }
+                else if (iCommandQuery == 4)
+                {
+                    //Evaluate answer from ELM
+                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0103");
+                    if (sReadValue !== null)
+                        sFuelSystem = sReadValue;
+
+                    //Send next command
+                    iCommandQuery = 5;
+                    fncStartCommand("01101");
+                }
+                else if (iCommandQuery == 5)
                 {
                     //Evaluate answer from ELM
                     sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0110");
@@ -100,7 +124,7 @@ Page
             {
                 //ELM has not yet answered. Or the answer is not complete.
                 //Check if wait time is over.
-                if (iWaitForCommand == 10)
+                if (iWaitForCommand == 20)
                 {
                     //Skip now.
                     bCommandRunning = false;
@@ -149,7 +173,24 @@ Page
             {
                 text: "Air Flow Rate: " + sAirFlowRate + "grams/sec";
             }
-
+            Separator
+            {
+                color: Theme.highlightColor
+                width: parent.width
+            }
+            Label
+            {
+                text: "Engine light, error number: " + sEngineLight;
+            }
+            Separator
+            {
+                color: Theme.highlightColor
+                width: parent.width
+            }
+            Label
+            {
+                text: "Fuel system 1 and 2: " + sFuelSystem;
+            }
         }
     }
 }

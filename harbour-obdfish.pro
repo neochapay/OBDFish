@@ -56,5 +56,6 @@ DISTFILES += \
     qml/pages/AboutPage.qml \
     qml/obdfish.png \
     qml/pages/Dyn1Page.qml \
-    qml/pages/Dyn2Page.qml
+    qml/pages/Dyn2Page.qml \
+    qml/pages/SettingsPage.qml
 

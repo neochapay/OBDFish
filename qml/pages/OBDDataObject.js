@@ -146,7 +146,7 @@ function fncEvaluatePIDQuery(sData, sPID)
 
     //Check if the search pattern is there. If this is not the case, we have incorrect data. Exit then...
     if (sData.indexOf(sSearchPattern) === -1)
-        return null;
+        return "";
 
     //Read out how many data bytes there should be within the data.
     //MEMO TO MYSELF: one byte consists of two characters. This is not ASCII!!!
@@ -190,21 +190,21 @@ var sSupportedPIDs0900 = "";
 
 var arrayPIDs =
 [
-    { pid: "0101", supported: false, bytescount: 4, fncConvert: "" },
-    { pid: "0104", supported: false, bytescount: 1, fncConvert: fncConvertLoad },
-    { pid: "0105", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
-    { pid: "010a", supported: false, bytescount: 1, fncConvert: "" },
-    { pid: "010b", supported: false, bytescount: 1, fncConvert: fncConvertIntakePressure },
-    { pid: "010c", supported: false, bytescount: 2, fncConvert: fncConvertRPM },
-    { pid: "010d", supported: false, bytescount: 1, fncConvert: fncConvertSpeed },
-    { pid: "010e", supported: false, bytescount: 1, fncConvert: fncConvertTimingAdvance },
-    { pid: "010f", supported: false, bytescount: 1, fncConvert: fncConvertTemp },
-    { pid: "0110", supported: false, bytescount: 2, fncConvert: fncConvertAirFlow },
-    { pid: "0111", supported: false, bytescount: 1, fncConvert: fncConvertThrottlePosition },
-    { pid: "011c", supported: false, bytescount: 1, fncConvert: fncConvertOBDStandard },
-    { pid: "0151", supported: false, bytescount: 1, fncConvert: fncConvertFuelType },
-    { pid: "0901", supported: false, bytescount: 1, fncConvert: fncConvertVINCount },
-    { pid: "0902", supported: false, bytescount: 1, fncConvert: "" }
+    { pid: "0101", supported: false, bytescount: 4, labeltext: "Engine light, error number:", unittext: "", fncConvert: fncConvertDTCCheck },
+    { pid: "0103", supported: false, bytescount: 2, labeltext: "Fuel system 1 and 2:", unittext: "", fncConvert: fncConvertFuelSystem },
+    { pid: "0104", supported: false, bytescount: 1, labeltext: "Engine Load:", unittext: "%", fncConvert: fncConvertLoad },
+    { pid: "0105", supported: false, bytescount: 1, labeltext: "Engine Temp:", unittext: "C°", fncConvert: fncConvertTemp },
+    { pid: "010b", supported: false, bytescount: 1, labeltext: "Intake Air Pressure:", unittext: "kPa", fncConvert: fncConvertIntakePressure },
+    { pid: "010c", supported: false, bytescount: 2, labeltext: "Engine RPM:", unittext: "rpm", fncConvert: fncConvertRPM },
+    { pid: "010d", supported: false, bytescount: 1, labeltext: "Vehicle Speed:", unittext: "km/h", fncConvert: fncConvertSpeed },
+    { pid: "010e", supported: false, bytescount: 1, labeltext: "Timing Advance:", unittext: "°", fncConvert: fncConvertTimingAdvance },
+    { pid: "010f", supported: false, bytescount: 1, labeltext: "Intake Air Temp:", unittext: "C°", fncConvert: fncConvertTemp },
+    { pid: "0110", supported: false, bytescount: 2, labeltext: "", unittext: "grams/sec", fncConvert: fncConvertAirFlow },
+    { pid: "0111", supported: false, bytescount: 1, labeltext: "Throttle Position:", unittext: "%", fncConvert: fncConvertThrottlePosition },
+    { pid: "011c", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: fncConvertOBDStandard },
+    { pid: "0151", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: fncConvertFuelType },
+    { pid: "0901", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: fncConvertVINCount },
+    { pid: "0902", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: "" }
 ];
 
 //Here come some enums for PID data
@@ -337,7 +337,7 @@ function fncConvertSpeed(data)
 function fncConvertLoad(data)
 {
     //TODO: Here round to one decimal place
-    return (parseInt(data, 16) * (100 / 256)).toString();
+    return (parseInt(data, 16) * (100 / 256)).toFixed(1);
 }
 function fncConvertIntakePressure(data)
 {
@@ -357,7 +357,7 @@ function fncConvertAirFlow(data)
 function fncConvertThrottlePosition(data)
 {
     //TODO: Here round to one decimal place
-    return ((parseInt(data, 16) * 100) / 255).toString();
+    return ((parseInt(data, 16) * 100) / 255).toFixed(1);
 }
 function fncConvertOBDStandard(data)
 {
@@ -385,4 +385,39 @@ function fncConvertVINCount(data)
     arrayLookupPID["0902"].bytescount = data;
 
     return data.toString();
+}
+function fncConvertDTCCheck(data)
+{
+    var sByte1 = data.substr(0, 2);
+
+    var byteValue, mil, numberOfDTCs, reply;
+    byteValue = parseInt(sByte1, 16);
+    if ((byteValue >> 7) === 1)
+    {
+        mil = "On";
+    }
+    else
+    {
+        mil = "Off";
+    }
+    numberOfDTCs = byteValue % 128;
+
+    return mil + ", " + numberOfDTCs;
+}
+function fncConvertFuelSystem(data)
+{
+    //We expect two bytes here. Extract them from data.
+    var sByte1 = data.substr(0, 2);
+    var sByte2 = data.substr(2, 2);
+
+    var sSystem1 = "";
+    var sSystem2 = "";
+
+    sSystem1 = FuelSystem[bitDecoder(sByte1)];
+    if( sByte2 )
+    {
+        sSystem2 = FuelSystem[bitDecoder(sByte2)];
+    }
+
+    return sSystem1 + ", " + sSystem2;
 }

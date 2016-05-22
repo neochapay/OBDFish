@@ -204,20 +204,17 @@ Page
                     //Evaluate if ELM found any supported PID
                     if (OBDDataObject.fncGetFoundSupportedPIDs())
                     {
-                        fncViewMessage("info", "Init is ready now!!!");                        
+                        fncViewMessage("info", "Init is ready now!!!");
+                        pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
                     }
                     else
                     {
                         //fncViewMessage("error", "No supported PID's!!!");
-                        fncShowMessage("No supported PID's found!<br>- turn on ignition/engine<br>- reconnect OBD adapter", 10000);
+                        fncShowMessage("No supported PID's found!<br>- turn on ignition/engine<br>- reconnect to OBD adapter", 20000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
                     }
-
-                    pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
-                    //pageStack.navigateForward();
-                    //TODO
                 }
             }
             else
@@ -259,6 +256,11 @@ Page
 
         PullDownMenu
         {
+            MenuItem
+            {
+                text: qsTr("Settings")
+                onClicked: {pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))}
+            }
             MenuItem
             {
                 text: qsTr("About")

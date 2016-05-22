@@ -25,13 +25,13 @@ Page
     id: id_page_secondpage
     property bool bPushDyn1Page: true
     property int iWaitForCommand: 0
-    property int iCommandQuery: 0
-    property string sEngineLoad: "Not supported"
-    property string sEngineTemp: "Not supported"
-    property string sEngineRPM: "Not supported"
-    property string sVehicleSpeed: "Not supported"
-    property string sTimingAdvance: "Not supported"
-    property string sThrottlePosition: "Not supported"
+    property int iCommandSequence: 1
+    property string sParameter1: "Not supported"
+    property string sParameter2: "Not supported"
+    property string sParameter3: "Not supported"
+    property string sParameter4: "Not supported"
+    property string sParameter5: "Not supported"
+    property string sParameter6: "Not supported"
 
     onStatusChanged:
     {
@@ -51,92 +51,93 @@ Page
         repeat: true
         onTriggered:
         {
-            var sReadValue = "";
-
             //Check if ELM has answered correctly to current AT command
             if (bCommandRunning == false)
             {
                 iWaitForCommand = 0;
 
                 //Send first command: query engine temperature
-                //Hier muss noch abgefragt werden, ob diese PID überhaupt unterstützt wird. TODO
-                if (iCommandQuery == 0)
+                switch (iCommandSequence)
                 {
-                    iCommandQuery = 1;
-                    fncStartCommand("01041");
-                }
-                else if (iCommandQuery == 1)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0104");
-                    if (sReadValue !== null)
-                        sEngineLoad = sReadValue;
-
-                    //Send next command
-                    iCommandQuery = 2;
-                    fncStartCommand("01051");
-                }
-                else if (iCommandQuery == 2)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0105");
-                    if (sReadValue !== null)
-                        sEngineTemp = sReadValue;
-
-                    //Send next command
-                    iCommandQuery = 3;
-                    fncStartCommand("010C1");
-                }                
-                else if (iCommandQuery == 3)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010C");
-                    if (sReadValue !== null)
-                        sEngineRPM = sReadValue;
-
-                    //Send next command
-                    iCommandQuery = 4;
-                    fncStartCommand("010D1");
-                }
-                else if (iCommandQuery == 4)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010D");
-                    if (sReadValue !== null)
-                        sVehicleSpeed = sReadValue;
-
-                    //Send next command
-                    iCommandQuery = 5;
-                    fncStartCommand("010E1");
-                }
-                else if (iCommandQuery == 5)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010E");
-                    if (sReadValue !== null)
-                        sTimingAdvance = sReadValue;
-
-                    //Send next command
-                    iCommandQuery = 6;
-                    fncStartCommand("01111");
-                }                
-                else if (iCommandQuery == 6)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0111");
-                    if (sReadValue !== null)
-                        sThrottlePosition = sReadValue;
-
-                    //Send next command
-                    iCommandQuery = 1;
-                    fncStartCommand("01041");
+                    case 1:
+                        if (fncStartCommand("01041"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 2:
+                        sParameter1 = OBDDataObject.arrayLookupPID["0104"].labeltext + " " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0104") +
+                                OBDDataObject.arrayLookupPID["0104"].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 3:
+                        if (fncStartCommand("01051"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 4:
+                        sParameter2 = OBDDataObject.arrayLookupPID["0105"].labeltext + " " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0105") +
+                                OBDDataObject.arrayLookupPID["0105"].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 5:
+                        if (fncStartCommand("010C1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 6:
+                        sParameter3 = OBDDataObject.arrayLookupPID["010c"].labeltext + " " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010C") +
+                                OBDDataObject.arrayLookupPID["010c"].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 7:
+                        if (fncStartCommand("010D1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 8:
+                        sParameter4 = OBDDataObject.arrayLookupPID["010d"].labeltext + " " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010D") +
+                                OBDDataObject.arrayLookupPID["010d"].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 9:
+                        if (fncStartCommand("010E1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 10:
+                        sParameter5 = OBDDataObject.arrayLookupPID["010e"].labeltext + " " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010E") +
+                                OBDDataObject.arrayLookupPID["010e"].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 11:
+                        if (fncStartCommand("01111"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = 1;
+                        break;
+                    case 12:
+                        sParameter6 = OBDDataObject.arrayLookupPID["0111"].labeltext + " " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0111") +
+                                OBDDataObject.arrayLookupPID["0111"].unittext;
+                        iCommandSequence = 1;
+                        break;
                 }
             }
             else
             {
                 //ELM has not yet answered. Or the answer is not complete.
                 //Check if wait time is over.
-                if (iWaitForCommand == 10)
+                if (iWaitForCommand == 20)
                 {
                     //Skip now.
                     bCommandRunning = false;
@@ -165,7 +166,7 @@ Page
 
             Label
             {
-                text: "Throttle Position: " + sThrottlePosition + "%";
+                text: sParameter1;
             }
             Separator
             {
@@ -174,7 +175,7 @@ Page
             }
             Label
             {
-                text: "Engine Load: " + sEngineLoad + "%";
+                text: sParameter2;
             }
             Separator
             {
@@ -183,7 +184,7 @@ Page
             }
             Label
             {
-                text: "Engine RPM: " + sEngineRPM + "rpm";
+                text: sParameter3;
             }
             Separator
             {
@@ -192,7 +193,7 @@ Page
             }
             Label
             {
-                text: "Vehicle Speed: " + sVehicleSpeed + "km/h";
+                text: sParameter4;
             }
             Separator
             {
@@ -201,7 +202,7 @@ Page
             }
             Label
             {
-                text: "Timing Advance: " + sTimingAdvance + "°";
+                text: sParameter5;
             }
             Separator
             {
@@ -210,7 +211,7 @@ Page
             }
             Label
             {
-                text: "Engine Temp: " + sEngineTemp + "C°";
+                text: sParameter6;
             }
         }
     }
