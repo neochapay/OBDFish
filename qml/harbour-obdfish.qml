@@ -19,9 +19,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
 import org.nemomobile.notifications 1.0
-import bluetoothconnection 1.0
-import bluetoothdata 1.0
-import filewriter 1.0
+import harbour.obdfish 1.0
 import QtSensors 5.0 as Sensors
 import "tools"
 import "pages/OBDDataObject.js" as OBDDataObject
@@ -35,11 +33,14 @@ ApplicationWindow
     property string sReceiveBuffer: "";
     property string sDebugFileBuffer: "";
     property string sELMVersion: "";
+    property string sPIDsPage1: "0104,0105,010c,010d,010e,0111";
+    property string sPIDsPage2: "010b,010f,0101,0103,0110,None";
 
     //Init C++ classes, libraries
     BluetoothConnection{ id: id_BluetoothConnection }
     BluetoothData{ id: id_BluetoothData }
     FileWriter{ id: id_FileWriter }
+    ProjectSettings{ id: id_ProjectSettings }
     Notification { id: mainPageNotification }
 
     Connections

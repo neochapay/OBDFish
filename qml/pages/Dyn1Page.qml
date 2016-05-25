@@ -66,7 +66,7 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 2:
-                        sParameter1 = OBDDataObject.arrayLookupPID["0104"].labeltext + " " +
+                        sParameter1 = OBDDataObject.arrayLookupPID["0104"].labeltext + ": " +
                                 OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0104") +
                                 OBDDataObject.arrayLookupPID["0104"].unittext;
                         iCommandSequence++;
@@ -78,7 +78,7 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 4:
-                        sParameter2 = OBDDataObject.arrayLookupPID["0105"].labeltext + " " +
+                        sParameter2 = OBDDataObject.arrayLookupPID["0105"].labeltext + ": " +
                                 OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0105") +
                                 OBDDataObject.arrayLookupPID["0105"].unittext;
                         iCommandSequence++;
@@ -90,7 +90,7 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 6:
-                        sParameter3 = OBDDataObject.arrayLookupPID["010c"].labeltext + " " +
+                        sParameter3 = OBDDataObject.arrayLookupPID["010c"].labeltext + ": " +
                                 OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010C") +
                                 OBDDataObject.arrayLookupPID["010c"].unittext;
                         iCommandSequence++;
@@ -102,7 +102,7 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 8:
-                        sParameter4 = OBDDataObject.arrayLookupPID["010d"].labeltext + " " +
+                        sParameter4 = OBDDataObject.arrayLookupPID["010d"].labeltext + ": " +
                                 OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010D") +
                                 OBDDataObject.arrayLookupPID["010d"].unittext;
                         iCommandSequence++;
@@ -114,7 +114,7 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 10:
-                        sParameter5 = OBDDataObject.arrayLookupPID["010e"].labeltext + " " +
+                        sParameter5 = OBDDataObject.arrayLookupPID["010e"].labeltext + ": " +
                                 OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010E") +
                                 OBDDataObject.arrayLookupPID["010e"].unittext;
                         iCommandSequence++;
@@ -126,7 +126,7 @@ Page
                             iCommandSequence = 1;
                         break;
                     case 12:
-                        sParameter6 = OBDDataObject.arrayLookupPID["0111"].labeltext + " " +
+                        sParameter6 = OBDDataObject.arrayLookupPID["0111"].labeltext + ": " +
                                 OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0111") +
                                 OBDDataObject.arrayLookupPID["0111"].unittext;
                         iCommandSequence = 1;

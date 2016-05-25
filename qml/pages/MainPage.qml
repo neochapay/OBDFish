@@ -42,6 +42,15 @@ Page
             SharedResources.fncAddDevice("Adapter v2.1", "88:18:56:68:98:EB");
             SharedResources.fncAddDevice("Alter Adapter v1.5", "98:76:54:32:10:00");
             id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
+
+
+            //Load project data
+            var sGetPIDsPage1 = id_ProjectSettings.sLoadProjectData("PIDsPage1");
+            var sGetPIDsPage2 = id_ProjectSettings.sLoadProjectData("PIDsPage2");
+            //Check project data
+            if (sGetPIDsPage1.length > 0) sPIDsPage1=sGetPIDsPage1;
+            if (sGetPIDsPage2.length > 0) sPIDsPage2=sGetPIDsPage2;
+
         }
     }
 

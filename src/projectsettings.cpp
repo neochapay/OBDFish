@@ -15,23 +15,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef QT_QML_DEBUG
-#include <QtQuick>
-#endif
+#include "projectsettings.h"
+#include <QtGui>
 
-#include <sailfishapp.h>
-#include "../src/bluetoothconnection.h"
-#include "../src/bluetoothdata.h"
-#include "../src/filewriter.h"
-#include "../src/projectsettings.h"
-
-
-int main(int argc, char *argv[])
+ProjectSettings::ProjectSettings(QObject *parent) : QObject(parent)
 {
-    qmlRegisterType<BluetoothConnection,1>("harbour.obdfish", 1, 0, "BluetoothConnection");
-    qmlRegisterType<BluetoothData,1>("harbour.obdfish", 1, 0, "BluetoothData");
-    qmlRegisterType<FileWriter,1>("harbour.obdfish", 1, 0, "FileWriter");
-    qmlRegisterType<ProjectSettings,1>("harbour.obdfish", 1, 0, "ProjectSettings");
-    return SailfishApp::main(argc, argv);
+
 }
 
+void ProjectSettings::vSaveProjectData(const QString &sKey, const QString &sValue)
+{
+    QSettings settings;
+
+    //qDebug() << "Save key: " << sKey << ", value: " << sValue;
+
+    settings.setValue(sKey, sValue);
+
+    return;
+}
+QString ProjectSettings::sLoadProjectData(const QString &sKey)
+{
+    QSettings settings;
+    QString sMySetting = settings.value(sKey, "").toString();
+
+    //qDebug() << "Load key: " << sKey << ", value: " << sMySetting;
+
+    return sMySetting;
+}

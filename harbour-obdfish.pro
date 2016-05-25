@@ -17,7 +17,8 @@ CONFIG += sailfishapp
 SOURCES += src/harbour-obdfish.cpp \
     src/bluetoothconnection.cpp \
     src/bluetoothdata.cpp \
-    src/filewriter.cpp
+    src/filewriter.cpp \
+    src/projectsettings.cpp
 
 QT += bluetooth
 
@@ -44,7 +45,8 @@ TRANSLATIONS += translations/harbour-obdfish-de.ts
 HEADERS += \
     src/bluetoothconnection.h \
     src/bluetoothdata.h \
-    src/filewriter.h
+    src/filewriter.h \
+    src/projectsettings.h
 
 DISTFILES += \
     rpm/harbour-obdfish.spec \

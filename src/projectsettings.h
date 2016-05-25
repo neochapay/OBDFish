@@ -15,23 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef QT_QML_DEBUG
-#include <QtQuick>
-#endif
+#ifndef PROJECTSETTINGS
+#define PROJECTSETTINGS
 
-#include <sailfishapp.h>
-#include "../src/bluetoothconnection.h"
-#include "../src/bluetoothdata.h"
-#include "../src/filewriter.h"
-#include "../src/projectsettings.h"
+#include <QObject>
 
-
-int main(int argc, char *argv[])
+class ProjectSettings : public QObject
 {
-    qmlRegisterType<BluetoothConnection,1>("harbour.obdfish", 1, 0, "BluetoothConnection");
-    qmlRegisterType<BluetoothData,1>("harbour.obdfish", 1, 0, "BluetoothData");
-    qmlRegisterType<FileWriter,1>("harbour.obdfish", 1, 0, "FileWriter");
-    qmlRegisterType<ProjectSettings,1>("harbour.obdfish", 1, 0, "ProjectSettings");
-    return SailfishApp::main(argc, argv);
-}
+    Q_OBJECT
+public:
+    explicit ProjectSettings(QObject *parent = 0);
+    Q_INVOKABLE void vSaveProjectData(const QString &sKey, const QString &sValue);
+    Q_INVOKABLE QString sLoadProjectData(const QString &sKey);
+};
 
+#endif // PROJECTSETTINGS

@@ -190,21 +190,21 @@ var sSupportedPIDs0900 = "";
 
 var arrayPIDs =
 [
-    { pid: "0101", supported: false, bytescount: 4, labeltext: "Engine light, error number:", unittext: "", fncConvert: fncConvertDTCCheck },
-    { pid: "0103", supported: false, bytescount: 2, labeltext: "Fuel system 1 and 2:", unittext: "", fncConvert: fncConvertFuelSystem },
-    { pid: "0104", supported: false, bytescount: 1, labeltext: "Engine Load:", unittext: "%", fncConvert: fncConvertLoad },
-    { pid: "0105", supported: false, bytescount: 1, labeltext: "Engine Temp:", unittext: "C°", fncConvert: fncConvertTemp },
-    { pid: "010b", supported: false, bytescount: 1, labeltext: "Intake Air Pressure:", unittext: "kPa", fncConvert: fncConvertIntakePressure },
-    { pid: "010c", supported: false, bytescount: 2, labeltext: "Engine RPM:", unittext: "rpm", fncConvert: fncConvertRPM },
-    { pid: "010d", supported: false, bytescount: 1, labeltext: "Vehicle Speed:", unittext: "km/h", fncConvert: fncConvertSpeed },
-    { pid: "010e", supported: false, bytescount: 1, labeltext: "Timing Advance:", unittext: "°", fncConvert: fncConvertTimingAdvance },
-    { pid: "010f", supported: false, bytescount: 1, labeltext: "Intake Air Temp:", unittext: "C°", fncConvert: fncConvertTemp },
-    { pid: "0110", supported: false, bytescount: 2, labeltext: "", unittext: "grams/sec", fncConvert: fncConvertAirFlow },
-    { pid: "0111", supported: false, bytescount: 1, labeltext: "Throttle Position:", unittext: "%", fncConvert: fncConvertThrottlePosition },
-    { pid: "011c", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: fncConvertOBDStandard },
-    { pid: "0151", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: fncConvertFuelType },
-    { pid: "0901", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: fncConvertVINCount },
-    { pid: "0902", supported: false, bytescount: 1, labeltext: "", unittext: "", fncConvert: "" }
+    { pid: "0101", supported: false, bytescount: 4, labeltext: "Engine light, error number", unittext: "", fncConvert: fncConvertDTCCheck },
+    { pid: "0103", supported: false, bytescount: 2, labeltext: "Fuel system 1 and 2", unittext: "", fncConvert: fncConvertFuelSystem },
+    { pid: "0104", supported: false, bytescount: 1, labeltext: "Engine Load", unittext: "%", fncConvert: fncConvertLoad },
+    { pid: "0105", supported: false, bytescount: 1, labeltext: "Engine Temp", unittext: "C°", fncConvert: fncConvertTemp },
+    { pid: "010b", supported: false, bytescount: 1, labeltext: "Intake Air Pressure", unittext: "kPa", fncConvert: fncConvertIntakePressure },
+    { pid: "010c", supported: false, bytescount: 2, labeltext: "Engine RPM", unittext: "rpm", fncConvert: fncConvertRPM },
+    { pid: "010d", supported: false, bytescount: 1, labeltext: "Vehicle Speed", unittext: "km/h", fncConvert: fncConvertSpeed },
+    { pid: "010e", supported: false, bytescount: 1, labeltext: "Timing Advance", unittext: "°", fncConvert: fncConvertTimingAdvance },
+    { pid: "010f", supported: false, bytescount: 1, labeltext: "Intake Air Temp", unittext: "C°", fncConvert: fncConvertTemp },
+    { pid: "0110", supported: false, bytescount: 2, labeltext: "Air Flow Rate", unittext: "grams/sec", fncConvert: fncConvertAirFlow },
+    { pid: "0111", supported: false, bytescount: 1, labeltext: "Throttle Position", unittext: "%", fncConvert: fncConvertThrottlePosition },
+    { pid: "011c", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertOBDStandard },
+    { pid: "0151", supported: false, bytescount: 1, labeltext: "Fuel Type", unittext: "", fncConvert: fncConvertFuelType },
+    { pid: "0901", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertVINCount },
+    { pid: "0902", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" }
 ];
 
 //Here come some enums for PID data
