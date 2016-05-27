@@ -18,19 +18,53 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "OBDDataObject.js" as OBDDataObject
+import "SettingsDataObject.js" as SettingsDataObject
 
 Page
 {
     allowedOrientations: Orientation.All
     property bool bPushSettingsPage: true
     property bool bInitPage: true
-    property variant arComboboxStringArray : []
-    property variant arPIDStringArray : []
-    property variant arLookupPIDs: []
+    property bool bPageInitialized: false
+    property variant arComboboxStringArray : []    
+
+    function fncOnComboboxCompleted()
+    {
+        bPageInitialized = true;
+
+        //Here we collect all PID labels in one string array.
+        //This is then the data model for the comboboxes.
+        var arComboarray = ["None"];
+        for (var i = 0; i < OBDDataObject.arrayPIDs.length; i++)
+        {
+            if (OBDDataObject.arrayPIDs[i].labeltext !== null)
+            {
+                arComboarray.push(OBDDataObject.arrayPIDs[i].labeltext);
+                SettingsDataObject.arPIDarray.push({text: OBDDataObject.arrayPIDs[i].labeltext, pid: OBDDataObject.arrayPIDs[i].pid, index: (i + 1)});
+            }
+        }
+
+        //Fill lookup arrays. Can find entrys based on PID or INDEX as key.
+        console.log("lenth: " + SettingsDataObject.arPIDarray.length.toString());
+
+        for (var j = 0; j < SettingsDataObject.arPIDarray.length; j++)
+        {
+            SettingsDataObject.arLookupPID[SettingsDataObject.arPIDarray[j].pid] = SettingsDataObject.arPIDarray[j];
+            SettingsDataObject.arLookupINDEX[SettingsDataObject.arPIDarray[j].index] = SettingsDataObject.arPIDarray[j];
+        }
+
+        console.log(SettingsDataObject.arLookupPID["0111"].index);
+        console.log(SettingsDataObject.arLookupINDEX[5].text);
+
+        //Generate array for the start index of the copmboboxes
+        SettingsDataObject.arPIDsPage1 = sPIDsPage1.split(",");
+
+        arComboboxStringArray = arComboarray;
+    }
 
     function fncTester()
     {
-        console.log("Tester");
+        //console.log("Tester");
     }
 
     onStatusChanged:
@@ -40,36 +74,6 @@ Page
             bInitPage = true;
             bPushSettingsPage = false;
 
-            //Here we collect all PID labels in one string array.
-            //This is then the data model for the comboboxes.
-            var arComboarray = ["None"];
-            var arPIDarray = [{text: "None", pid: "0000", index: 0}];       //Stupid qml crap. Need this additional array to get PID of selected combobox index.
-            for (var i = 0; i < OBDDataObject.arrayPIDs.length; i++)
-            {
-                if (OBDDataObject.arrayPIDs[i].labeltext !== null)
-                {
-                    arComboarray.push(OBDDataObject.arrayPIDs[i].labeltext);
-                    arPIDarray.push({text: OBDDataObject.arrayPIDs[i].labeltext, pid: OBDDataObject.arrayPIDs[i].pid, index: i});
-                }
-            }
-
-            var arrayLookupPID = {};
-            for (var j = 0; j < arPIDarray.length; j++)
-            {
-                arrayLookupPID[arPIDarray[j].pid] = arPIDarray[j];
-            }
-
-
-
-            //sPIDsPage1: "0104,0105,010c,010d,010e,0111";
-            //Set saved values to comboboxes, separate strings by decimal point
-            var arPIDsPage1 = sPIDsPage1.split(",");
-            //id_CMB_page1_1.currentIndex = arrayLookupPID[arPIDsPage1[0]].index;
-            //id_CMB_page1_2.currentIndex = arrayLookupPID[arPIDsPage1[1]].index;
-
-            sComboboxStringArray = arComboarray;
-            sPIDStringArray = arPIDarray;
-            arLookupPIDs = arrayLookupPID;
             bInitPage = false;
         }
 
@@ -107,15 +111,20 @@ Page
                 id: id_CMB_page1_1
                 width: parent.width
                 label: 'Parameter1:'                
-                menu: ContextMenu { Repeater { model: sComboboxStringArray; MenuItem { text: modelData }}}
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData }}}
                 Component.onCompleted:
                 {
-                    var arPIDsPage1 = sPIDsPage1.split(",");
-                    currentIndex = arLookupPIDs[arPIDsPage1[0]].index;
+                    if (bPageInitialized===false) fncOnComboboxCompleted();
+
+                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[0]].index);
+                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[0]].index.toString());
+
+                    //currentIndex = SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[0]].index;
+                    //currentIndex = 5;
                 }
                 onCurrentIndexChanged:
                 {
-                    fncTester(1);
+                    console.log("1 changed: " + currentIndex.toString());
                 }
             }
 
@@ -124,30 +133,28 @@ Page
                 id: id_CMB_page1_2
                 width: parent.width
                 label: 'Parameter2:'
-                currentIndex: 0
-                menu: ContextMenu { Repeater { model: sComboboxStringArray; MenuItem { text: modelData } }}
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}                
                 Component.onCompleted:
                 {
-                    var arPIDsPage1 = sPIDsPage1.split(",");
-                    currentIndex = arLookupPIDs[arPIDsPage1[1]].index;
+                    if (bPageInitialized===false) fncOnComboboxCompleted();
+
+                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[1]].index);
+                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[1]].index.toString());
+
+                    //currentIndex = SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[1]].index;#
+
+                    //currentIndex = 3;
                 }
                 onCurrentIndexChanged:
                 {
-                    fncTester(2);
+                    console.log("2 changed: " + currentIndex.toString());
                 }
             }
-
-
-
-
 
             SectionHeader
             {
                 text: qsTr("Dynamic Parameters Page 2")
             }
-
-
-
         }
     }
 }
