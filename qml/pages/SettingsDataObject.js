@@ -17,10 +17,8 @@
 
 .pragma library
 
-//Need this tables here as heplers.
+//Need this tables here as heplers. They are used from the SettingsPage(s).
 //Stupid QML arrays can't do anything, they suck at all!!!
-
 var arPIDarray = [{text: "None", pid: "0000", index: 0}];
 var arLookupPID = {};
 var arLookupINDEX = {};
-var arPIDsPage1 = {};

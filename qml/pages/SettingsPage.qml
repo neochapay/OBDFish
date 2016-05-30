@@ -44,28 +44,15 @@ Page
             }
         }
 
-        //Fill lookup arrays. Can find entrys based on PID or INDEX as key.
-        console.log("lenth: " + SettingsDataObject.arPIDarray.length.toString());
-
+        //Fill lookup arrays. Can find entrys based on PID or INDEX as key.       
         for (var j = 0; j < SettingsDataObject.arPIDarray.length; j++)
         {
             SettingsDataObject.arLookupPID[SettingsDataObject.arPIDarray[j].pid] = SettingsDataObject.arPIDarray[j];
             SettingsDataObject.arLookupINDEX[SettingsDataObject.arPIDarray[j].index] = SettingsDataObject.arPIDarray[j];
-        }
-
-        console.log(SettingsDataObject.arLookupPID["0111"].index);
-        console.log(SettingsDataObject.arLookupINDEX[5].text);
-
-        //Generate array for the start index of the copmboboxes
-        SettingsDataObject.arPIDsPage1 = sPIDsPage1.split(",");
+        }            
 
         arComboboxStringArray = arComboarray;
-    }
-
-    function fncTester()
-    {
-        //console.log("Tester");
-    }
+    } 
 
     onStatusChanged:
     {
@@ -74,14 +61,46 @@ Page
             bInitPage = true;
             bPushSettingsPage = false;
 
+            //Generate array for the start index of the copmboboxes
+            var arPIDsPage1 = sPIDsPage1.split(",");
+
+            //Set start indexes of comboboxes.
+            //This has to be done here, because the boxes first have to be filled with the models. That is a timing issue.
+            id_CMB_page1_1.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[0]].index;
+            id_CMB_page1_2.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[1]].index;
+            id_CMB_page1_3.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[2]].index;
+            id_CMB_page1_4.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[3]].index;
+            id_CMB_page1_5.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[4]].index;
+            id_CMB_page1_6.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[5]].index;
+
             bInitPage = false;
         }
 
         //Save values to project data when page is closed
         if (status === PageStatus.Deactivating && !bInitPage)
         {
-            //Check if fields are valid and have changed. Save values.
+            var sPIDsPage1FromPage = "";
 
+            //Check if fields are valid and have changed. Save values.
+            //Generate PID strings from comboboxe indexes
+            sPIDsPage1FromPage = SettingsDataObject.arLookupINDEX[id_CMB_page1_1.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page1_2.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page1_3.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page1_4.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page1_5.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page1_6.currentIndex].pid;
+
+            //Check if settings changed.
+            if (sPIDsPage1FromPage !== sPIDsPage1)
+            {
+                console.log("sPIDsPage1: " + sPIDsPage1);
+                console.log("sPIDsPage1FromPage: " + sPIDsPage1FromPage);
+
+                //Save new configuration to global variable
+                sPIDsPage1 = sPIDsPage1FromPage;
+                //Save new configuration to project settings
+                id_ProjectSettings.vSaveProjectData("PIDsPage1", sPIDsPage1FromPage);
+            }
         }
     }
 
@@ -112,49 +131,55 @@ Page
                 width: parent.width
                 label: 'Parameter1:'                
                 menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData }}}
-                Component.onCompleted:
-                {
-                    if (bPageInitialized===false) fncOnComboboxCompleted();
-
-                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[0]].index);
-                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[0]].index.toString());
-
-                    //currentIndex = SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[0]].index;
-                    //currentIndex = 5;
-                }
-                onCurrentIndexChanged:
-                {
-                    console.log("1 changed: " + currentIndex.toString());
-                }
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
             }
-
             ComboBox
             {
                 id: id_CMB_page1_2
                 width: parent.width
                 label: 'Parameter2:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}                
-                Component.onCompleted:
-                {
-                    if (bPageInitialized===false) fncOnComboboxCompleted();
-
-                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[1]].index);
-                    console.log(SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[1]].index.toString());
-
-                    //currentIndex = SettingsDataObject.arLookupPID[SettingsDataObject.arPIDsPage1[1]].index;#
-
-                    //currentIndex = 3;
-                }
-                onCurrentIndexChanged:
-                {
-                    console.log("2 changed: " + currentIndex.toString());
-                }
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }            
+            ComboBox
+            {
+                id: id_CMB_page1_3
+                width: parent.width
+                label: 'Parameter2:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page1_4
+                width: parent.width
+                label: 'Parameter2:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page1_5
+                width: parent.width
+                label: 'Parameter2:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page1_6
+                width: parent.width
+                label: 'Parameter2:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
             }
 
+            /*
             SectionHeader
             {
                 text: qsTr("Dynamic Parameters Page 2")
             }
+            */
         }
     }
 }

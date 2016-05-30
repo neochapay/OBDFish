@@ -110,9 +110,5 @@
         <source>Dynamic Parameters Page 1</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Dynamic Parameters Page 2</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 </TS>
