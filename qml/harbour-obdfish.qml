@@ -34,7 +34,7 @@ ApplicationWindow
     property string sDebugFileBuffer: "";
     property string sELMVersion: "";
     property string sPIDsPage1: "0104,0105,010c,010d,010e,0111";
-    property string sPIDsPage2: "010b,010f,0101,0103,0110,None";
+    property string sPIDsPage2: "0104,0105,010c,010d,010e,0111";
 
     //Init C++ classes, libraries
     BluetoothConnection{ id: id_BluetoothConnection }

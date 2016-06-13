@@ -35,26 +35,36 @@ Page
     property string sParameter6: "Not supported"
     property variant arPIDPageArray : []
     property string sCycleTime : "0"
-    property int iStartTime : 0
+    property double iStartTime : 0
+    property double iNowTime : 0
 
     onStatusChanged:
     {
         if (status === PageStatus.Active && bPushDyn1Page)
+        {            
+            bPushDyn1Page = false;        
+
+            pageStack.pushAttached(Qt.resolvedUrl("Dyn2Page.qml"));
+        }
+
+        if (status === PageStatus.Active)
         {
             bInitPage = true;
-            bPushDyn1Page = false;
+
+            iCommandSequence = 1;
+            sCycleTime = 0;
+            iStartTime = 0;
+            iNowTime = 0;
 
             //Fill PID's for this Page into an array. Empty spaces between two PID's should be avoided.
             var arPIDsPage1 = sPIDsPage1.split(",");
-            var arPIDPageArrayTemp = {};
+            var arPIDPageArrayTemp = [];
             for (var i = 0; i < arPIDsPage1.length; i++)
             {
                 if (arPIDsPage1[i] !== "0000")
                     arPIDPageArrayTemp.push(arPIDsPage1[i]);
             }
             arPIDPageArray = arPIDPageArrayTemp;
-
-            pageStack.pushAttached(Qt.resolvedUrl("Dyn2Page.qml"));
 
             bInitPage = false;
         }
@@ -74,16 +84,22 @@ Page
             {
                 iWaitForCommand = 0;
 
+                //console.log("timQueryELMParameters step: " + iCommandSequence.toString());
+
                 //Send first command: query engine temperature
                 switch (iCommandSequence)
                 {
                     case 1:
-                        //If a start time was saved before, calculate cycle time.
+                        //If a start time was saved before, calculate cycle time.                       
                         if (iStartTime !== 0)
-                            sCycleTime = ((new Date().getTime()) - iStartTime).toString();
+                        {
+                            iNowTime = new Date().getTime();
+
+                            sCycleTime = (iNowTime - iStartTime).toString();
+                        }
 
                         //Save current time in order to calculate the cycle time.
-                        iStartTime = new Date().getTime();
+                        iStartTime = new Date().getTime();                        
 
                         if (arPIDPageArray.length > 0 && fncStartCommand(arPIDPageArray[0] + "1"))
                             iCommandSequence++;
@@ -92,7 +108,7 @@ Page
                         break;
                     case 2:
                         sParameter1 = OBDDataObject.arrayLookupPID[arPIDPageArray[0]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpper()) +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase()) +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[0]].unittext;
                         iCommandSequence++;
                         break;
@@ -104,7 +120,7 @@ Page
                         break;
                     case 4:
                         sParameter2 = OBDDataObject.arrayLookupPID[arPIDPageArray[1]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[1].toUpper()) +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[1].toUpperCase()) +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[1]].unittext;
                         iCommandSequence++;
                         break;
@@ -116,7 +132,7 @@ Page
                         break;
                     case 6:
                         sParameter3 = OBDDataObject.arrayLookupPID[arPIDPageArray[2]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[2].toUpper()) +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[2].toUpperCase()) +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[2]].unittext;
                         iCommandSequence++;
                         break;
@@ -128,7 +144,7 @@ Page
                         break;
                     case 8:
                         sParameter4 = OBDDataObject.arrayLookupPID[arPIDPageArray[3]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[3].toUpper()) +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[3].toUpperCase()) +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[3]].unittext;
                         iCommandSequence++;
                         break;
@@ -140,7 +156,7 @@ Page
                         break;
                     case 10:
                         sParameter5 = OBDDataObject.arrayLookupPID[arPIDPageArray[4]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[4].toUpper()) +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[4].toUpperCase()) +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[4]].unittext;
                         iCommandSequence++;
                         break;
@@ -152,7 +168,7 @@ Page
                         break;
                     case 12:                        
                         sParameter6 = OBDDataObject.arrayLookupPID[arPIDPageArray[5]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[5].toUpper()) +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[5].toUpperCase()) +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[5]].unittext;
 
                             iCommandSequence = 1;
@@ -190,9 +206,22 @@ Page
 
             PageHeader { title: qsTr("Dynamic Values 1") }
 
-            Label
+            Row
             {
-                text: "Cycle time: " + sCycleTime + "ms";
+                IconButton
+                {
+                    icon.source: "image://theme/icon-m-question"
+                    onClicked:
+                    {
+                        fncShowMessage(qsTr("The more parameters are requested, the higher the cycle time.<br>To get a more responsive cycle time, go to settings and reduce amount of parameters for this page."), 20000);
+                    }
+                }
+                Label
+                {
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: Theme.fontSizeMedium
+                    text: qsTr("Cycle time: ") + sCycleTime + "ms";
+                }
             }
             Separator
             {

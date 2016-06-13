@@ -24,20 +24,49 @@ Page
     allowedOrientations: Orientation.All
     id: id_page_secondpage
     property bool bPushDyn2Page: true
+    property bool bInitPage: true
     property int iWaitForCommand: 0
-    property int iCommandQuery: 0    
-    property string sIntakePressure: "Not supported"
-    property string sIntakeTemp: "Not supported"
-    property string sAirFlowRate: "Not supported"
-    property string sEngineLight: "Not supported"
-    property string sFuelSystem: "Not supported"
+    property int iCommandSequence: 1
+    property string sParameter1: "Not supported"
+    property string sParameter2: "Not supported"
+    property string sParameter3: "Not supported"
+    property string sParameter4: "Not supported"
+    property string sParameter5: "Not supported"
+    property string sParameter6: "Not supported"
+    property variant arPIDPageArray : []
+    property string sCycleTime : "0"
+    property double iStartTime : 0
+    property double iNowTime : 0
 
     onStatusChanged:
     {
         if (status === PageStatus.Active && bPushDyn2Page)
         {
             bPushDyn2Page = false;
-            //pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
+
+            //pageStack.pushAttached(Qt.resolvedUrl("Dyn3Page.qml"));
+        }
+
+        if (status === PageStatus.Active)
+        {
+            bInitPage = true;
+
+            iCommandSequence = 1;
+            sCycleTime = 0;
+            iStartTime = 0;
+            iNowTime = 0;
+
+            //Fill PID's for this Page into an array. Empty spaces between two PID's should be avoided.
+            var arPIDsPage2 = sPIDsPage2.split(",");
+            var arPIDPageArrayTemp = [];
+            for (var i = 0; i < arPIDsPage2.length; i++)
+            {
+                if (arPIDsPage2[i] !== "0000")
+                    arPIDPageArrayTemp.push(arPIDsPage2[i]);
+            }
+            arPIDPageArray = arPIDPageArrayTemp;
+
+            bInitPage = false;
         }
     }
 
@@ -46,79 +75,105 @@ Page
         //This timer is called cyclically to query ELM
         id: timQueryELMParameters
         interval: 55
-        running: (status === PageStatus.Active)
+        running: ((status === PageStatus.Active) && !bInitPage)
         repeat: true
         onTriggered:
         {
-            var sReadValue = "";
-
             //Check if ELM has answered correctly to current AT command
             if (bCommandRunning == false)
             {
                 iWaitForCommand = 0;
 
+                //console.log("timQueryELMParameters step: " + iCommandSequence.toString());
+
                 //Send first command: query engine temperature
-                //Hier muss noch abgefragt werden, ob diese PID überhaupt unterstützt wird. TODO
-                if (iCommandQuery == 0)
+                switch (iCommandSequence)
                 {
-                    iCommandQuery = 1;
-                    fncStartCommand("010B1");
-                }
-                else if (iCommandQuery == 1)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010B");
-                    if (sReadValue !== null)
-                        sIntakePressure = sReadValue;
+                    case 1:
+                        //If a start time was saved before, calculate cycle time.
+                        if (iStartTime !== 0)
+                        {
+                            iNowTime = new Date().getTime();
 
-                    //Send next command
-                    iCommandQuery = 2;
-                    fncStartCommand("010F1");
-                }
-                else if (iCommandQuery == 2)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "010F");
-                    if (sReadValue !== null)
-                        sIntakeTemp = sReadValue;
+                            sCycleTime = (iNowTime - iStartTime).toString();
+                        }
 
-                    //Send next command
-                    iCommandQuery = 3;
-                    fncStartCommand("01011");
-                }
-                else if (iCommandQuery == 3)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0101");
-                    if (sReadValue !== null)
-                        sEngineLight = sReadValue;
+                        //Save current time in order to calculate the cycle time.
+                        iStartTime = new Date().getTime();
 
-                    //Send next command
-                    iCommandQuery = 4;
-                    fncStartCommand("01031");
-                }
-                else if (iCommandQuery == 4)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0103");
-                    if (sReadValue !== null)
-                        sFuelSystem = sReadValue;
+                        if (arPIDPageArray.length > 0 && fncStartCommand(arPIDPageArray[0] + "1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 2:
+                        sParameter1 = OBDDataObject.arrayLookupPID[arPIDPageArray[0]].labeltext + ": " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase()) +
+                                OBDDataObject.arrayLookupPID[arPIDPageArray[0]].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 3:
+                        if (arPIDPageArray.length > 1 && fncStartCommand(arPIDPageArray[1] + "1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 4:
+                        sParameter2 = OBDDataObject.arrayLookupPID[arPIDPageArray[1]].labeltext + ": " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[1].toUpperCase()) +
+                                OBDDataObject.arrayLookupPID[arPIDPageArray[1]].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 5:
+                        if (arPIDPageArray.length > 2 && fncStartCommand(arPIDPageArray[2] + "1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 6:
+                        sParameter3 = OBDDataObject.arrayLookupPID[arPIDPageArray[2]].labeltext + ": " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[2].toUpperCase()) +
+                                OBDDataObject.arrayLookupPID[arPIDPageArray[2]].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 7:
+                        if (arPIDPageArray.length > 3 && fncStartCommand(arPIDPageArray[3] + "1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 8:
+                        sParameter4 = OBDDataObject.arrayLookupPID[arPIDPageArray[3]].labeltext + ": " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[3].toUpperCase()) +
+                                OBDDataObject.arrayLookupPID[arPIDPageArray[3]].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 9:
+                        if (arPIDPageArray.length > 4 && fncStartCommand(arPIDPageArray[4] + "1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = iCommandSequence + 2;
+                        break;
+                    case 10:
+                        sParameter5 = OBDDataObject.arrayLookupPID[arPIDPageArray[4]].labeltext + ": " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[4].toUpperCase()) +
+                                OBDDataObject.arrayLookupPID[arPIDPageArray[4]].unittext;
+                        iCommandSequence++;
+                        break;
+                    case 11:
+                        if (arPIDPageArray.length > 5 && fncStartCommand(arPIDPageArray[5] + "1"))
+                            iCommandSequence++;
+                        else
+                            iCommandSequence = 1;
+                        break;
+                    case 12:
+                        sParameter6 = OBDDataObject.arrayLookupPID[arPIDPageArray[5]].labeltext + ": " +
+                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[5].toUpperCase()) +
+                                OBDDataObject.arrayLookupPID[arPIDPageArray[5]].unittext;
 
-                    //Send next command
-                    iCommandQuery = 5;
-                    fncStartCommand("01101");
+                            iCommandSequence = 1;
+                        break;
                 }
-                else if (iCommandQuery == 5)
-                {
-                    //Evaluate answer from ELM
-                    sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0110");
-                    if (sReadValue !== null)
-                        sAirFlowRate = sReadValue;
-
-                    //Send next command
-                    iCommandQuery = 1;
-                    fncStartCommand("010B1");
-                }              
             }
             else
             {
@@ -151,9 +206,22 @@ Page
 
             PageHeader { title: qsTr("Dynamic Values 2") }
 
-            Label
+            Row
             {
-                text: "Intake Air Pressure: " + sIntakePressure + "kPa";
+                IconButton
+                {
+                    icon.source: "image://theme/icon-m-question"
+                    onClicked:
+                    {
+                        fncShowMessage(qsTr("The more parameters are requested, the higher the cycle time.<br>To get a more responsive cycle time, go to settings and reduce amount of parameters for this page."), 20000);
+                    }
+                }
+                Label
+                {
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: Theme.fontSizeMedium
+                    text: qsTr("Cycle time: ") + sCycleTime + "ms";
+                }
             }
             Separator
             {
@@ -162,34 +230,63 @@ Page
             }
             Label
             {
-                text: "Intake Air Temp: " + sIntakeTemp + "C°";
+                visible: (arPIDPageArray.length > 0)
+                text: sParameter1;
             }
             Separator
             {
+                visible: (arPIDPageArray.length > 0)
                 color: Theme.highlightColor
                 width: parent.width
             }
             Label
             {
-                text: "Air Flow Rate: " + sAirFlowRate + "grams/sec";
+                visible: (arPIDPageArray.length > 1)
+                text: sParameter2;
             }
             Separator
             {
+                visible: (arPIDPageArray.length > 1)
                 color: Theme.highlightColor
                 width: parent.width
             }
             Label
             {
-                text: "Engine light, error number: " + sEngineLight;
+                visible: (arPIDPageArray.length > 2)
+                text: sParameter3;
             }
             Separator
             {
+                visible: (arPIDPageArray.length > 2)
                 color: Theme.highlightColor
                 width: parent.width
             }
             Label
             {
-                text: "Fuel system 1 and 2: " + sFuelSystem;
+                visible: (arPIDPageArray.length > 3)
+                text: sParameter4;
+            }
+            Separator
+            {
+                visible: (arPIDPageArray.length > 3)
+                color: Theme.highlightColor
+                width: parent.width
+            }
+            Label
+            {
+                visible: (arPIDPageArray.length > 4)
+                text: sParameter5;
+            }
+            Separator
+            {
+                visible: (arPIDPageArray.length > 4)
+                color: Theme.highlightColor
+                width: parent.width
+            }
+            Label
+            {
+                visible: (arPIDPageArray.length > 5)
+                text: sParameter6;
             }
         }
     }

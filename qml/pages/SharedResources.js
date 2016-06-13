@@ -17,6 +17,99 @@
 
 .pragma library
 
+/*----------------START used bluetooth adapters----------------*/
+
+var arrayUsedAdapters = new Array();
+
+function fncFillUsedAdaptersArray(sUsedAdaptersNames, sUsedAdaptersAddresses)
+{
+    arrayUsedAdapters = new Array();
+
+    var arrayNames = sUsedAdaptersNames.split("#,#");
+    var arrayAddresses = sUsedAdaptersAddresses.split("#,#");
+
+    //If there is no data or amount of names and amount of addresses differ, exit.
+    if (arrayNames.length === 0 || arrayNames.length !== arrayAddresses.length)
+        return;
+
+    for (var i = 0; i < arrayNames.length; i++)
+    {        
+        arrayUsedAdapters[i] = new Object();
+        arrayUsedAdapters[i]["BTName"] = arrayNames[i];
+        arrayUsedAdapters[i]["BTAddress"] = arrayAddresses[i];
+    }        
+}
+
+function fncAddUsedDevice(sBTName, sBTAddress)
+{      
+    var iPosition = arrayUsedAdapters.length;
+
+    //Check if the device address is already in the list.
+    //DEBUG: this might not work here, because object arrays have no length in crazy JS!!!
+    for (var i = 0; i < arrayUsedAdapters.length; i++)
+    {
+        if (arrayUsedAdapters[i]["BTAddress"] === sBTAddress)
+        {
+            //If the adapter is already in the list, break here.
+            return false;
+        }
+    }
+
+    arrayUsedAdapters[iPosition] = new Object();
+    arrayUsedAdapters[iPosition]["BTName"] = sBTName;
+    arrayUsedAdapters[iPosition]["BTAddress"] = sBTAddress;
+
+    return true;
+}
+
+function fncGetUsedDeviceBTNamesSeparatedString()
+{
+    var sSeparatedString = "";
+
+    for (var i = 0; i < arrayUsedAdapters.length; i++)
+    {
+        sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTName"] + "#,#";
+    }
+
+    sSeparatedString = sSeparatedString.slice(0, -3);
+
+    return sSeparatedString;
+}
+
+function fncGetUsedDeviceBTAddressesSeparatedString()
+{
+    var sSeparatedString = "";
+
+    for (var i = 0; i < arrayUsedAdapters.length; i++)
+    {
+        sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTAddress"] + "#,#";
+    }
+
+    sSeparatedString = sSeparatedString.slice(0, -3);
+
+    return sSeparatedString;
+}
+
+function fncGetUsedDevicesNumber()
+{
+    return arrayUsedAdapters.length;
+}
+
+function fncGetUsedDeviceBTName(iIndex)
+{
+    return arrayUsedAdapters[iIndex]["BTName"];
+}
+
+function fncGetUsedDeviceBTAddress(iIndex)
+{
+    return arrayUsedAdapters[iIndex]["BTAddress"];
+}
+
+/*----------------END used bluetooth adapters----------------*/
+
+
+/*--------------START scanned bluetooth adapters--------------*/
+
 var arrayMainDevicesArray = new Array();
 
 function fncAddDevice(sBTName, sBTAddress)
@@ -47,3 +140,5 @@ function fncGetDeviceBTAddress(iIndex)
 {
     return arrayMainDevicesArray[iIndex]["BTAddress"];
 }
+
+/*--------------END scanned bluetooth adapters--------------*/

@@ -1,19 +1,9 @@
---------------IDEEN---------------
-- VIN-Dekodierer einbauen, erst mal nur für VW
-	- Für jede Automarke eine JS library anlegen
-	- die JS library enthält eine Methode zur Dekodierung die generisch genutzt werden kann
-	- die JS library enthält alle Listen zur Dekosierung z.B. Baujahre, Modelle, Standorte
+--------------Ideas---------------
+- Make a VIN decoder (first only VW)
+	- for every car brand an own JS library file
+	- JS library has a generic function to decode
+	- JS library has all lists which are needed to decode VIN. E.g. models, manufacturing date , ...
 
-- Supported PID's 0100:		-> FERTIG!!!
-	Am Ende jeden Bereichs ist bekannt ob der jeweils nächste unterstützt ist.
-	Es muss in der Funktion fncSetSupportedPIDs zurückgeliefert werden, ob der nächste Block gelesen werden muss.
-	In der Init-Sequenz in MainPage.qml muss dann einiges umgebaut werden.
-	NEUE ERKENNTNIS: Eigentlich ist das doof. Kann man sicher sein, das nicht zwischendrin ein Bereich ausgelassen wird? Habs wieder gelöscht!!!
-
-- Die "Supported Info" wird noch nicht ausgewertet.		-> FERTIG!!!
-	Beim Lesen von PID's muss zuerst geschaut werden, ob die jeweilige PID überhaupt unterstützt wird.
-	Das sollte in der Funktion fncStartCommand realisiert werden. Diese Funktion liefert dann zurück ob die PID unterstützt wird.
-	Wenn die Funktion feststellt, das die PID nicht unterstützt wird, kann sie in den ReceiveBuffer "NoData" schreiben. Dann ist alles generisch!!!
 
 - Eine Seite für Statische Daten		-> FERTIG
 	- Adapter ID
@@ -32,22 +22,21 @@
 
 - MIL in Init prüfen. Wenn gesetzt, Warnung anzeigen
 
+- Spannung irgendwie generisch als weitere PID abfragen. Mit in dynamische Parameter.
+
 
 
 ----------NÄCHSTE SCHRITTE--------------
 - Dynamische Dialoge
-	- Kommastellen bei engineload und throttleposition begrenzen
-	- elseif auf switchcase umstellen
-	- Mehr Parameter auf die 2 Seite 
+	- elseif auf switchcase umstellen -> auf Dyn1Page schon umgesetzt. Weitere DynPages erstellen.
+	- Weitere PID's anlegen
 - MainPage
 	- zweite Liste einbauen für bekannte Adapter. Jedes Adapter mit erfolgreicher Verbindung dort eintragen.
 	- bekannte Adapter in Projektdaten speichern
 	- bei Start der App die zweite Liste anzeigen, wenn sie etwas enthält
 	- Bei klick auf "suchen", die zweite Liste unsichtbar machen und die erste anzeigen
+	- Der Waiter nach dem INIT soll wieder unsichtbar gemacht werden.
 - GeneralInfoPage
-	- VIN Abfrage mehrfach wiederholen (10 fach)
+	- VIN Abfrage mehrfach wiederholen (10 fach). Testen mit Caddy.
+	- Fehler: Wenn die Sequenz nicht fertiggstellt ist, gibt es ein Problem -> Waiter einblenden und Abbruch verhindern.
 - Debug Datei anlegen. Alle Console.logs müssen da rein!!!
-- OBDDataObject.js
-	- arrayPIDs: Labelbeschriftung einbauen als Variable
-	- arrayPIDs: Einheit des Wertes einbauen als Variable
--

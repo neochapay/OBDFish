@@ -29,7 +29,9 @@ Page
     property bool bWaitForCommandSequenceEnd: false
     property int iInit: 0
     property int iWaitForCommand: 0   
-    property bool bBluetoothScanning: false
+    property bool bBluetoothScanning: false    
+    property string sCurrentBTAddress: ""
+    property string sCurrentBTName: ""
 
     onStatusChanged:
     {       
@@ -37,20 +39,29 @@ Page
         {
             bFirstPage = false
 
-            //DEBUG!!!
-            SharedResources.fncAddDevice("Neuer Adapter v1.5", "12:34:56:88:C7:B1");
-            SharedResources.fncAddDevice("Adapter v2.1", "88:18:56:68:98:EB");
-            SharedResources.fncAddDevice("Alter Adapter v1.5", "98:76:54:32:10:00");
-            id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
-
-
             //Load project data
             var sGetPIDsPage1 = id_ProjectSettings.sLoadProjectData("PIDsPage1");
             var sGetPIDsPage2 = id_ProjectSettings.sLoadProjectData("PIDsPage2");
+            var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
+            var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
+
+            //DEBUG TODO
+            //sGetUsedAdaptersNames = "Neuer Adapter v1.5#,#Adapter v2.1#,#Alter Adapter v1.5";
+            //sGetUsedAdaptersAddresses = "12:34:56:88:C7:B1#,#88:18:56:68:98:EB#,#98:76:54:32:10:00";
+
             //Check project data
             if (sGetPIDsPage1.length > 0) sPIDsPage1=sGetPIDsPage1;
             if (sGetPIDsPage2.length > 0) sPIDsPage2=sGetPIDsPage2;
 
+            //Check if there are used devices. If there are, show them.
+            if (sGetUsedAdaptersNames.length > 0 && sGetUsedAdaptersAddresses.length > 0)
+            {
+                 SharedResources.fncFillUsedAdaptersArray(sGetUsedAdaptersNames, sGetUsedAdaptersAddresses);
+                id_LV_UsedDevices.model = SharedResources.fncGetUsedDevicesNumber();
+
+                id_LV_UsedDevices.visible = true;
+                id_SH_UsedDevices.visible = true;
+            }            
         }
     }
 
@@ -214,6 +225,17 @@ Page
                     if (OBDDataObject.fncGetFoundSupportedPIDs())
                     {
                         fncViewMessage("info", "Init is ready now!!!");
+
+                        //Save adapter as used adapter. Only do this if the adapter is not in the list of used devies.
+                        if (SharedResources.fncAddUsedDevice(sCurrentBTName, sCurrentBTAddress))
+                        {
+                            var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
+                            var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
+
+                            id_ProjectSettings.vSaveProjectData("UsedAdaptersNames", SharedResources.fncGetUsedDeviceBTNamesSeparatedString());
+                            id_ProjectSettings.vSaveProjectData("UsedAdaptersAddresses", SharedResources.fncGetUsedDeviceBTAddressesSeparatedString());
+                        }
+
                         pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
                     }
                     else
@@ -275,7 +297,7 @@ Page
                 text: qsTr("About")
                 onClicked: {pageStack.push(Qt.resolvedUrl("AboutPage.qml"))}
             }
-        }
+        }                
         Column
         {
             id: id_Column_FirstCol
@@ -285,7 +307,7 @@ Page
             PageHeader 
             {
                 title: qsTr("Welcome to OBDFish")
-            }
+            }            
 
             SectionHeader
             {
@@ -298,6 +320,12 @@ Page
                 visible: !bBluetoothScanning && !bConnecting && !bConnected
                 onClicked:
                 {
+                    //Make listviews visible/invisible
+                    id_SH_UsedDevices.visible = false;
+                    id_LV_UsedDevices.visible = false;
+                    id_SC_Devices.visible = true;
+                    id_LV_Devices.visible = true;
+
                     bBluetoothScanning = true;
                     SharedResources.fncDeleteDevices();
                     id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
@@ -372,8 +400,50 @@ Page
 
             SectionHeader
             {
-                text: "Bluetooth devices (press to connect):"
-                visible: true
+                id: id_SH_UsedDevices
+                text: "OBD adapters (press to connect):"
+                visible: false
+            }
+            SilicaListView
+            {
+                id: id_LV_UsedDevices
+                model: SharedResources.fncGetUsedDevicesNumber();
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: parent.height / 3
+                visible: false
+
+                delegate: BackgroundItem
+                {
+                    id: delegateUsedDevices
+
+                    Label
+                    {
+                        x: Theme.paddingLarge
+                        text: SharedResources.fncGetUsedDeviceBTName(index) + ", " + SharedResources.fncGetUsedDeviceBTAddress(index);
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: delegateUsedDevices.highlighted ? Theme.highlightColor : Theme.primaryColor
+                    }
+                    onClicked:
+                    {
+                        //Connect here. Prepeare some things.
+                        OBDDataObject.sSupportedPIDs0100 = "";
+                        sDebugFileBuffer= "";
+                        sELMVersion= "";
+                        bConnecting = true;                        
+
+                        //Connect and init
+                        id_BluetoothData.connect(SharedResources.fncGetUsedDeviceBTAddress(index), 1);
+                    }
+                }
+                VerticalScrollDecorator {}
+            }
+
+            SectionHeader
+            {
+                id: id_SC_Devices
+                text: "Found adapters (press to connect):"
+                visible: false
             }
             SilicaListView
             {
@@ -382,18 +452,18 @@ Page
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: parent.height / 3
-                visible: true
+                visible: false
 
                 delegate: BackgroundItem
                 {
-                    id: delegate
+                    id: delegateDevices
 
                     Label
                     {
                         x: Theme.paddingLarge
                         text: SharedResources.fncGetDeviceBTName(index) + ", " + SharedResources.fncGetDeviceBTAddress(index);
                         anchors.verticalCenter: parent.verticalCenter
-                        color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                        color: delegateDevices.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                     onClicked:
                     {
@@ -403,6 +473,12 @@ Page
                         sELMVersion= "";
                         bConnecting = true;
 
+                        //Save chosen BT connection data to page variables
+                        //They need to be saved in List of used devices. This will be done after successful initializing.
+                        sCurrentBTAddress = SharedResources.fncGetDeviceBTAddress(index);
+                        sCurrentBTName = SharedResources.fncGetDeviceBTName(index);
+
+                        //Connect and init
                         id_BluetoothData.connect(SharedResources.fncGetDeviceBTAddress(index), 1);
                     }
                 }

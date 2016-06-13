@@ -190,19 +190,19 @@ var sSupportedPIDs0900 = "";
 
 var arrayPIDs =
 [
-    { pid: "0101", supported: false, bytescount: 4, labeltext: "Engine light, error number", unittext: "", fncConvert: fncConvertDTCCheck },
-    { pid: "0103", supported: false, bytescount: 2, labeltext: "Fuel system 1 and 2", unittext: "", fncConvert: fncConvertFuelSystem },
-    { pid: "0104", supported: false, bytescount: 1, labeltext: "Engine Load", unittext: "%", fncConvert: fncConvertLoad },
-    { pid: "0105", supported: false, bytescount: 1, labeltext: "Engine Temp", unittext: "C°", fncConvert: fncConvertTemp },
-    { pid: "010b", supported: false, bytescount: 1, labeltext: "Intake Air Pressure", unittext: "kPa", fncConvert: fncConvertIntakePressure },
-    { pid: "010c", supported: false, bytescount: 2, labeltext: "Engine RPM", unittext: "rpm", fncConvert: fncConvertRPM },
-    { pid: "010d", supported: false, bytescount: 1, labeltext: "Vehicle Speed", unittext: "km/h", fncConvert: fncConvertSpeed },
-    { pid: "010e", supported: false, bytescount: 1, labeltext: "Timing Advance", unittext: "°", fncConvert: fncConvertTimingAdvance },
-    { pid: "010f", supported: false, bytescount: 1, labeltext: "Intake Air Temp", unittext: "C°", fncConvert: fncConvertTemp },
-    { pid: "0110", supported: false, bytescount: 2, labeltext: "Air Flow Rate", unittext: "grams/sec", fncConvert: fncConvertAirFlow },
-    { pid: "0111", supported: false, bytescount: 1, labeltext: "Throttle Position", unittext: "%", fncConvert: fncConvertThrottlePosition },
+    { pid: "0101", supported: false, bytescount: 4, labeltext: qsTr("Engine light, error number"), unittext: "", fncConvert: fncConvertDTCCheck },
+    { pid: "0103", supported: false, bytescount: 2, labeltext: qsTr("Fuel system 1 and 2"), unittext: "", fncConvert: fncConvertFuelSystem },
+    { pid: "0104", supported: false, bytescount: 1, labeltext: qsTr("Engine Load"), unittext: "%", fncConvert: fncConvertLoad },
+    { pid: "0105", supported: false, bytescount: 1, labeltext: qsTr("Engine Temp"), unittext: "C°", fncConvert: fncConvertTemp },
+    { pid: "010b", supported: false, bytescount: 1, labeltext: qsTr("Intake Air Pressure"), unittext: "kPa", fncConvert: fncConvertIntakePressure },
+    { pid: "010c", supported: false, bytescount: 2, labeltext: qsTr("Engine RPM"), unittext: qsTr("rpm"), fncConvert: fncConvertRPM },
+    { pid: "010d", supported: false, bytescount: 1, labeltext: qsTr("Vehicle Speed"), unittext: "km/h", fncConvert: fncConvertSpeed },
+    { pid: "010e", supported: false, bytescount: 1, labeltext: qsTr("Timing Advance"), unittext: "°", fncConvert: fncConvertTimingAdvance },
+    { pid: "010f", supported: false, bytescount: 1, labeltext: qsTr("Intake Air Temp"), unittext: "C°", fncConvert: fncConvertTemp },
+    { pid: "0110", supported: false, bytescount: 2, labeltext: qsTr("Air Flow Rate"), unittext: qsTr("grams/sec"), fncConvert: fncConvertAirFlow },
+    { pid: "0111", supported: false, bytescount: 1, labeltext: qsTr("Throttle Position"), unittext: "%", fncConvert: fncConvertThrottlePosition },
     { pid: "011c", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertOBDStandard },
-    { pid: "0151", supported: false, bytescount: 1, labeltext: "Fuel Type", unittext: "", fncConvert: fncConvertFuelType },
+    { pid: "0151", supported: false, bytescount: 1, labeltext: qsTr("Fuel Type"), unittext: "", fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertVINCount },
     { pid: "0902", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" }
 ];
@@ -210,16 +210,16 @@ var arrayPIDs =
 //Here come some enums for PID data
 var FuelTypes =
 {
-    0: "Not available",
-    1: "Gasoline",
+    0: qsTr("Not available"),
+    1: qsTr("Gasoline"),
     2: "Methanol",
     3: "Ethanol",
     4: "Diesel",
     5: "LPG",
     6: "CNG",
-    7: "Propane",
-    8: "Electric",
-    9: "Bifuel running Gasoline",
+    7: qsTr("Propane"),
+    8: qsTr("Electric"),
+    9: qsTr("Bifuel running Gasoline"),
     10: "Bifuel running Methanol",
     11: "Bifuel running Ethanol",
     12: "Bifuel running LPG",

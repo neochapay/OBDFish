@@ -30,11 +30,27 @@
         <source>Dynamic Values 1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cycle time: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Dyn2Page</name>
     <message>
         <source>Dynamic Values 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cycle time: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -101,6 +117,85 @@
     </message>
 </context>
 <context>
+    <name>OBDDataObject</name>
+    <message>
+        <source>Engine light, error number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuel system 1 and 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Engine Load</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Engine Temp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intake Air Pressure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Engine RPM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>rpm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vehicle Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Timing Advance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intake Air Temp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Air Flow Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>grams/sec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Throttle Position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuel Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gasoline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Propane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Electric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running Gasoline</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SettingsPage</name>
     <message>
         <source>Settings</source>
@@ -108,6 +203,10 @@
     </message>
     <message>
         <source>Dynamic Parameters Page 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic Parameters Page 2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
