@@ -190,8 +190,8 @@ var sSupportedPIDs0900 = "";
 
 var arrayPIDs =
 [
-    { pid: "0101", supported: false, bytescount: 4, labeltext: qsTr("Engine light, error number"), unittext: "", fncConvert: fncConvertDTCCheck },
-    { pid: "0103", supported: false, bytescount: 2, labeltext: qsTr("Fuel system 1 and 2"), unittext: "", fncConvert: fncConvertFuelSystem },
+    { pid: "0101", supported: false, bytescount: 4, labeltext: qsTr("Engine light, error number"), unittext: " ", fncConvert: fncConvertDTCCheck },
+    { pid: "0103", supported: false, bytescount: 2, labeltext: qsTr("Fuel system 1 and 2"), unittext: " ", fncConvert: fncConvertFuelSystem },
     { pid: "0104", supported: false, bytescount: 1, labeltext: qsTr("Engine Load"), unittext: "%", fncConvert: fncConvertLoad },
     { pid: "0105", supported: false, bytescount: 1, labeltext: qsTr("Engine Temp"), unittext: "C°", fncConvert: fncConvertTemp },
     { pid: "010b", supported: false, bytescount: 1, labeltext: qsTr("Intake Air Pressure"), unittext: "kPa", fncConvert: fncConvertIntakePressure },
@@ -202,7 +202,7 @@ var arrayPIDs =
     { pid: "0110", supported: false, bytescount: 2, labeltext: qsTr("Air Flow Rate"), unittext: qsTr("grams/sec"), fncConvert: fncConvertAirFlow },
     { pid: "0111", supported: false, bytescount: 1, labeltext: qsTr("Throttle Position"), unittext: "%", fncConvert: fncConvertThrottlePosition },
     { pid: "011c", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertOBDStandard },
-    { pid: "0151", supported: false, bytescount: 1, labeltext: qsTr("Fuel Type"), unittext: "", fncConvert: fncConvertFuelType },
+    { pid: "0151", supported: false, bytescount: 1, labeltext: qsTr("Fuel Type"), unittext: " ", fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertVINCount },
     { pid: "0902", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" }
 ];
@@ -220,21 +220,21 @@ var FuelTypes =
     7: qsTr("Propane"),
     8: qsTr("Electric"),
     9: qsTr("Bifuel running Gasoline"),
-    10: "Bifuel running Methanol",
-    11: "Bifuel running Ethanol",
-    12: "Bifuel running LPG",
-    13: "Bifuel running CNG",
-    14: "Bifuel running Propane",
-    15: "Bifuel running Electricity",
-    16: "Bifuel running electric and combustion engine",
-    17: "Hybrid gasoline",
+    10: qsTr("Bifuel running Methanol"),
+    11: qsTr("Bifuel running Ethanol"),
+    12: qsTr("Bifuel running LPG"),
+    13: qsTr("Bifuel running CNG"),
+    14: qsTr("Bifuel running Propane"),
+    15: qsTr("Bifuel running Electricity"),
+    16: qsTr("Bifuel running electric and combustion engine"),
+    17: qsTr("Hybrid gasoline"),
     18: "Hybrid Ethanol",
     19: "Hybrid Diesel",
-    20: "Hybrid Electric",
-    21: "Hybrid running electric and combustion engine",
-    22: "Hybrid Regenerative",
-    23: "Bifuel running diesel",
-    24: "Undefined"
+    20: qsTr("Hybrid Electric"),
+    21: qsTr("Hybrid running electric and combustion engine"),
+    22: qsTr("Hybrid Regenerative"),
+    23: qsTr("Bifuel running diesel"),
+    24: qsTr("Undefined")
 }
 var OBDStandards =
 {

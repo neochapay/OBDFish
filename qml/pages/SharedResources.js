@@ -68,10 +68,12 @@ function fncGetUsedDeviceBTNamesSeparatedString()
 
     for (var i = 0; i < arrayUsedAdapters.length; i++)
     {
-        sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTName"] + "#,#";
+        //Check if this is the last iteration
+        if ((i+1) === arrayUsedAdapters.length)
+            sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTName"];
+        else
+            sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTName"] + "#,#";
     }
-
-    sSeparatedString = sSeparatedString.slice(0, -3);
 
     return sSeparatedString;
 }
@@ -82,10 +84,12 @@ function fncGetUsedDeviceBTAddressesSeparatedString()
 
     for (var i = 0; i < arrayUsedAdapters.length; i++)
     {
-        sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTAddress"] + "#,#";
+        //Check if this is the last iteration
+        if ((i+1) === arrayUsedAdapters.length)
+            sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTAddress"];
+        else
+            sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTAddress"] + "#,#";
     }
-
-    sSeparatedString = sSeparatedString.slice(0, -3);
 
     return sSeparatedString;
 }

@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>Cycle time: </source>
-        <translation>Zykluszeit</translation>
+        <translation>Zykluszeit: </translation>
     </message>
     <message>
         <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
@@ -51,7 +51,7 @@
     </message>
     <message>
         <source>Cycle time: </source>
-        <translation>Zykluszeit</translation>
+        <translation>Zykluszeit: </translation>
     </message>
 </context>
 <context>
@@ -115,84 +115,212 @@
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Checking OBD adapter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disconnected from adapter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error while connecting: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: unknown adapter. This is no ELM327 device!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch echo off...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch linefeed off...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch headers off...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch spaces off...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set protocol...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supported PID&apos;s 0101-0120...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supported PID&apos;s 0121-0140...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supported PID&apos;s 0141-0160...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supported PID&apos;s 0900-0920...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Successfully connected to car computer!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connecting:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connecting to OBD adapter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initializing:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD adapters (press to connect):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Found adapters (press to connect):</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OBDDataObject</name>
     <message>
         <source>Engine light, error number</source>
-        <translation>Motor Warnleuchte, Anzahl Fehler</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fuel system 1 and 2</source>
-        <translation>Treibstoffsystem 1 und 2</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Engine Load</source>
-        <translation>Motorlast</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Engine Temp</source>
-        <translation>Motor Temp.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Intake Air Pressure</source>
-        <translation>Ansaugluftdruck</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Engine RPM</source>
-        <translation>Motor Drehzahl</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>rpm</source>
-        <translation>U/min</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Vehicle Speed</source>
-        <translation>Geschwindigkeit</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Timing Advance</source>
-        <translation>Zündwinkel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Intake Air Temp</source>
-        <translation>Ansauglufttemperator</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Air Flow Rate</source>
-        <translation>Luftdurchsatz</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>grams/sec</source>
-        <translation>Gramm/Sek.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Throttle Position</source>
-        <translation>Drosselklappenstellung</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fuel Type</source>
-        <translation>Treibstoffart</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation>Nicht verfügbar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gasoline</source>
-        <translation>Benzin</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Propane</source>
-        <translation>Propan</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Electric</source>
-        <translation>Elektrisch</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Bifuel running Gasoline</source>
-        <translation>Bifuel auf Benzin</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running Methanol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running Ethanol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running LPG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running CNG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running Propane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running Electricity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running electric and combustion engine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hybrid gasoline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hybrid Electric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hybrid running electric and combustion engine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hybrid Regenerative</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bifuel running diesel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undefined</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

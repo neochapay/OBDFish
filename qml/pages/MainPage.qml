@@ -32,6 +32,8 @@ Page
     property bool bBluetoothScanning: false    
     property string sCurrentBTAddress: ""
     property string sCurrentBTName: ""
+    property int iScannedDevicesCount: 0
+    property int iUsedDevicesCount: 0
 
     onStatusChanged:
     {       
@@ -57,10 +59,7 @@ Page
             if (sGetUsedAdaptersNames.length > 0 && sGetUsedAdaptersAddresses.length > 0)
             {
                  SharedResources.fncFillUsedAdaptersArray(sGetUsedAdaptersNames, sGetUsedAdaptersAddresses);
-                id_LV_UsedDevices.model = SharedResources.fncGetUsedDevicesNumber();
-
-                id_LV_UsedDevices.visible = true;
-                id_SH_UsedDevices.visible = true;
+                id_LV_UsedDevices.model = iUsedDevicesCount = SharedResources.fncGetUsedDevicesNumber();
             }            
         }
     }
@@ -72,7 +71,7 @@ Page
         {
             //Add device to data array
             SharedResources.fncAddDevice(sName, sAddress);
-            id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
+            id_LV_Devices.model = iScannedDevicesCount = SharedResources.fncGetDevicesNumber();
         }
         onScanFinished:
         {
@@ -85,13 +84,12 @@ Page
         target: id_BluetoothData        
         onSigConnected:         //This is called from C++ if a connection was established
         {            
-            fncViewMessage("info", "Connected");
             bConnected = true;
             bConnecting = false;
 
             //Now start with initialize process
             iInit = 1;
-            progressBarInit.label = "Checking OBD adapter...";
+            progressBarInit.label = qsTr("Checking OBD adapter...");
 
             //Send command to check if this is an ELM327
             iWaitForCommand = 0;
@@ -100,14 +98,14 @@ Page
         }
         onSigDisconnected:      //This is called from C++ if an established bluetooth connection gets disconnected
         {
-            fncViewMessage("info", "Disconnected");
+            fncViewMessage("info", qsTr("Disconnected from adapter"));
             bConnected = false;
             bConnecting = false;
         }
         onSigError:             //This is called from C++ if there was an error while establishing a bluetooth connection
         {
-            fncViewMessage("error", "Error: " + sError);
-            bConnecting = false;
+            fncShowMessage(qsTr("Error while connecting: ") + sError, 8000);
+            bConnected = false;
             bConnecting = false;
         }
     }
@@ -139,7 +137,7 @@ Page
                     {
                         //This is not ELM327!!!
                         //Skip now and disconect from bluetooth device
-                        fncViewMessage("error", "Unknown OBD Adapter!!!");
+                        fncShowMessage(qsTr("Error: unknown adapter. This is no ELM327 device!"), 8000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
@@ -152,7 +150,7 @@ Page
                         
                         //Let's initialize this baby...
                         iInit = 2;
-                        progressBarInit.label = "Switch echo off...";
+                        progressBarInit.label = qsTr("Switch echo off...");
                         fncStartCommand("ATE0");
                     }
                 }
@@ -160,31 +158,31 @@ Page
                 {
                     //Just send next init command
                     iInit = 3;
-                    progressBarInit.label = "Switch linefeed off...";
+                    progressBarInit.label = qsTr("Switch linefeed off...");
                     fncStartCommand("ATL0");
                 }
                 else if (iInit == 3)
                 {
                     iInit = 4;
-                    progressBarInit.label = "Switch headers off...";
+                    progressBarInit.label = qsTr("Switch headers off...");
                     fncStartCommand("ATH0");
                 }
                 else if (iInit == 4)
                 {
                     iInit = 5;
-                    progressBarInit.label = "Switch spaces off...";
+                    progressBarInit.label = qsTr("Switch spaces off...");
                     fncStartCommand("ATS0");
                 }
                 else if (iInit == 5)
                 {
                     iInit = 6;
-                    progressBarInit.label = "Set protocol...";
+                    progressBarInit.label = qsTr("Set protocol...");
                     fncStartCommand("ATSP0");
                 }
                 else if (iInit == 6)
                 {
                     iInit = 7;
-                    progressBarInit.label = "Supported PID's 0101-0120...";
+                    progressBarInit.label = qsTr("Supported PID's 0101-0120...");
                     fncStartCommand("0100");
                 }
                 else if (iInit == 7)
@@ -192,7 +190,7 @@ Page
                     iInit = 8;
                     OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0100");
 
-                    progressBarInit.label = "Supported PID's 0121-0140...";
+                    progressBarInit.label = qsTr("Supported PID's 0121-0140...");
                     fncStartCommand("0120");
                 }
                 else if (iInit == 8)
@@ -200,7 +198,7 @@ Page
                     iInit = 9;
                     OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0120");
 
-                    progressBarInit.label = "Supported PID's 0141-0160...";
+                    progressBarInit.label = qsTr("Supported PID's 0141-0160...");
                     fncStartCommand("0140");
                 }
                 else if (iInit == 9)
@@ -209,7 +207,7 @@ Page
                     //Evaluate answer from ELM
                     OBDDataObject.fncSetSupportedPIDs(sReceiveBuffer, "0140");
 
-                    progressBarInit.label = "Supported PID's 0900-0920...";
+                    progressBarInit.label = qsTr("Supported PID's 0900-0920...");
                     fncStartCommand("0900");
                 }
                 else if (iInit == 10)
@@ -224,7 +222,7 @@ Page
                     //Evaluate if ELM found any supported PID
                     if (OBDDataObject.fncGetFoundSupportedPIDs())
                     {
-                        fncViewMessage("info", "Init is ready now!!!");
+                        fncShowMessage(qsTr("Successfully connected to car computer!"), 6000);
 
                         //Save adapter as used adapter. Only do this if the adapter is not in the list of used devies.
                         if (SharedResources.fncAddUsedDevice(sCurrentBTName, sCurrentBTAddress))
@@ -237,10 +235,11 @@ Page
                         }
 
                         pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
+
+                        iInit = 0;
                     }
                     else
-                    {
-                        //fncViewMessage("error", "No supported PID's!!!");
+                    {                       
                         fncShowMessage("No supported PID's found!<br>- turn on ignition/engine<br>- reconnect to OBD adapter", 20000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
@@ -319,16 +318,10 @@ Page
                 text: qsTr("Start Scanning...")
                 visible: !bBluetoothScanning && !bConnecting && !bConnected
                 onClicked:
-                {
-                    //Make listviews visible/invisible
-                    id_SH_UsedDevices.visible = false;
-                    id_LV_UsedDevices.visible = false;
-                    id_SC_Devices.visible = true;
-                    id_LV_Devices.visible = true;
-
+                {                    
                     bBluetoothScanning = true;
                     SharedResources.fncDeleteDevices();
-                    id_LV_Devices.model = SharedResources.fncGetDevicesNumber();
+                    id_LV_Devices.model = iScannedDevicesCount = SharedResources.fncGetDevicesNumber();
                     id_BluetoothConnection.vStartDeviceDiscovery();
                 }
                 Image
@@ -379,13 +372,24 @@ Page
                 }
             }           
 
+            SectionHeader
+            {
+                text: qsTr("Connecting:")
+                visible: bConnecting
+            }
             ProgressBar
             {
                 id: progressBarConnectBT
                 width: parent.width
                 visible: bConnecting
                 indeterminate: true
-                label: "Connecting to OBD adapter..."
+                label: qsTr("Connecting to OBD adapter...")
+            }
+
+            SectionHeader
+            {
+                text: qsTr("Initializing:")
+                visible: (iInit > 0)
             }
             ProgressBar
             {
@@ -401,8 +405,8 @@ Page
             SectionHeader
             {
                 id: id_SH_UsedDevices
-                text: "OBD adapters (press to connect):"
-                visible: false
+                text: qsTr("OBD adapters (press to connect):")
+                visible: (iScannedDevicesCount === 0 && iUsedDevicesCount > 0 && !bConnected && !bConnecting && iInit === 0)
             }
             SilicaListView
             {
@@ -411,7 +415,7 @@ Page
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: parent.height / 3
-                visible: false
+                visible: (iScannedDevicesCount === 0 && iUsedDevicesCount > 0 && !bConnected && !bConnecting && iInit === 0)
 
                 delegate: BackgroundItem
                 {
@@ -442,8 +446,8 @@ Page
             SectionHeader
             {
                 id: id_SC_Devices
-                text: "Found adapters (press to connect):"
-                visible: false
+                text: qsTr("Found adapters (press to connect):")
+                visible: (iScannedDevicesCount > 0 &&  !bConnected && !bConnecting && iInit === 0)
             }
             SilicaListView
             {
@@ -452,7 +456,7 @@ Page
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: parent.height / 3
-                visible: false
+                visible: (iScannedDevicesCount > 0 &&  !bConnected && !bConnecting && iInit === 0)
 
                 delegate: BackgroundItem
                 {

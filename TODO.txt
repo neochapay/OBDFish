@@ -36,6 +36,11 @@
 	- bei Start der App die zweite Liste anzeigen, wenn sie etwas enthält
 	- Bei klick auf "suchen", die zweite Liste unsichtbar machen und die erste anzeigen
 	- Der Waiter nach dem INIT soll wieder unsichtbar gemacht werden.
+
+	- Bei Klick auf einen Bluetooth Adapter, die Listen unsichtbar machen.
+	- Listen wieder sichtbar machen, nach Disconnect
+	- Nach Connect/Init den Progressbar unsichtbar machen
+
 - GeneralInfoPage
 	- VIN Abfrage mehrfach wiederholen (10 fach). Testen mit Caddy.
 	- Fehler: Wenn die Sequenz nicht fertiggstellt ist, gibt es ein Problem -> Waiter einblenden und Abbruch verhindern.
