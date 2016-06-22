@@ -32,6 +32,7 @@ Page
     property string sFuelType: "Not supported"
     property string sVIN: "Not supported"
     property string sBatteryVoltage: ""
+    property int iWaitForVIN : 10
 
 
     onStatusChanged:
@@ -122,45 +123,34 @@ Page
                     case 10:
                         sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0901");
                         iCommandSequence++;
-                        break;
+                        break;                    
                     case 11:
-                        //Need this for VIN query.
-                        //Disable adaptive timing of ELM.
-                        fncStartCommand("ATAT0");
-                        iCommandSequence++;
-                        break;
-                    case 12:
-                        //Set very high timeout. Also needed for VIN query.
-                        fncStartCommand("ATST128");
-                        iCommandSequence++;
-                        break;
-                    case 13:
                         //The number behind the PID is the number of packets expected from ELM
                         //TODO: get the number of packets from 0901
                         if (fncStartCommand("0902" + OBDDataObject.arrayLookupPID["0902"].bytescount.toString()))
                             iCommandSequence++;
                         else
-                            iCommandSequence = iCommandSequence + 2;
+                            bWaitForCommandSequenceEnd = false; //Finish by halting timer
                         break;
-                    case 14:
+                    case 12:
                         sReadValue = OBDDataObject.fncEvaluateVINQuery(sReceiveBuffer);
                         if (sReadValue !== null)
                             sVIN = sReadValue;
                         else
-                            iCommandSequence--;
-                        iCommandSequence++;
-                        break;
-                    case 15:
-                        if (fncStartCommand("ATST128"))
-                            iCommandSequence++;
-                        else
-                            iCommandSequence = iCommandSequence + 2;
-                        break;
-                    case 16:
-                        fncStartCommand("ATAT1");
-                        //End sequence here.
-                        bWaitForCommandSequenceEnd = false; //Finish by halting timer
-                        break;
+                        {
+                            if (iWaitForVIN > 0)    //VIN query is repeated 10 times, because cars (VW Caddy) sometimes don't deliver all packets.
+                            {
+                                iWaitForVIN--;
+                                iCommandSequence--;
+                            }
+                            else
+                            {
+                                //End sequence here.
+                                bWaitForCommandSequenceEnd = false; //Finish by halting timer
+                            }
+                        }
+
+                        break;                    
                 }
             }            
             else

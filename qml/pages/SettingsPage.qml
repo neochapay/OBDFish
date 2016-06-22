@@ -27,6 +27,7 @@ Page
     property bool bInitPage: true
     property bool bPageInitialized: false
     property variant arComboboxStringArray : []    
+    property int iPIDPageIndex: 0;
 
     function fncOnComboboxCompleted()
     {
@@ -39,7 +40,11 @@ Page
         {
             if (OBDDataObject.arrayPIDs[i].labeltext !== null)
             {
-                arComboarray.push(OBDDataObject.arrayPIDs[i].labeltext);
+                if (OBDDataObject.arrayPIDs[i].supported)
+                    arComboarray.push(qsTr("Supported: ") + OBDDataObject.arrayPIDs[i].labeltext);
+                else
+                    arComboarray.push(qsTr("Not supported: ") + OBDDataObject.arrayPIDs[i].labeltext);
+
                 SettingsDataObject.arPIDarray.push({text: OBDDataObject.arrayPIDs[i].labeltext, pid: OBDDataObject.arrayPIDs[i].pid, index: (i + 1)});
             }
         }
@@ -62,32 +67,16 @@ Page
             bPushSettingsPage = false;
 
             //Generate array for the start index of the copmboboxes
-            var arPIDsPage1 = sPIDsPage1.split(",");
-            var arPIDsPage2 = sPIDsPage2.split(",");
-            var arPIDsPage3 = sPIDsPage3.split(",");
+            var arPIDsPage = arPIDsPagesArray[iPIDPageIndex].split(",");
 
             //Set start indexes of comboboxes.
             //This has to be done here, because the boxes first have to be filled with the models. That is a timing issue.
-            id_CMB_page1_1.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[0]].index;
-            id_CMB_page1_2.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[1]].index;
-            id_CMB_page1_3.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[2]].index;
-            id_CMB_page1_4.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[3]].index;
-            id_CMB_page1_5.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[4]].index;
-            id_CMB_page1_6.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage1[5]].index;
-
-            id_CMB_page2_1.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[0]].index;
-            id_CMB_page2_2.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[1]].index;
-            id_CMB_page2_3.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[2]].index;
-            id_CMB_page2_4.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[3]].index;
-            id_CMB_page2_5.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[4]].index;
-            id_CMB_page2_6.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[5]].index;
-
-            id_CMB_page3_1.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[0]].index;
-            id_CMB_page3_2.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[1]].index;
-            id_CMB_page3_3.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[2]].index;
-            id_CMB_page3_4.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[3]].index;
-            id_CMB_page3_5.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[4]].index;
-            id_CMB_page3_6.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[5]].index;
+            id_CMB_page1_1.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage[0]].index;
+            id_CMB_page1_2.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage[1]].index;
+            id_CMB_page1_3.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage[2]].index;
+            id_CMB_page1_4.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage[3]].index;
+            id_CMB_page1_5.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage[4]].index;
+            id_CMB_page1_6.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage[5]].index;
 
             bInitPage = false;
         }
@@ -95,64 +84,28 @@ Page
         //Save values to project data when page is closed
         if (status === PageStatus.Deactivating && !bInitPage)
         {
-            var sPIDsPage1FromPage = "";
-            var sPIDsPage2FromPage = "";
-            var sPIDsPage3FromPage = "";
+            var sPIDsPageFromPage = "";
 
             //Check if fields are valid and have changed. Save values.
             //Generate PID strings from comboboxe indexes
-            sPIDsPage1FromPage = SettingsDataObject.arLookupINDEX[id_CMB_page1_1.currentIndex].pid + "," +
+            sPIDsPageFromPage = SettingsDataObject.arLookupINDEX[id_CMB_page1_1.currentIndex].pid + "," +
                     SettingsDataObject.arLookupINDEX[id_CMB_page1_2.currentIndex].pid + "," +
                     SettingsDataObject.arLookupINDEX[id_CMB_page1_3.currentIndex].pid + "," +
                     SettingsDataObject.arLookupINDEX[id_CMB_page1_4.currentIndex].pid + "," +
                     SettingsDataObject.arLookupINDEX[id_CMB_page1_5.currentIndex].pid + "," +
                     SettingsDataObject.arLookupINDEX[id_CMB_page1_6.currentIndex].pid;
 
-            sPIDsPage2FromPage = SettingsDataObject.arLookupINDEX[id_CMB_page2_1.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page2_2.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page2_3.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page2_4.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page2_5.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page2_6.currentIndex].pid;
-
-            sPIDsPage3FromPage = SettingsDataObject.arLookupINDEX[id_CMB_page3_1.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page3_2.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page3_3.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page3_4.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page3_5.currentIndex].pid + "," +
-                    SettingsDataObject.arLookupINDEX[id_CMB_page3_6.currentIndex].pid;
-
             //Check if settings changed.
-            if (sPIDsPage1FromPage !== sPIDsPage1)
+            if (sPIDsPageFromPage !== arPIDsPagesArray[iPIDPageIndex])
             {
-                console.log("sPIDsPage1: " + sPIDsPage1);
-                console.log("sPIDsPage1FromPage: " + sPIDsPage1FromPage);
+                console.log("arPIDsPagesArray[iPIDPageIndex]: " + arPIDsPagesArray[iPIDPageIndex]);
+                console.log("sPIDsPageFromPage: " + sPIDsPageFromPage);
 
-                //Save new configuration to global variable
-                sPIDsPage1 = sPIDsPage1FromPage;
+                //Save new configuration to global array variable
+                arPIDsPagesArray[iPIDPageIndex] = sPIDsPageFromPage;
                 //Save new configuration to project settings
-                id_ProjectSettings.vSaveProjectData("PIDsPage1", sPIDsPage1FromPage);
-            }
-            if (sPIDsPage2FromPage !== sPIDsPage2)
-            {
-                console.log("sPIDsPage2: " + sPIDsPage2);
-                console.log("sPIDsPage2FromPage: " + sPIDsPage2FromPage);
-
-                //Save new configuration to global variable
-                sPIDsPage2 = sPIDsPage2FromPage;
-                //Save new configuration to project settings
-                id_ProjectSettings.vSaveProjectData("PIDsPage2", sPIDsPage2FromPage);
-            }
-            if (sPIDsPage3FromPage !== sPIDsPage3)
-            {
-                console.log("sPIDsPage3: " + sPIDsPage3);
-                console.log("sPIDsPage3FromPage: " + sPIDsPage3FromPage);
-
-                //Save new configuration to global variable
-                sPIDsPage3 = sPIDsPage3FromPage;
-                //Save new configuration to project settings
-                id_ProjectSettings.vSaveProjectData("PIDsPage3", sPIDsPage3FromPage);
-            }
+                id_ProjectSettings.vSaveProjectData("PIDsPage" + (iPIDPageIndex + 1).toString(), sPIDsPageFromPage);
+            }           
         }
     }
 
@@ -174,7 +127,7 @@ Page
 
             SectionHeader
             {
-                text: qsTr("Dynamic Parameters Page 1")
+                text: qsTr("Dynamic Parameters Page: " + (iPIDPageIndex + 1).toString())
             }
             ComboBox
             {
@@ -223,114 +176,7 @@ Page
                 label: 'Parameter6:'
                 menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
                 Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-
-
-            SectionHeader
-            {
-                text: qsTr("Dynamic Parameters Page 2")
-            }
-            ComboBox
-            {
-                id: id_CMB_page2_1
-                width: parent.width
-                label: 'Parameter1:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData }}}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page2_2
-                width: parent.width
-                label: 'Parameter2:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page2_3
-                width: parent.width
-                label: 'Parameter3:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page2_4
-                width: parent.width
-                label: 'Parameter4:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page2_5
-                width: parent.width
-                label: 'Parameter5:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page2_6
-                width: parent.width
-                label: 'Parameter6:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-
-            SectionHeader
-            {
-                text: qsTr("Dynamic Parameters Page 3")
-            }
-            ComboBox
-            {
-                id: id_CMB_page3_1
-                width: parent.width
-                label: 'Parameter1:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData }}}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page3_2
-                width: parent.width
-                label: 'Parameter2:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page3_3
-                width: parent.width
-                label: 'Parameter3:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page3_4
-                width: parent.width
-                label: 'Parameter4:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page3_5
-                width: parent.width
-                label: 'Parameter5:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
-            ComboBox
-            {
-                id: id_CMB_page3_6
-                width: parent.width
-                label: 'Parameter6:'
-                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
-                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
-            }
+            }        
         }
     }
 }

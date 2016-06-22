@@ -38,6 +38,10 @@
         <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Dyn2Page</name>
@@ -53,6 +57,10 @@
         <source>Cycle time: </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Dyn3Page</name>
@@ -66,6 +74,10 @@
     </message>
     <message>
         <source>Cycle time: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -124,10 +136,6 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -409,15 +417,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dynamic Parameters Page 1</source>
+        <source>Supported: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dynamic Parameters Page 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dynamic Parameters Page 3</source>
+        <source>Not supported: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -38,6 +38,10 @@
         <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
         <translation>Je mehr Parameter auf einer Seite geladen werden, desto höher ist die Zykluszeit.&lt;br&gt;Um eine kürzere Zykluszeit zu erreichen, kann die Anhzahl der Parameter in den Einstellungen reduziert werden.</translation>
     </message>
+    <message>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
+    </message>
 </context>
 <context>
     <name>Dyn2Page</name>
@@ -52,6 +56,10 @@
     <message>
         <source>Cycle time: </source>
         <translation>Zykluszeit: </translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -68,36 +76,40 @@
         <source>Cycle time: </source>
         <translation>Zykluszeit: </translation>
     </message>
+    <message>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
+    </message>
 </context>
 <context>
     <name>GeneralInfo</name>
     <message>
         <source>General Informations</source>
-        <translation type="unfinished"></translation>
+        <translation>Allgemeine Infos</translation>
     </message>
     <message>
         <source>Vehicle Identification Number: &lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Fahrzeug-Identifizierungsnummer (VIN): &lt;br&gt;</translation>
     </message>
     <message>
         <source>OBD adapter: ELM327 </source>
-        <translation type="unfinished"></translation>
+        <translation>OBD-Adapter: ELM327 </translation>
     </message>
     <message>
         <source>OBD standard: </source>
-        <translation type="unfinished"></translation>
+        <translation>OBD-Standard: </translation>
     </message>
     <message>
         <source>OBD protocol: </source>
-        <translation type="unfinished"></translation>
+        <translation>OBD-Protocol: </translation>
     </message>
     <message>
         <source>Battery voltage: </source>
-        <translation type="unfinished"></translation>
+        <translation>Batteriespannung: </translation>
     </message>
     <message>
         <source>Fuel type: </source>
-        <translation type="unfinished"></translation>
+        <translation>Kraftstoff: </translation>
     </message>
 </context>
 <context>
@@ -125,10 +137,6 @@
     <message>
         <source>About</source>
         <translation>Über OBDFish</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Checking OBD adapter...</source>
@@ -409,16 +417,12 @@
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <source>Dynamic Parameters Page 1</source>
-        <translation>Dynamische Parameter Seite 1</translation>
+        <source>Supported: </source>
+        <translation>Unterstüzt: </translation>
     </message>
     <message>
-        <source>Dynamic Parameters Page 2</source>
-        <translation>Dynamische Parameter Seite 2</translation>
-    </message>
-    <message>
-        <source>Dynamic Parameters Page 3</source>
-        <translation type="unfinished">Dynamische Parameter Seite 3</translation>
+        <source>Not supported: </source>
+        <translation>Nicht unterstüzt: </translation>
     </message>
 </context>
 </TS>

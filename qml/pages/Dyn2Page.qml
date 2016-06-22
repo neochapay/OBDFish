@@ -17,13 +17,14 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.obdfish 1.0
 import "OBDDataObject.js" as OBDDataObject
 
 Page
 {
     allowedOrientations: Orientation.All
-    id: id_page_dyn2
-    property bool bPushDyn2Page: true
+    id: id_page_dyn1
+    property bool bPushDyn1Page: true
     property bool bInitPage: true
     property int iWaitForCommand: 0
     property int iCommandSequence: 1
@@ -40,9 +41,9 @@ Page
 
     onStatusChanged:
     {
-        if (status === PageStatus.Active && bPushDyn2Page)
+        if (status === PageStatus.Active && bPushDyn1Page)
         {
-            bPushDyn2Page = false;
+            bPushDyn1Page = false;
 
             pageStack.pushAttached(Qt.resolvedUrl("Dyn3Page.qml"));
         }
@@ -57,14 +58,16 @@ Page
             iNowTime = 0;
 
             //Fill PID's for this Page into an array. Empty spaces between two PID's should be avoided.
-            var arPIDsPage2 = sPIDsPage2.split(",");
+            var arPIDsPage = arPIDsPagesArray[1].split(",");
             var arPIDPageArrayTemp = [];
-            for (var i = 0; i < arPIDsPage2.length; i++)
+            for (var i = 0; i < arPIDsPage.length; i++)
             {
-                if (arPIDsPage2[i] !== "0000")
-                    arPIDPageArrayTemp.push(arPIDsPage2[i]);
+                if (arPIDsPage[i] !== "0000")
+                    arPIDPageArrayTemp.push(arPIDsPage[i]);
             }
             arPIDPageArray = arPIDPageArrayTemp;
+
+            id_PlotWidget.reset();
 
             bInitPage = false;
         }
@@ -107,9 +110,17 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 2:
+                        var sValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase());
                         sParameter1 = OBDDataObject.arrayLookupPID[arPIDPageArray[0]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase()) +
+                                sValue +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[0]].unittext;
+
+                        if (arPIDPageArray.length == 1)
+                        {
+                            id_PlotWidget.addValue(sValue);
+                            id_PlotWidget.update();
+                        }
+
                         iCommandSequence++;
                         break;
                     case 3:
@@ -197,6 +208,14 @@ Page
 
         VerticalScrollDecorator {}
 
+        PullDownMenu
+        {
+            MenuItem
+            {
+                text: qsTr("Settings")
+                onClicked: {pageStack.push(Qt.resolvedUrl("SettingsPage.qml"), {iPIDPageIndex: 1})}
+            }
+        }
         Column
         {
             id: id_Column_FirstCol
@@ -287,6 +306,15 @@ Page
             {
                 visible: (arPIDPageArray.length > 5)
                 text: sParameter6;
+            }
+            PlotWidget
+            {
+                id: id_PlotWidget
+                visible: (arPIDPageArray.length == 1)
+                width: parent.width
+                height: 150
+                plotColor: Theme.highlightColor
+                scaleColor: Theme.secondaryHighlightColor
             }
         }
     }

@@ -53,9 +53,12 @@ Page
             //sGetUsedAdaptersAddresses = "12:34:56:88:C7:B1#,#88:18:56:68:98:EB#,#98:76:54:32:10:00";
 
             //Check project data
-            if (sGetPIDsPage1.length > 0) sPIDsPage1=sGetPIDsPage1;
-            if (sGetPIDsPage2.length > 0) sPIDsPage2=sGetPIDsPage2;
-            if (sGetPIDsPage3.length > 0) sPIDsPage3=sGetPIDsPage3;
+            if (sGetPIDsPage1.length > 0 && sGetPIDsPage2.length > 0 && sGetPIDsPage3.length > 0)
+            {
+                arPIDsPagesArray[0] = sGetPIDsPage1;
+                arPIDsPagesArray[1] = sGetPIDsPage2;
+                arPIDsPagesArray[2] = sGetPIDsPage3;
+            }
 
             //Check if there are used devices. If there are, show them.
             if (sGetUsedAdaptersNames.length > 0 && sGetUsedAdaptersAddresses.length > 0)
@@ -288,11 +291,13 @@ Page
 
         PullDownMenu
         {
+            /*
             MenuItem
             {
                 text: qsTr("Settings")
                 onClicked: {pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))}
             }
+            */
             MenuItem
             {
                 text: qsTr("About")

@@ -33,9 +33,7 @@ ApplicationWindow
     property string sReceiveBuffer: "";
     property string sDebugFileBuffer: "";
     property string sELMVersion: "";
-    property string sPIDsPage1: "0104,0105,010c,010d,010e,0111";
-    property string sPIDsPage2: "0104,0105,010c,010d,010e,0111";
-    property string sPIDsPage3: "0104,0105,010c,010d,010e,0111";
+    property variant arPIDsPagesArray : [ "0104,0105,010c,010d,010e,0111", "0104,0105,010c,010d,010e,0111", "0104,0105,010c,010d,010e,0111" ]
 
     //Init C++ classes, libraries
     PlotWidget{ id: id_PlotWidget }

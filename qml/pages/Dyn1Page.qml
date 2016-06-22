@@ -58,14 +58,16 @@ Page
             iNowTime = 0;
 
             //Fill PID's for this Page into an array. Empty spaces between two PID's should be avoided.
-            var arPIDsPage1 = sPIDsPage1.split(",");
+            var arPIDsPage = arPIDsPagesArray[0].split(",");
             var arPIDPageArrayTemp = [];
-            for (var i = 0; i < arPIDsPage1.length; i++)
+            for (var i = 0; i < arPIDsPage.length; i++)
             {
-                if (arPIDsPage1[i] !== "0000")
-                    arPIDPageArrayTemp.push(arPIDsPage1[i]);
+                if (arPIDsPage[i] !== "0000")
+                    arPIDPageArrayTemp.push(arPIDsPage[i]);
             }
             arPIDPageArray = arPIDPageArrayTemp;
+
+            id_PlotWidget.reset();
 
             bInitPage = false;
         }
@@ -206,6 +208,14 @@ Page
 
         VerticalScrollDecorator {}
 
+        PullDownMenu
+        {
+            MenuItem
+            {
+                text: qsTr("Settings")
+                onClicked: {pageStack.push(Qt.resolvedUrl("SettingsPage.qml"), {iPIDPageIndex: 0})}
+            }
+        }
         Column
         {
             id: id_Column_FirstCol

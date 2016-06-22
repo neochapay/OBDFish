@@ -1,52 +1,37 @@
---------------Ideas---------------
+--------------ToDo's for immediate future (before next release)---------------
+- Repeat VIN request if not all data packets arrived. VW Caddy sometimes leaves out packet number 4!!!			-> should work now. Need to check this out...
+- Each dynamic parameters page should have it's own settings page reachable via pull menu.						-> should work now. Need to check this out...
+- In settings page, mark the supported/unsupported settings														-> should work now. Need to check this out...
+
+
+--------------ToDo's for near future---------------
+- Check MIL in init process on mainpage. If it is set, show a warning.
+- Voltage should be choosable as parameter for dynamic pages.
+- Add more PID's
+- Add debug file which holds errors and problems detected by the software
+- Add global settings page:
+	- save communication with ELM327 to a file
+
+
+--------------ToDo's for far future---------------
+
+- Don't know what informations to view on the cover page. Need input...
+
 - Make a VIN decoder (first only VW)
 	- for every car brand an own JS library file
 	- JS library has a generic function to decode
 	- JS library has all lists which are needed to decode VIN. E.g. models, manufacturing date , ...
 
+- Build in special PID requests, e.g. only working for Volkswagen
+	- find a list of known PID's and how to deal with them
 
-- Eine Seite für Statische Daten		-> FERTIG
-	- Adapter ID
-	- OBD Standard
-	- VIN mit Auswertung über Webseite
+- Read trouble codes from PID area 0300
+	- Problem is here that these codes might be manufacturer dependent.
+	- I need to find out how to trigger a trouble code with my car.
+	- The trouble codes should be viewed in a new dialog.
 
-- Mehrere Seiten für Dynamische Daten
-	- Diese Seiten haben je 6 Parameter
-	- Die Seiten sind konfigurierbar (6 DropDown Boxen)
-	- Wenn ein Parameter nicht unterstüzt ist: "Nicht unterstüzt" anzeigen
-	- 
-
-- Profile für Autos anlegen
-	- Die Konfiguration der Dynamischen Seiten wird hier abgespeichert
-	- auch die Zuornung der bekannten Adapter kann hierüber erfolgen -> das ist fraglich, mehr darüber nachdenken.
-
-- MIL in Init prüfen. Wenn gesetzt, Warnung anzeigen
-
-- Spannung irgendwie generisch als weitere PID abfragen. Mit in dynamische Parameter.
-
-
-
-----------NÄCHSTE SCHRITTE--------------
-- Dynamische Dialoge
-	- elseif auf switchcase umstellen -> auf Dyn1Page schon umgesetzt. Weitere DynPages erstellen.
-	- Weitere PID's anlegen
-- MainPage
-	- zweite Liste einbauen für bekannte Adapter. Jedes Adapter mit erfolgreicher Verbindung dort eintragen.
-	- bekannte Adapter in Projektdaten speichern
-	- bei Start der App die zweite Liste anzeigen, wenn sie etwas enthält
-	- Bei klick auf "suchen", die zweite Liste unsichtbar machen und die erste anzeigen
-	- Der Waiter nach dem INIT soll wieder unsichtbar gemacht werden.
-
-	- Bei Klick auf einen Bluetooth Adapter, die Listen unsichtbar machen.
-	- Listen wieder sichtbar machen, nach Disconnect
-	- Nach Connect/Init den Progressbar unsichtbar machen
-
-- GeneralInfoPage
-	- VIN Abfrage mehrfach wiederholen (10 fach). Testen mit Caddy.
-	- Fehler: Wenn die Sequenz nicht fertiggstellt ist, gibt es ein Problem -> Waiter einblenden und Abbruch verhindern.
-- Debug Datei anlegen. Alle Console.logs müssen da rein!!!
-
--------------------BUGS---------------------
-- Beim Speichern von bekannten BT Adaptern wird immer das Trennzeichen hinten angehängt
-
+- Reset trouble codes
+	- The ELM327 allows to reset triggered trouble codes.
+	- Is this maybe manufacturer dependent? I won't do this if there is some chance of bricking the car controller!!!
+	- Send a mode 04 command to the ELM. Do this only if there are trouble codes.
 
