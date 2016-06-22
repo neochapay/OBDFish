@@ -44,6 +44,7 @@ Page
             //Load project data
             var sGetPIDsPage1 = id_ProjectSettings.sLoadProjectData("PIDsPage1");
             var sGetPIDsPage2 = id_ProjectSettings.sLoadProjectData("PIDsPage2");
+            var sGetPIDsPage3 = id_ProjectSettings.sLoadProjectData("PIDsPage3");
             var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
             var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
 
@@ -54,6 +55,7 @@ Page
             //Check project data
             if (sGetPIDsPage1.length > 0) sPIDsPage1=sGetPIDsPage1;
             if (sGetPIDsPage2.length > 0) sPIDsPage2=sGetPIDsPage2;
+            if (sGetPIDsPage3.length > 0) sPIDsPage3=sGetPIDsPage3;
 
             //Check if there are used devices. If there are, show them.
             if (sGetUsedAdaptersNames.length > 0 && sGetUsedAdaptersAddresses.length > 0)

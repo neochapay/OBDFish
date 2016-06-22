@@ -45,3 +45,8 @@
 	- VIN Abfrage mehrfach wiederholen (10 fach). Testen mit Caddy.
 	- Fehler: Wenn die Sequenz nicht fertiggstellt ist, gibt es ein Problem -> Waiter einblenden und Abbruch verhindern.
 - Debug Datei anlegen. Alle Console.logs müssen da rein!!!
+
+-------------------BUGS---------------------
+- Beim Speichern von bekannten BT Adaptern wird immer das Trennzeichen hinten angehängt
+
+

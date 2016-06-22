@@ -50,19 +50,19 @@ Page
             onClicked:
             {
                 if (iCountWhtRbbt == 1)
-                    fncShowMessage("First iteration", 1000);
+                    fncShowMessage("First iteration: At the earliest drawing of the fractal curve, few clues to the underlying mathematical structure will be seen - IAN MALCOLM", 6000);
                 else if (iCountWhtRbbt == 2)
-                    fncShowMessage("Second iteration", 1000);
+                    fncShowMessage("Second iteration: With subsequent drawings of the fractal curve, sudden changes may appear. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 3)
-                    fncShowMessage("Third iteration", 1000);
+                    fncShowMessage("Third iteration: Details emerge more clearly as the fractal curve is redrawn. - Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 4)
-                    fncShowMessage("Fourth iteration", 1000);
+                    fncShowMessage("Fourth iteration: Inevitably, underlying instabilities begin to appear. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 5)
-                    fncShowMessage("Fifth iteration", 1000);
+                    fncShowMessage("Fifth iteration: Flawsin the system will now become severe. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 6)
-                    fncShowMessage("Sixth iteration", 1000);
+                    fncShowMessage("Sixth iteration: System recovery may prove impossible. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 7)
-                    fncShowMessage("Seventh iteration", 1000);
+                    fncShowMessage("Seventh iteration: Increasingly, the mathematics will demand the courage to face its implications. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 8)
                     fncShowMessage("STOP NOW or system will crash!!!", 6000);
                 else if (iCountWhtRbbt == 9)
@@ -123,7 +123,7 @@ Page
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: Theme.fontSizeExtraSmall
             color: Theme.secondaryColor
-            text: qsTr("Date: 07.05.2016")
+            text: qsTr("Date: ") + "07.05.2016";
         }
         Label
         {

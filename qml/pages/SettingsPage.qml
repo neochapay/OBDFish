@@ -64,6 +64,7 @@ Page
             //Generate array for the start index of the copmboboxes
             var arPIDsPage1 = sPIDsPage1.split(",");
             var arPIDsPage2 = sPIDsPage2.split(",");
+            var arPIDsPage3 = sPIDsPage3.split(",");
 
             //Set start indexes of comboboxes.
             //This has to be done here, because the boxes first have to be filled with the models. That is a timing issue.
@@ -81,6 +82,13 @@ Page
             id_CMB_page2_5.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[4]].index;
             id_CMB_page2_6.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage2[5]].index;
 
+            id_CMB_page3_1.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[0]].index;
+            id_CMB_page3_2.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[1]].index;
+            id_CMB_page3_3.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[2]].index;
+            id_CMB_page3_4.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[3]].index;
+            id_CMB_page3_5.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[4]].index;
+            id_CMB_page3_6.currentIndex = SettingsDataObject.arLookupPID[arPIDsPage3[5]].index;
+
             bInitPage = false;
         }
 
@@ -89,6 +97,7 @@ Page
         {
             var sPIDsPage1FromPage = "";
             var sPIDsPage2FromPage = "";
+            var sPIDsPage3FromPage = "";
 
             //Check if fields are valid and have changed. Save values.
             //Generate PID strings from comboboxe indexes
@@ -105,6 +114,13 @@ Page
                     SettingsDataObject.arLookupINDEX[id_CMB_page2_4.currentIndex].pid + "," +
                     SettingsDataObject.arLookupINDEX[id_CMB_page2_5.currentIndex].pid + "," +
                     SettingsDataObject.arLookupINDEX[id_CMB_page2_6.currentIndex].pid;
+
+            sPIDsPage3FromPage = SettingsDataObject.arLookupINDEX[id_CMB_page3_1.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page3_2.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page3_3.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page3_4.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page3_5.currentIndex].pid + "," +
+                    SettingsDataObject.arLookupINDEX[id_CMB_page3_6.currentIndex].pid;
 
             //Check if settings changed.
             if (sPIDsPage1FromPage !== sPIDsPage1)
@@ -126,6 +142,16 @@ Page
                 sPIDsPage2 = sPIDsPage2FromPage;
                 //Save new configuration to project settings
                 id_ProjectSettings.vSaveProjectData("PIDsPage2", sPIDsPage2FromPage);
+            }
+            if (sPIDsPage3FromPage !== sPIDsPage3)
+            {
+                console.log("sPIDsPage3: " + sPIDsPage3);
+                console.log("sPIDsPage3FromPage: " + sPIDsPage3FromPage);
+
+                //Save new configuration to global variable
+                sPIDsPage3 = sPIDsPage3FromPage;
+                //Save new configuration to project settings
+                id_ProjectSettings.vSaveProjectData("PIDsPage3", sPIDsPage3FromPage);
             }
         }
     }
@@ -150,7 +176,6 @@ Page
             {
                 text: qsTr("Dynamic Parameters Page 1")
             }
-
             ComboBox
             {
                 id: id_CMB_page1_1
@@ -205,7 +230,6 @@ Page
             {
                 text: qsTr("Dynamic Parameters Page 2")
             }
-
             ComboBox
             {
                 id: id_CMB_page2_1
@@ -249,6 +273,59 @@ Page
             ComboBox
             {
                 id: id_CMB_page2_6
+                width: parent.width
+                label: 'Parameter6:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+
+            SectionHeader
+            {
+                text: qsTr("Dynamic Parameters Page 3")
+            }
+            ComboBox
+            {
+                id: id_CMB_page3_1
+                width: parent.width
+                label: 'Parameter1:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData }}}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page3_2
+                width: parent.width
+                label: 'Parameter2:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page3_3
+                width: parent.width
+                label: 'Parameter3:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page3_4
+                width: parent.width
+                label: 'Parameter4:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page3_5
+                width: parent.width
+                label: 'Parameter5:'
+                menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}
+                Component.onCompleted: { if (bPageInitialized===false) fncOnComboboxCompleted(); }
+            }
+            ComboBox
+            {
+                id: id_CMB_page3_6
                 width: parent.width
                 label: 'Parameter6:'
                 menu: ContextMenu { Repeater { model: arComboboxStringArray; MenuItem { text: modelData } }}

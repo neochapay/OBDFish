@@ -238,19 +238,19 @@ var FuelTypes =
 }
 var OBDStandards =
 {
-    1: "OBD-II as defined by the CARB",
-    2: "OBD as defined by the EPA",
-    3: "OBD and OBD-II",
+    1: qsTr("OBD-II as defined by the CARB"),
+    2: qsTr("OBD as defined by the EPA"),
+    3: qsTr("OBD and OBD-II"),
     4: "OBD-I",
-    5: "Not OBD compliant",
-    6: "EOBD (Europe)",
-    7: "EOBD and OBD-II",
-    8: "EOBD and OBD",
-    9: "EOBD, OBD and OBD II",
+    5: qsTr("Not OBD compliant"),
+    6: qsTr("EOBD (Europe)"),
+    7: qsTr("EOBD and OBD-II"),
+    8: qsTr("EOBD and OBD"),
+    9: qsTr("EOBD, OBD and OBD II"),
     10: "JOBD (Japan)",
-    11: "JOBD and OBD II",
-    12: "JOBD and EOBD",
-    13: "JOBD, EOBD, and OBD II",
+    11: qsTr("JOBD and OBD II"),
+    12: qsTr("JOBD and EOBD"),
+    13: qsTr("JOBD, EOBD, and OBD II"),
     14: "Reserved",
     15: "Reserved",
     16: "Reserved",
@@ -271,16 +271,16 @@ var OBDStandards =
     31: "India OBD I (IOBD I)",
     32: "India OBD II (IOBD II)",
     33: "Heavy Duty Euro OBD Stage VI (HD EOBD-IV)",
-    34: "Undefined"
+    34: qsTr("Undefined")
 }
 
 var FuelSystem =
 {
-    1: "Open loop due to insufficient engine temperature",
-    2: "Closed loop, using oxygen sensor feedback to determine fuel mix",
-    4: "Open loop due to engine load OR fuel cut due to deceleration",
-    8: "Open loop due to system failure",
-    16: "Closed loop, using at least one oxygen sensor but there is a fault in the feedback system"
+    1: qsTr("Open loop due to insufficient engine temperature"),
+    2: qsTr("Closed loop, using oxygen sensor feedback to determine fuel mix"),
+    4: qsTr("Open loop due to engine load OR fuel cut due to deceleration"),
+    8: qsTr("Open loop due to system failure"),
+    16: qsTr("Closed loop, using at least one oxygen sensor but there is a fault in the feedback system")
 }
 
 //Create lookup table for PID's.

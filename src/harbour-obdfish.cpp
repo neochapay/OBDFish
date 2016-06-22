@@ -24,10 +24,12 @@
 #include "../src/bluetoothdata.h"
 #include "../src/filewriter.h"
 #include "../src/projectsettings.h"
+#include "../src/plotwidget.h"
 
 
 int main(int argc, char *argv[])
 {
+    qmlRegisterType<PlotWidget,1>("harbour.obdfish", 1, 0, "PlotWidget");
     qmlRegisterType<BluetoothConnection,1>("harbour.obdfish", 1, 0, "BluetoothConnection");
     qmlRegisterType<BluetoothData,1>("harbour.obdfish", 1, 0, "BluetoothData");
     qmlRegisterType<FileWriter,1>("harbour.obdfish", 1, 0, "FileWriter");

@@ -14,11 +14,15 @@ TARGET = harbour-obdfish
 
 CONFIG += sailfishapp
 
+QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_LFLAGS += -std=c++0x
+
 SOURCES += src/harbour-obdfish.cpp \
     src/bluetoothconnection.cpp \
     src/bluetoothdata.cpp \
     src/filewriter.cpp \
-    src/projectsettings.cpp
+    src/projectsettings.cpp \
+    src/plotwidget.cpp
 
 QT += bluetooth
 
@@ -46,7 +50,8 @@ HEADERS += \
     src/bluetoothconnection.h \
     src/bluetoothdata.h \
     src/filewriter.h \
-    src/projectsettings.h
+    src/projectsettings.h \
+    src/plotwidget.h
 
 DISTFILES += \
     rpm/harbour-obdfish.spec \
@@ -60,5 +65,6 @@ DISTFILES += \
     qml/pages/Dyn1Page.qml \
     qml/pages/Dyn2Page.qml \
     qml/pages/SettingsPage.qml \
-    qml/pages/SettingsDataObject.js
+    qml/pages/SettingsDataObject.js \
+    qml/pages/Dyn3Page.qml
 

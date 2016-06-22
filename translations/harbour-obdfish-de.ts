@@ -5,23 +5,23 @@
     <name>AboutPage</name>
     <message>
         <source>About OBDFish</source>
-        <translation type="unfinished"></translation>
+        <translation>Über OBDFish</translation>
     </message>
     <message>
         <source>OBD ELM327 car diagnostic reader application for Sailfish OS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Date: 07.05.2016</source>
-        <translation type="unfinished"></translation>
+        <translation>OBD ELM327 Fahrzeugdiagnose für Sailfish OS</translation>
     </message>
     <message>
         <source>License: GPLv3</source>
-        <translation type="unfinished"></translation>
+        <translation>Lizenz: GPLv3</translation>
     </message>
     <message>
         <source>Source code:</source>
-        <translation type="unfinished"></translation>
+        <translation>Quellcode:</translation>
+    </message>
+    <message>
+        <source>Date: </source>
+        <translation>Datum: </translation>
     </message>
 </context>
 <context>
@@ -44,6 +44,21 @@
     <message>
         <source>Dynamic Values 2</source>
         <translation>Dynamische Werte 2</translation>
+    </message>
+    <message>
+        <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
+        <translation>Je mehr Parameter auf einer Seite geladen werden, desto höher ist die Zykluszeit.&lt;br&gt;Um eine kürzere Zykluszeit zu erreichen, kann die Anhzahl der Parameter in den Einstellungen reduziert werden.</translation>
+    </message>
+    <message>
+        <source>Cycle time: </source>
+        <translation>Zykluszeit: </translation>
+    </message>
+</context>
+<context>
+    <name>Dyn3Page</name>
+    <message>
+        <source>Dynamic Values 3</source>
+        <translation>Dynamische Werte 3</translation>
     </message>
     <message>
         <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
@@ -89,253 +104,321 @@
     <name>MainPage</name>
     <message>
         <source>Welcome to OBDFish</source>
-        <translation type="unfinished"></translation>
+        <translation>OBDFish</translation>
     </message>
     <message>
         <source>Scan for Bluetooth devices...</source>
-        <translation type="unfinished"></translation>
+        <translation>Scannen nach Bluetooth-Geräten...</translation>
     </message>
     <message>
         <source>Start Scanning...</source>
-        <translation type="unfinished"></translation>
+        <translation>Starte Scannen...</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Disconnect</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbindung Trennen</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Über OBDFish</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Checking OBD adapter...</source>
-        <translation type="unfinished"></translation>
+        <translation>Überprüfe OBD-Adapter...</translation>
     </message>
     <message>
         <source>Disconnected from adapter</source>
-        <translation type="unfinished"></translation>
+        <translation>Trenne Verbindung zu Adapter</translation>
     </message>
     <message>
         <source>Error while connecting: </source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim Verbinden: </translation>
     </message>
     <message>
         <source>Error: unknown adapter. This is no ELM327 device!</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler: unbekannter Adapter. Das ist kein ELM327 Gerät!</translation>
     </message>
     <message>
         <source>Switch echo off...</source>
-        <translation type="unfinished"></translation>
+        <translation>Schalte ECHO aus...</translation>
     </message>
     <message>
         <source>Switch linefeed off...</source>
-        <translation type="unfinished"></translation>
+        <translation>Schalte linefeed aus...</translation>
     </message>
     <message>
         <source>Switch headers off...</source>
-        <translation type="unfinished"></translation>
+        <translation>Schalte header aus...</translation>
     </message>
     <message>
         <source>Switch spaces off...</source>
-        <translation type="unfinished"></translation>
+        <translation>Schalte Leerzeichen aus...</translation>
     </message>
     <message>
         <source>Set protocol...</source>
-        <translation type="unfinished"></translation>
+        <translation>Setze Protokoll...</translation>
     </message>
     <message>
         <source>Supported PID&apos;s 0101-0120...</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterstützte PID&apos;s 0101-0120...</translation>
     </message>
     <message>
         <source>Supported PID&apos;s 0121-0140...</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterstützte PID&apos;s 0121-0140...</translation>
     </message>
     <message>
         <source>Supported PID&apos;s 0141-0160...</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterstützte PID&apos;s 0141-0160...</translation>
     </message>
     <message>
         <source>Supported PID&apos;s 0900-0920...</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterstützte PID&apos;s 0900-0920...</translation>
     </message>
     <message>
         <source>Successfully connected to car computer!</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbindug zum Bordcomputer erfolgreich aufgebaut!</translation>
     </message>
     <message>
         <source>Connecting:</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbinde:</translation>
     </message>
     <message>
         <source>Connecting to OBD adapter...</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbinde mit OBD-Adapter...</translation>
     </message>
     <message>
         <source>Initializing:</source>
-        <translation type="unfinished"></translation>
+        <translation>Initialisierung:</translation>
     </message>
     <message>
         <source>OBD adapters (press to connect):</source>
-        <translation type="unfinished"></translation>
+        <translation>OBD-Adapter:</translation>
     </message>
     <message>
         <source>Found adapters (press to connect):</source>
-        <translation type="unfinished"></translation>
+        <translation>Gefundene Adapter:</translation>
     </message>
 </context>
 <context>
     <name>OBDDataObject</name>
     <message>
         <source>Engine light, error number</source>
-        <translation type="unfinished"></translation>
+        <translation>Motor Warnleuchte, Anzahl Fehler</translation>
     </message>
     <message>
         <source>Fuel system 1 and 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Treibstoffsystem 1 und 2</translation>
     </message>
     <message>
         <source>Engine Load</source>
-        <translation type="unfinished"></translation>
+        <translation>Motorlast</translation>
     </message>
     <message>
         <source>Engine Temp</source>
-        <translation type="unfinished"></translation>
+        <translation>Motortemperatur</translation>
     </message>
     <message>
         <source>Intake Air Pressure</source>
-        <translation type="unfinished"></translation>
+        <translation>Ansaugluftdruck</translation>
     </message>
     <message>
         <source>Engine RPM</source>
-        <translation type="unfinished"></translation>
+        <translation>Motordrehzahl</translation>
     </message>
     <message>
         <source>rpm</source>
-        <translation type="unfinished"></translation>
+        <translation>U/min</translation>
     </message>
     <message>
         <source>Vehicle Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Geschwindigkeit</translation>
     </message>
     <message>
         <source>Timing Advance</source>
-        <translation type="unfinished"></translation>
+        <translation>Zündwinkel</translation>
     </message>
     <message>
         <source>Intake Air Temp</source>
-        <translation type="unfinished"></translation>
+        <translation>Ansaugluft-Temperatur</translation>
     </message>
     <message>
         <source>Air Flow Rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Luftdurchsatz</translation>
     </message>
     <message>
         <source>grams/sec</source>
-        <translation type="unfinished"></translation>
+        <translation>gramm/sek</translation>
     </message>
     <message>
         <source>Throttle Position</source>
-        <translation type="unfinished"></translation>
+        <translation>Drosselklappenstellung</translation>
     </message>
     <message>
         <source>Fuel Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Treibstoffart</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht Verfügbar</translation>
     </message>
     <message>
         <source>Gasoline</source>
-        <translation type="unfinished"></translation>
+        <translation>Benzin</translation>
     </message>
     <message>
         <source>Propane</source>
-        <translation type="unfinished"></translation>
+        <translation>Propan</translation>
     </message>
     <message>
         <source>Electric</source>
-        <translation type="unfinished"></translation>
+        <translation>Elektrisch</translation>
     </message>
     <message>
         <source>Bifuel running Gasoline</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf Benzin</translation>
     </message>
     <message>
         <source>Bifuel running Methanol</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf Methanol</translation>
     </message>
     <message>
         <source>Bifuel running Ethanol</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf Ethanol</translation>
     </message>
     <message>
         <source>Bifuel running LPG</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf LPG</translation>
     </message>
     <message>
         <source>Bifuel running CNG</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf CNG</translation>
     </message>
     <message>
         <source>Bifuel running Propane</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf Propane</translation>
     </message>
     <message>
         <source>Bifuel running Electricity</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf Elektrisch</translation>
     </message>
     <message>
         <source>Bifuel running electric and combustion engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf Elektrisch und Verbrenner</translation>
     </message>
     <message>
         <source>Hybrid gasoline</source>
-        <translation type="unfinished"></translation>
+        <translation>Hybrid Benzin</translation>
     </message>
     <message>
         <source>Hybrid Electric</source>
-        <translation type="unfinished"></translation>
+        <translation>Hybrid Elektrisch</translation>
     </message>
     <message>
         <source>Hybrid running electric and combustion engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Hybrid auf Elektrisch und Verbrenner</translation>
     </message>
     <message>
         <source>Hybrid Regenerative</source>
-        <translation type="unfinished"></translation>
+        <translation>Hybrid Regenerativ</translation>
     </message>
     <message>
         <source>Bifuel running diesel</source>
-        <translation type="unfinished"></translation>
+        <translation>Bifuel auf Diesel</translation>
     </message>
     <message>
         <source>Undefined</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht definiert</translation>
+    </message>
+    <message>
+        <source>OBD-II as defined by the CARB</source>
+        <translation>OBD-II definiert durch CARB</translation>
+    </message>
+    <message>
+        <source>OBD as defined by the EPA</source>
+        <translation>OBD definiert durch EPA</translation>
+    </message>
+    <message>
+        <source>OBD and OBD-II</source>
+        <translation>OBD und OBD-II</translation>
+    </message>
+    <message>
+        <source>Not OBD compliant</source>
+        <translation>Nicht OBD konform</translation>
+    </message>
+    <message>
+        <source>EOBD (Europe)</source>
+        <translation>EOBD (Europa)</translation>
+    </message>
+    <message>
+        <source>EOBD and OBD-II</source>
+        <translation>EOBD und OBD-II</translation>
+    </message>
+    <message>
+        <source>EOBD and OBD</source>
+        <translation>EOBD und OBD</translation>
+    </message>
+    <message>
+        <source>EOBD, OBD and OBD II</source>
+        <translation>EOBD, OBD und OBD II</translation>
+    </message>
+    <message>
+        <source>JOBD and OBD II</source>
+        <translation>JOBD und OBD II</translation>
+    </message>
+    <message>
+        <source>JOBD and EOBD</source>
+        <translation>JOBD und EOBD</translation>
+    </message>
+    <message>
+        <source>JOBD, EOBD, and OBD II</source>
+        <translation>JOBD, EOBD, und OBD II</translation>
+    </message>
+    <message>
+        <source>Open loop due to insufficient engine temperature</source>
+        <translation>Offene Schleife aufgrund unzureichender Motortemperatur</translation>
+    </message>
+    <message>
+        <source>Closed loop, using oxygen sensor feedback to determine fuel mix</source>
+        <translation>Geschlossene Schleife, nutze Sauerstoff-Sensor-Feedback um Brennstoff-Mix zu bestimmen</translation>
+    </message>
+    <message>
+        <source>Open loop due to engine load OR fuel cut due to deceleration</source>
+        <translation>Offene Schleife aufgrund von Motorlast oder Kraftstoffunterbrechung wegen Verzögerung</translation>
+    </message>
+    <message>
+        <source>Open loop due to system failure</source>
+        <translation>Offene Schleife wegen Systemausfall</translation>
+    </message>
+    <message>
+        <source>Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
+        <translation>Geschlossene Schleife, mindestens ein Sauerstoffsensor wird verwendet, aber es gibt einen Fehler im Rückkopplungssystem.</translation>
     </message>
 </context>
 <context>
     <name>SettingsPage</name>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Dynamic Parameters Page 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamische Parameter Seite 1</translation>
     </message>
     <message>
         <source>Dynamic Parameters Page 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamische Parameter Seite 2</translation>
+    </message>
+    <message>
+        <source>Dynamic Parameters Page 3</source>
+        <translation type="unfinished">Dynamische Parameter Seite 3</translation>
     </message>
 </context>
 </TS>

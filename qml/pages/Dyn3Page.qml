@@ -22,8 +22,8 @@ import "OBDDataObject.js" as OBDDataObject
 Page
 {
     allowedOrientations: Orientation.All
-    id: id_page_dyn2
-    property bool bPushDyn2Page: true
+    id: id_page_dyn3
+    property bool bPushDyn3Page: true
     property bool bInitPage: true
     property int iWaitForCommand: 0
     property int iCommandSequence: 1
@@ -40,11 +40,11 @@ Page
 
     onStatusChanged:
     {
-        if (status === PageStatus.Active && bPushDyn2Page)
+        if (status === PageStatus.Active && bPushDyn3Page)
         {
-            bPushDyn2Page = false;
+            bPushDyn3Page = false;
 
-            pageStack.pushAttached(Qt.resolvedUrl("Dyn3Page.qml"));
+            //pageStack.pushAttached(Qt.resolvedUrl("Dyn4Page.qml"));
         }
 
         if (status === PageStatus.Active)
@@ -57,12 +57,12 @@ Page
             iNowTime = 0;
 
             //Fill PID's for this Page into an array. Empty spaces between two PID's should be avoided.
-            var arPIDsPage2 = sPIDsPage2.split(",");
+            var arPIDsPage3 = sPIDsPage3.split(",");
             var arPIDPageArrayTemp = [];
-            for (var i = 0; i < arPIDsPage2.length; i++)
+            for (var i = 0; i < arPIDsPage3.length; i++)
             {
-                if (arPIDsPage2[i] !== "0000")
-                    arPIDPageArrayTemp.push(arPIDsPage2[i]);
+                if (arPIDsPage3[i] !== "0000")
+                    arPIDPageArrayTemp.push(arPIDsPage3[i]);
             }
             arPIDPageArray = arPIDPageArrayTemp;
 
@@ -204,7 +204,7 @@ Page
             spacing: Theme.paddingLarge
             width: parent.width
 
-            PageHeader { title: qsTr("Dynamic Values 2") }
+            PageHeader { title: qsTr("Dynamic Values 3") }
 
             Row
             {

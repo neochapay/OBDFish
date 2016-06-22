@@ -17,12 +17,13 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.obdfish 1.0
 import "OBDDataObject.js" as OBDDataObject
 
 Page
 {
     allowedOrientations: Orientation.All
-    id: id_page_secondpage
+    id: id_page_dyn1
     property bool bPushDyn1Page: true
     property bool bInitPage: true
     property int iWaitForCommand: 0
@@ -107,9 +108,17 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 2:
+                        var sValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase());
                         sParameter1 = OBDDataObject.arrayLookupPID[arPIDPageArray[0]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase()) +
+                                sValue +
                                 OBDDataObject.arrayLookupPID[arPIDPageArray[0]].unittext;
+
+                        if (arPIDPageArray.length == 1)
+                        {
+                            id_PlotWidget.addValue(sValue);
+                            id_PlotWidget.update();
+                        }
+
                         iCommandSequence++;
                         break;
                     case 3:
@@ -287,6 +296,15 @@ Page
             {
                 visible: (arPIDPageArray.length > 5)
                 text: sParameter6;
+            }
+            PlotWidget
+            {
+                id: id_PlotWidget
+                visible: (arPIDPageArray.length == 1)
+                width: parent.width
+                height: 150
+                plotColor: Theme.highlightColor
+                scaleColor: Theme.secondaryHighlightColor
             }
         }
     }

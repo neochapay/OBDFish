@@ -12,15 +12,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Date: 07.05.2016</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>License: GPLv3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Source code:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -43,6 +43,21 @@
     <name>Dyn2Page</name>
     <message>
         <source>Dynamic Values 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The more parameters are requested, the higher the cycle time.&lt;br&gt;To get a more responsive cycle time, go to settings and reduce amount of parameters for this page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cycle time: </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Dyn3Page</name>
+    <message>
+        <source>Dynamic Values 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -322,6 +337,70 @@
         <source>Undefined</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>OBD-II as defined by the CARB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD as defined by the EPA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OBD and OBD-II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not OBD compliant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EOBD (Europe)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EOBD and OBD-II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EOBD and OBD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EOBD, OBD and OBD II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JOBD and OBD II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JOBD and EOBD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JOBD, EOBD, and OBD II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open loop due to insufficient engine temperature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Closed loop, using oxygen sensor feedback to determine fuel mix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open loop due to engine load OR fuel cut due to deceleration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open loop due to system failure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsPage</name>
@@ -335,6 +414,10 @@
     </message>
     <message>
         <source>Dynamic Parameters Page 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic Parameters Page 3</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
