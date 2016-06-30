@@ -135,7 +135,10 @@ Page
                     case 12:
                         sReadValue = OBDDataObject.fncEvaluateVINQuery(sReceiveBuffer);
                         if (sReadValue !== null)
+                        {
                             sVIN = sReadValue;
+                            bWaitForCommandSequenceEnd = false; //Finish by halting timer
+                        }
                         else
                         {
                             if (iWaitForVIN > 0)    //VIN query is repeated 10 times, because cars (VW Caddy) sometimes don't deliver all packets.

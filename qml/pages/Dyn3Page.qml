@@ -232,7 +232,7 @@ Page
                     icon.source: "image://theme/icon-m-question"
                     onClicked:
                     {
-                        fncShowMessage(qsTr("The more parameters are requested, the higher the cycle time.<br>To get a more responsive cycle time, go to settings and reduce amount of parameters for this page."), 20000);
+                        fncShowMessage(1,qsTr("The more parameters are requested, the higher the cycle time.<br>To get a more responsive cycle time, go to settings and reduce amount of parameters for this page."), 20000);
                     }
                 }
                 Label

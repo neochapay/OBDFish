@@ -33,7 +33,7 @@ ApplicationWindow
     property string sReceiveBuffer: "";
     property string sDebugFileBuffer: "";
     property string sELMVersion: "";
-    property variant arPIDsPagesArray : [ "0104,0105,010c,010d,010e,0111", "0104,0105,010c,010d,010e,0111", "0104,0105,010c,010d,010e,0111" ]
+    property variant arPIDsPagesArray : [ "010d,0000,0000,0000,0000,0000", "0104,0105,010c,010d,010e,0111", "0104,0105,010c,010d,010e,0111" ]
 
     //Init C++ classes, libraries
     PlotWidget{ id: id_PlotWidget }
@@ -139,9 +139,9 @@ ApplicationWindow
         }
     }
 
-    function fncShowMessage(sMessage, iTime)
+    function fncShowMessage(iType ,sMessage, iTime)
     {
-        messagebox.showMessage(sMessage, iTime);
+        messagebox.showMessage(iType, sMessage, iTime);
     }
 
     Sensors.OrientationSensor

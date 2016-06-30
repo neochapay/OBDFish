@@ -28,12 +28,7 @@ BackgroundItem
     width: parent.width
     onClicked: messageboxVisibility.stop()
 
-    Rectangle
-    {
-        height: Theme.paddingSmall
-        width: parent.width
-        color: Theme.highlightBackgroundColor
-    }
+
 
     Rectangle
     {
@@ -41,11 +36,55 @@ BackgroundItem
         color: Qt.rgba(0, 0, 0, 0.6)
     }
 
-    function showMessage(message, delay)
+    Image
     {
-        messageboxText.text = message
-        messageboxVisibility.interval = (delay>0) ? delay : 3000
-        messageboxVisibility.restart()
+        id: idImageIcon
+        anchors.top: parent.top
+        anchors.left: parent.left
+        source: "image://theme/icon-lock-warning"
+    }
+
+    Rectangle
+    {
+        id: idRectangleColor
+        anchors.left: idImageIcon.right
+        height: Theme.paddingSmall
+        width: parent.width - idImageIcon.width
+        color: Theme.highlightBackgroundColor
+    }
+
+
+
+    function showMessage(type, message, delay)
+    {
+        messageboxText.text = message;
+        messageboxVisibility.interval = (delay>0) ? delay : 3000;
+        messageboxVisibility.restart();
+
+        if (type === 0)//WARNING
+        {
+            idRectangleColor.color = "#DEB954";
+            idImageIcon.visible = true;
+            idImageIcon.source = "../icon-lock-warning.png"
+        }
+        else if (type === 1)//INFO
+        {
+            idRectangleColor.color = "#7086FF";
+            idImageIcon.visible = true;
+            idImageIcon.source = "../icon-lock-info.png"
+        }
+        else if (type === 2)//SUCCESS
+        {
+            idRectangleColor.color = "#2FE629";
+            idImageIcon.visible = true;
+            idImageIcon.source = "../icon-lock-ok.png"
+        }
+        else if (type === 3)//ERROR
+        {
+            idRectangleColor.color = "#F23730";
+            idImageIcon.visible = true;
+            idImageIcon.source = "../icon-lock-error.png"
+        }
     }
 
     Label

@@ -35,18 +35,18 @@ Page
 
         //Here we collect all PID labels in one string array.
         //This is then the data model for the comboboxes.
-        var arComboarray = ["None"];
+        var arComboarray = [qsTr("Empty")];
+        var iLoopVar = 1;
         for (var i = 0; i < OBDDataObject.arrayPIDs.length; i++)
         {
-            if (OBDDataObject.arrayPIDs[i].labeltext !== null)
-            {
-                if (OBDDataObject.arrayPIDs[i].supported)
-                    arComboarray.push(qsTr("Supported: ") + OBDDataObject.arrayPIDs[i].labeltext);
-                else
-                    arComboarray.push(qsTr("Not supported: ") + OBDDataObject.arrayPIDs[i].labeltext);
+            //Show only supported values
+            if (OBDDataObject.arrayPIDs[i].labeltext !== null && OBDDataObject.arrayPIDs[i].supported)
+            {                
+                arComboarray.push(OBDDataObject.arrayPIDs[i].labeltext);
 
-                SettingsDataObject.arPIDarray.push({text: OBDDataObject.arrayPIDs[i].labeltext, pid: OBDDataObject.arrayPIDs[i].pid, index: (i + 1)});
+                SettingsDataObject.arPIDarray.push({text: OBDDataObject.arrayPIDs[i].labeltext, pid: OBDDataObject.arrayPIDs[i].pid, index: iLoopVar});
             }
+            iLoopVar++;
         }
 
         //Fill lookup arrays. Can find entrys based on PID or INDEX as key.       
@@ -68,6 +68,16 @@ Page
 
             //Generate array for the start index of the copmboboxes
             var arPIDsPage = arPIDsPagesArray[iPIDPageIndex].split(",");
+
+            //Go through array and check if there are unsupported values.
+            //Those values will be exchanged to empty fields this is PID "0000".
+            for(var i = 0; i < arPIDsPage.length; i++)
+            {                
+                if (arPIDsPage[i] !== "0000" && OBDDataObject.arrayLookupPID[arPIDsPage[i].toLowerCase()].supported === false)
+                {
+                    arPIDsPage[i] = "0000";
+                }
+            }
 
             //Set start indexes of comboboxes.
             //This has to be done here, because the boxes first have to be filled with the models. That is a timing issue.
@@ -102,9 +112,15 @@ Page
                 console.log("sPIDsPageFromPage: " + sPIDsPageFromPage);
 
                 //Save new configuration to global array variable
-                arPIDsPagesArray[iPIDPageIndex] = sPIDsPageFromPage;
+                //For stupid crap QML arrays, have to use a JS array as middle man...
+                var arTempArray = arPIDsPagesArray;
+                arTempArray[iPIDPageIndex] = sPIDsPageFromPage;
+                arPIDsPagesArray = arTempArray;
+
                 //Save new configuration to project settings
                 id_ProjectSettings.vSaveProjectData("PIDsPage" + (iPIDPageIndex + 1).toString(), sPIDsPageFromPage);
+
+                 console.log("arPIDsPagesArray[iPIDPageIndex]: " + arPIDsPagesArray[iPIDPageIndex]);
             }           
         }
     }

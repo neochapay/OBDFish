@@ -109,7 +109,7 @@ Page
         }
         onSigError:             //This is called from C++ if there was an error while establishing a bluetooth connection
         {
-            fncShowMessage(qsTr("Error while connecting: ") + sError, 8000);
+            fncShowMessage(3, qsTr("Error while connecting: ") + sError, 8000);
             bConnected = false;
             bConnecting = false;
         }
@@ -142,7 +142,7 @@ Page
                     {
                         //This is not ELM327!!!
                         //Skip now and disconect from bluetooth device
-                        fncShowMessage(qsTr("Error: unknown adapter. This is no ELM327 device!"), 8000);
+                        fncShowMessage(3, qsTr("Error: unknown adapter. This is no ELM327 device!"), 8000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
@@ -227,10 +227,10 @@ Page
                     //Evaluate if ELM found any supported PID
                     if (OBDDataObject.fncGetFoundSupportedPIDs())
                     {
-                        fncShowMessage(qsTr("Successfully connected to car computer!"), 6000);
+                        fncShowMessage(2,qsTr("Successfully connected to car computer!"), 6000);
 
                         //Save adapter as used adapter. Only do this if the adapter is not in the list of used devies.
-                        if (SharedResources.fncAddUsedDevice(sCurrentBTName, sCurrentBTAddress))
+                        if (sCurrentBTAddress !== "" && SharedResources.fncAddUsedDevice(sCurrentBTName, sCurrentBTAddress))
                         {
                             var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
                             var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
@@ -245,7 +245,7 @@ Page
                     }
                     else
                     {                       
-                        fncShowMessage("No supported PID's found!<br>- turn on ignition/engine<br>- reconnect to OBD adapter", 20000);
+                        fncShowMessage(0,"No supported PID's found!<br>- turn on ignition/engine<br>- reconnect to OBD adapter", 20000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
@@ -314,11 +314,22 @@ Page
             {
                 title: qsTr("Welcome to OBDFish")
             }            
-
+            Image
+            {
+                visible: !bConnecting
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: "../elm327.png"
+            }
+            Image
+            {
+                visible: bConnecting
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: "../elm327_data.gif"
+            }
             SectionHeader
             {
                 text: qsTr("Scan for Bluetooth devices...")
-            }           
+            }
             Button
             {
                 width: parent.width
@@ -441,7 +452,7 @@ Page
                         OBDDataObject.sSupportedPIDs0100 = "";
                         sDebugFileBuffer= "";
                         sELMVersion= "";
-                        bConnecting = true;                        
+                        bConnecting = true;                                               
 
                         //Connect and init
                         id_BluetoothData.connect(SharedResources.fncGetUsedDeviceBTAddress(index), 1);

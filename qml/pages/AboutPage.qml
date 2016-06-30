@@ -50,26 +50,26 @@ Page
             onClicked:
             {
                 if (iCountWhtRbbt == 1)
-                    fncShowMessage("First iteration: At the earliest drawing of the fractal curve, few clues to the underlying mathematical structure will be seen - IAN MALCOLM", 6000);
+                    fncShowMessage(1,"First iteration: At the earliest drawing of the fractal curve, few clues to the underlying mathematical structure will be seen - IAN MALCOLM", 6000);
                 else if (iCountWhtRbbt == 2)
-                    fncShowMessage("Second iteration: With subsequent drawings of the fractal curve, sudden changes may appear. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Second iteration: With subsequent drawings of the fractal curve, sudden changes may appear. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 3)
-                    fncShowMessage("Third iteration: Details emerge more clearly as the fractal curve is redrawn. - Ian Malcolm", 6000);
+                    fncShowMessage(1,"Third iteration: Details emerge more clearly as the fractal curve is redrawn. - Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 4)
-                    fncShowMessage("Fourth iteration: Inevitably, underlying instabilities begin to appear. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Fourth iteration: Inevitably, underlying instabilities begin to appear. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 5)
-                    fncShowMessage("Fifth iteration: Flawsin the system will now become severe. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Fifth iteration: Flawsin the system will now become severe. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 6)
-                    fncShowMessage("Sixth iteration: System recovery may prove impossible. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Sixth iteration: System recovery may prove impossible. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 7)
-                    fncShowMessage("Seventh iteration: Increasingly, the mathematics will demand the courage to face its implications. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Seventh iteration: Increasingly, the mathematics will demand the courage to face its implications. -Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 8)
-                    fncShowMessage("STOP NOW or system will crash!!!", 6000);
+                    fncShowMessage(3,"STOP NOW or system will crash!!!", 6000);
                 else if (iCountWhtRbbt == 9)
-                    fncShowMessage("executing Whte_rbt.obj...", 2000);
+                    fncShowMessage(0,"executing Whte_rbt.obj...", 2000);
                 else if (iCountWhtRbbt == 10)
                 {
-                    fncShowMessage("Developed by Integrated Computer Systems, Inc. Cambridge Mass<br>Project Supervisor: Dennis Nedry<br>Chief Programmer: Jens Drescher<br>\u00A9 Jurassic Parc Inc. All Rights Reserved", 16000);
+                    fncShowMessage(2,"Developed by Integrated Computer Systems, Inc. Cambridge Mass<br>Project Supervisor: Dennis Nedry<br>Chief Programmer: Jens Drescher<br>\u00A9 Jurassic Parc Inc. All Rights Reserved", 16000);
                     iCountWhtRbbt = 1;
                 }
 

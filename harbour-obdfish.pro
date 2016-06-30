@@ -66,5 +66,11 @@ DISTFILES += \
     qml/pages/Dyn2Page.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/SettingsDataObject.js \
-    qml/pages/Dyn3Page.qml
+    qml/pages/Dyn3Page.qml \
+    qml/icon-lock-error.png \
+    qml/icon-lock-info.png \
+    qml/icon-lock-ok.png \
+    qml/icon-lock-warning.png \
+    qml/elm327.png \
+    qml/elm327_data.gif
 

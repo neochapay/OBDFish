@@ -411,18 +411,21 @@
     </message>
 </context>
 <context>
+    <name>SettingsDataObject</name>
+    <message>
+        <source>Empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SettingsPage</name>
     <message>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <source>Supported: </source>
-        <translation>Unterstüzt: </translation>
-    </message>
-    <message>
-        <source>Not supported: </source>
-        <translation>Nicht unterstüzt: </translation>
+        <source>Empty</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

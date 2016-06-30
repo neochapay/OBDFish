@@ -42,6 +42,8 @@ function fncFillUsedAdaptersArray(sUsedAdaptersNames, sUsedAdaptersAddresses)
 
 function fncAddUsedDevice(sBTName, sBTAddress)
 {      
+    //Hier ist irgendwo ein Bug
+
     var iPosition = arrayUsedAdapters.length;
 
     //Check if the device address is already in the list.
@@ -67,9 +69,9 @@ function fncGetUsedDeviceBTNamesSeparatedString()
     var sSeparatedString = "";
 
     for (var i = 0; i < arrayUsedAdapters.length; i++)
-    {
+    {       
         //Check if this is the last iteration
-        if ((i+1) === arrayUsedAdapters.length)
+        if ((i+1) >= arrayUsedAdapters.length)
             sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTName"];
         else
             sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTName"] + "#,#";
@@ -85,7 +87,7 @@ function fncGetUsedDeviceBTAddressesSeparatedString()
     for (var i = 0; i < arrayUsedAdapters.length; i++)
     {
         //Check if this is the last iteration
-        if ((i+1) === arrayUsedAdapters.length)
+        if ((i+1) >= arrayUsedAdapters.length)
             sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTAddress"];
         else
             sSeparatedString = sSeparatedString + arrayUsedAdapters[i]["BTAddress"] + "#,#";
