@@ -36,7 +36,7 @@ Page
         //Here we collect all PID labels in one string array.
         //This is then the data model for the comboboxes.
         var arComboarray = [qsTr("Empty")];
-        var iLoopVar = 1;
+        var iLoopVar = 0;
         for (var i = 0; i < OBDDataObject.arrayPIDs.length; i++)
         {
             //Show only supported values

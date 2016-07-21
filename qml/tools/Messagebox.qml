@@ -28,8 +28,6 @@ BackgroundItem
     width: parent.width
     onClicked: messageboxVisibility.stop()
 
-
-
     Rectangle
     {
         anchors.fill: parent
@@ -85,6 +83,12 @@ BackgroundItem
             idImageIcon.visible = true;
             idImageIcon.source = "../icon-lock-error.png"
         }
+        else if (type === 4)//SPECIAL IMAGE
+        {
+            idRectangleColor.color = "#F9D440";
+            idImageIcon.visible = true;
+            idImageIcon.source = "../jp_logo.png"
+        }
     }
 
     Label
@@ -95,6 +99,7 @@ BackgroundItem
         color: Theme.primaryColor
         text: ""
         anchors.centerIn: parent
+
     }
 
     Timer

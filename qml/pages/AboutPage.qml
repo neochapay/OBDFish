@@ -50,26 +50,26 @@ Page
             onClicked:
             {
                 if (iCountWhtRbbt == 1)
-                    fncShowMessage(1,"First iteration: At the earliest drawing of the fractal curve, few clues to the underlying mathematical structure will be seen - IAN MALCOLM", 6000);
+                    fncShowMessage(1,"First iteration: At the earliest drawing of the fractal curve, few clues to the underlying mathematical structure will be seen.<br>Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 2)
-                    fncShowMessage(1,"Second iteration: With subsequent drawings of the fractal curve, sudden changes may appear. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Second iteration: With subsequent drawings of the fractal curve, sudden changes may appear.<br>Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 3)
-                    fncShowMessage(1,"Third iteration: Details emerge more clearly as the fractal curve is redrawn. - Ian Malcolm", 6000);
+                    fncShowMessage(1,"Third iteration: Details emerge more clearly as the fractal curve is redrawn.<br>Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 4)
-                    fncShowMessage(1,"Fourth iteration: Inevitably, underlying instabilities begin to appear. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Fourth iteration: Inevitably, underlying instabilities begin to appear.<br>Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 5)
-                    fncShowMessage(1,"Fifth iteration: Flawsin the system will now become severe. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Fifth iteration: Flaws in the system will now become severe.<br>Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 6)
-                    fncShowMessage(1,"Sixth iteration: System recovery may prove impossible. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Sixth iteration: System recovery may prove impossible.<br>Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 7)
-                    fncShowMessage(1,"Seventh iteration: Increasingly, the mathematics will demand the courage to face its implications. -Ian Malcolm", 6000);
+                    fncShowMessage(1,"Seventh iteration: Increasingly, the mathematics will demand the courage to face its implications.<br>Ian Malcolm", 6000);
                 else if (iCountWhtRbbt == 8)
                     fncShowMessage(3,"STOP NOW or system will crash!!!", 6000);
                 else if (iCountWhtRbbt == 9)
-                    fncShowMessage(0,"executing Whte_rbt.obj...", 2000);
+                    fncShowMessage(0,"loading whte_rbt.obj to sailfish device, please wait...", 3000);
                 else if (iCountWhtRbbt == 10)
                 {
-                    fncShowMessage(2,"Developed by Integrated Computer Systems, Inc. Cambridge Mass<br>Project Supervisor: Dennis Nedry<br>Chief Programmer: Jens Drescher<br>\u00A9 Jurassic Parc Inc. All Rights Reserved", 16000);
+                    fncShowMessage(4,"Developed by Integrated Computer Systems, Inc. Cambridge Mass<br>Project Supervisor: Dennis Nedry<br>Chief Programmer: Mike Backes<br>\u00A9 Jurassic Parc Inc. All Rights Reserved", 16000);
                     iCountWhtRbbt = 1;
                 }
 
@@ -123,7 +123,7 @@ Page
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: Theme.fontSizeExtraSmall
             color: Theme.secondaryColor
-            text: qsTr("Date: ") + "07.05.2016";
+            text: qsTr("Date: ") + "21.07.2016";
         }
         Label
         {
@@ -149,6 +149,26 @@ Page
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: Theme.fontSizeExtraSmall
             property string urlstring: "https://github.com/jdrescher2006/OBDFish"
+            text: "<a href=\"" + urlstring + "\">" +  urlstring + "<\a>"
+            onLinkActivated: Qt.openUrlExternally(link)
+        }
+        Item
+        {
+            width: parent.width
+            height: Theme.paddingLarge
+        }
+        Label
+        {
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: Theme.fontSizeExtraSmall
+            color: Theme.secondaryColor
+            text: qsTr("Feedback, bugs:")
+        }
+        Label
+        {
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: Theme.fontSizeExtraSmall
+            property string urlstring: "https://github.com/jdrescher2006/OBDFish/issues"
             text: "<a href=\"" + urlstring + "\">" +  urlstring + "<\a>"
             onLinkActivated: Qt.openUrlExternally(link)
         }

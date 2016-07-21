@@ -35,23 +35,7 @@ CoverBackground
         id: id_label_AppName
         anchors.centerIn: parent
         text: "OBDFish"
-    }
-    Image
-    {
-        visible: !bConnecting
-        anchors.margins: Theme.paddingLarge
-        anchors.top: id_label_AppName.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        source: "../elm327.png"
-    }
-    Image
-    {
-        visible: bConnecting
-        anchors.margins: Theme.paddingLarge
-        anchors.top: id_label_AppName.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        source: "../elm327_data.gif"
-    }
+    }    
 }
 
 

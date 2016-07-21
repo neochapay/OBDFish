@@ -313,19 +313,52 @@ Page
             PageHeader 
             {
                 title: qsTr("Welcome to OBDFish")
-            }            
+            }
+
             Image
             {
-                visible: !bConnecting
+                visible: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 source: "../elm327.png"
-            }
-            Image
-            {
-                visible: bConnecting
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: "../elm327_data.gif"
-            }
+                GlassItem
+                {
+                    id: id_GlassItem_Red
+                    color: "red"
+                    anchors.top: parent.top
+                    anchors.topMargin: 18
+                    visible: false
+                }               
+                GlassItem
+                {
+                    id: id_GlassItem_Yellow
+                    color: "yellow"
+                    anchors.top: parent.top
+                    anchors.topMargin: 42
+                    visible: bConnecting
+                    Timer
+                    {
+                        repeat: true
+                        running: bConnecting
+                        interval: 250
+                        onTriggered: id_GlassItem_Yellow.dimmed = !id_GlassItem_Yellow.dimmed
+                    }
+                }
+                GlassItem
+                {
+                    id: id_GlassItem_Green
+                    color: "#03EC16"
+                    anchors.top: parent.top
+                    anchors.topMargin: 66
+                    visible: bConnecting
+                    Timer
+                    {
+                        repeat: true
+                        running: bConnecting
+                        interval: 100
+                        onTriggered: id_GlassItem_Green.visible = !id_GlassItem_Green.visible
+                    }
+                }
+            }           
             SectionHeader
             {
                 text: qsTr("Scan for Bluetooth devices...")

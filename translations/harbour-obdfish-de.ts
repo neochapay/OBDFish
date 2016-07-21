@@ -23,6 +23,10 @@
         <source>Date: </source>
         <translation>Datum: </translation>
     </message>
+    <message>
+        <source>Feedback, bugs:</source>
+        <translation>Feedback, Probleme:</translation>
+    </message>
 </context>
 <context>
     <name>Dyn1Page</name>
@@ -414,7 +418,7 @@
     <name>SettingsDataObject</name>
     <message>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Leer</translation>
     </message>
 </context>
 <context>
@@ -425,7 +429,7 @@
     </message>
     <message>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Leer</translation>
     </message>
 </context>
 </TS>

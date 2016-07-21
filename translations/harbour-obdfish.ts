@@ -23,6 +23,10 @@
         <source>Date: </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Feedback, bugs:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Dyn1Page</name>

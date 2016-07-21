@@ -72,5 +72,5 @@ DISTFILES += \
     qml/icon-lock-ok.png \
     qml/icon-lock-warning.png \
     qml/elm327.png \
-    qml/elm327_data.gif
+    qml/jp_logo.png
 
