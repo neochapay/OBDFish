@@ -9,10 +9,11 @@
 - Repeat VIN request if not all data packets arrived. VW Caddy sometimes leaves out packet number 4!!!			-> should work now. Need to check this out...
 - Each dynamic parameters page should have it's own settings page reachable via pull menu.						-> should work now. Need to check this out...
 - In settings page, mark the supported/unsupported settings														-> should work now. Need to check this out...
-- general settings page: query parameters in init routine on main page. Make parameters global.
+- plot widget C++ library, check usage...
 
 
 --------------ToDo's for near future---------------
+- general settings page: query parameters in init routine on main page. Make parameters global.
 - Check MIL in init process on mainpage. If it is set, show a warning.
 - Voltage should be choosable as parameter for dynamic pages.
 - Add more PID's
@@ -23,7 +24,7 @@
 
 --------------ToDo's for far future---------------
 
-- Don't know what informations to view on the cover page. Need input...
+- Don't know what informations to view on the cover page. Need input from users...
 
 - Make a VIN decoder (first only VW)
 	- for every car brand an own JS library file

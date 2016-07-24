@@ -326,7 +326,7 @@ Page
                     color: "red"
                     anchors.top: parent.top
                     anchors.topMargin: 18
-                    visible: false
+                    visible: (bConnecting && bConnected)
                 }               
                 GlassItem
                 {
@@ -334,11 +334,11 @@ Page
                     color: "yellow"
                     anchors.top: parent.top
                     anchors.topMargin: 42
-                    visible: bConnecting
+                    visible: (iInit > 0)
                     Timer
                     {
                         repeat: true
-                        running: bConnecting
+                        running: (iInit > 0)
                         interval: 250
                         onTriggered: id_GlassItem_Yellow.dimmed = !id_GlassItem_Yellow.dimmed
                     }
@@ -349,11 +349,11 @@ Page
                     color: "#03EC16"
                     anchors.top: parent.top
                     anchors.topMargin: 66
-                    visible: bConnecting
+                    visible: (iInit > 0)
                     Timer
                     {
                         repeat: true
-                        running: bConnecting
+                        running: (iInit > 0)
                         interval: 100
                         onTriggered: id_GlassItem_Green.visible = !id_GlassItem_Green.visible
                     }

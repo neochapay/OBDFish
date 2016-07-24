@@ -29,21 +29,30 @@ Page
     property variant arComboboxStringArray : []    
     property int iPIDPageIndex: 0;
 
+    //Called when a combobox selection changes
     function fncOnComboboxCompleted()
     {
         bPageInitialized = true;
 
         //Here we collect all PID labels in one string array.
-        //This is then the data model for the comboboxes.
+        //This is then the data model for the comboboxes.        
+        //The first entry does not reference to a valid PID.
+        //It is used as a placeholder if the field on a dynamic page has to be empty.
+        //It refers to PID 0000.
         var arComboarray = [qsTr("Empty")];
+
         var iLoopVar = 0;
         for (var i = 0; i < OBDDataObject.arrayPIDs.length; i++)
         {
-            //Show only supported values
+            //Show only values which have a label text, because only these are showable PID's.
+            //Show only PID's which are supported by the car controller.
             if (OBDDataObject.arrayPIDs[i].labeltext !== null && OBDDataObject.arrayPIDs[i].supported)
             {                
+                //Add label text of PID to the combobox data array
                 arComboarray.push(OBDDataObject.arrayPIDs[i].labeltext);
 
+                //Add the other data for this PID to a helper array.
+                //This array is later used to get the data for the PID based on the index.
                 SettingsDataObject.arPIDarray.push({text: OBDDataObject.arrayPIDs[i].labeltext, pid: OBDDataObject.arrayPIDs[i].pid, index: iLoopVar});
             }
             iLoopVar++;
@@ -61,6 +70,7 @@ Page
 
     onStatusChanged:
     {
+        //Called when page is initialized
         if (status === PageStatus.Active && bPushSettingsPage)
         {
             bInitPage = true;
@@ -71,7 +81,7 @@ Page
 
             //Go through array and check if there are unsupported values.
             //Those values will be exchanged to empty fields this is PID "0000".
-            for(var i = 0; i < arPIDsPage.length; i++)
+            for (var i = 0; i < arPIDsPage.length; i++)
             {                
                 if (arPIDsPage[i] !== "0000" && OBDDataObject.arrayLookupPID[arPIDsPage[i].toLowerCase()].supported === false)
                 {
@@ -91,9 +101,12 @@ Page
             bInitPage = false;
         }
 
-        //Save values to project data when page is closed
+        //Called when page is left
         if (status === PageStatus.Deactivating && !bInitPage)
         {
+            //Save values to project data when page is closed.
+            //Unfortunately this is called whenever a ComboBox is opened, due to crappy QT comboboxes.
+
             var sPIDsPageFromPage = "";
 
             //Check if fields are valid and have changed. Save values.
