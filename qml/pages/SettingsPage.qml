@@ -41,7 +41,9 @@ Page
         //It refers to PID 0000.
         var arComboarray = [qsTr("Empty")];
 
-        var iLoopVar = 0;
+        SettingsDataObject.arPIDarray = [{text: qsTr("Empty"), pid: "0000", index: 0}];
+
+        var iLoopVar = 1;
         for (var i = 0; i < OBDDataObject.arrayPIDs.length; i++)
         {
             //Show only values which have a label text, because only these are showable PID's.
@@ -54,13 +56,18 @@ Page
                 //Add the other data for this PID to a helper array.
                 //This array is later used to get the data for the PID based on the index.
                 SettingsDataObject.arPIDarray.push({text: OBDDataObject.arrayPIDs[i].labeltext, pid: OBDDataObject.arrayPIDs[i].pid, index: iLoopVar});
-            }
-            iLoopVar++;
+
+                iLoopVar++;
+            }            
         }
 
         //Fill lookup arrays. Can find entrys based on PID or INDEX as key.       
         for (var j = 0; j < SettingsDataObject.arPIDarray.length; j++)
         {
+            console.log("j: " + j.toString());
+            console.log("SettingsDataObject.arPIDarray[j].pid: " + SettingsDataObject.arPIDarray[j].pid);
+            console.log("SettingsDataObject.arPIDarray[j].index: " + SettingsDataObject.arPIDarray[j].index);
+
             SettingsDataObject.arLookupPID[SettingsDataObject.arPIDarray[j].pid] = SettingsDataObject.arPIDarray[j];
             SettingsDataObject.arLookupINDEX[SettingsDataObject.arPIDarray[j].index] = SettingsDataObject.arPIDarray[j];
         }            
@@ -103,7 +110,7 @@ Page
 
         //Called when page is left
         if (status === PageStatus.Deactivating && !bInitPage)
-        {
+        {         
             //Save values to project data when page is closed.
             //Unfortunately this is called whenever a ComboBox is opened, due to crappy QT comboboxes.
 

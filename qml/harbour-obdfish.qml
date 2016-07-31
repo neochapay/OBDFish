@@ -33,6 +33,7 @@ ApplicationWindow
     property string sReceiveBuffer: "";
     property string sDebugFileBuffer: "";
     property string sELMVersion: "";
+    property bool bSaveDataToDebugFile: false;
     property variant arPIDsPagesArray : [ "010d,0000,0000,0000,0000,0000", "0104,0105,010c,010d,010e,0111", "0104,0105,010c,010d,010e,0111" ]
 
     //Init C++ classes, libraries
@@ -49,7 +50,6 @@ ApplicationWindow
         onSigReadDataReady:     //This is called from C++ if there is data via bluetooth
         {
             //Check received data
-            sDebugFileBuffer = sDebugFileBuffer + sData;
             fncGetData(sData);
         }
     }
@@ -96,13 +96,22 @@ ApplicationWindow
 
             if (bSupported === false)
                 return false;
-        }
+        }                
 
         //Set active command bit
         bCommandRunning = true;
 
+        //There is one special case, this is the request for battery voltage.
+        //In order to do this generically on the dynamic pages, battery voltage request is treated like a PID request.
+        //Fake PID for th9is is 1234. If this is the case here, send AT command for voltage request: ATRV
+        if (sCommand === "12341")
+        {
+            sCommand = "ATRV";
+        }
+
         //Send the AT command via bluetooth
-        id_BluetoothData.sendHex(sCommand);
+        sDebugFileBuffer = sDebugFileBuffer + "Send: " + sCommand + "\r\n";
+        id_BluetoothData.sendHex(sCommand);        
 
         return true;
     }
@@ -110,6 +119,8 @@ ApplicationWindow
     //Data which is received via bluetooth is passed into this function
     function fncGetData(sData)
     {
+        sDebugFileBuffer = sDebugFileBuffer + "Receive: " + sData + "\r\n";
+
         //WARNING: Don't trim here. ELM might send leading/trailing spaces/carriage returns.
         //They might get lost but are needed!!!
 

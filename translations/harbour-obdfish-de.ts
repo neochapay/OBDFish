@@ -117,6 +117,21 @@
     </message>
 </context>
 <context>
+    <name>GeneralSettingsPage</name>
+    <message>
+        <source>General settings</source>
+        <translation>Allgemeine Einstellungen</translation>
+    </message>
+    <message>
+        <source>Write debug file</source>
+        <translation>Logbuchdatei schreiben</translation>
+    </message>
+    <message>
+        <source>Communication with car is saved to /home/nemo/Documents/obd_log.txt. Data is saved when disconnect button is pressed.</source>
+        <translation>Kommunikation mit Steuergerät wird gespeichert: /home/nemo/Documents/obd_log.txt. Daten werden gespeichert wenn Trennen-Button gedrückt wird.</translation>
+    </message>
+</context>
+<context>
     <name>MainPage</name>
     <message>
         <source>Welcome to OBDFish</source>
@@ -217,6 +232,10 @@
     <message>
         <source>Found adapters (press to connect):</source>
         <translation>Gefundene Adapter:</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -413,12 +432,33 @@
         <source>Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
         <translation>Geschlossene Schleife, mindestens ein Sauerstoffsensor wird verwendet, aber es gibt einen Fehler im Rückkopplungssystem.</translation>
     </message>
-</context>
-<context>
-    <name>SettingsDataObject</name>
     <message>
-        <source>Empty</source>
-        <translation>Leer</translation>
+        <source>Battery voltage</source>
+        <translation>Batteriespannung</translation>
+    </message>
+    <message>
+        <source>Short term fuel trim, Bank 1</source>
+        <translation>Kurzzeit-Einspritztrimm, Bank 1</translation>
+    </message>
+    <message>
+        <source>Long term fuel trim, Bank 1</source>
+        <translation>Langzeit-Einspritztrimm, Bank 1</translation>
+    </message>
+    <message>
+        <source>Short term fuel trim, Bank 2</source>
+        <translation>Kurzzeit-Einspritztrimm, Bank 2</translation>
+    </message>
+    <message>
+        <source>Long term fuel trim, Bank 2</source>
+        <translation>Langzeit-Einspritztrimm, Bank 2</translation>
+    </message>
+    <message>
+        <source>Fuel pressure</source>
+        <translation>Kraftstoffdruck</translation>
+    </message>
+    <message>
+        <source>Run time since engine start</source>
+        <translation>Laufzeit seit Motorstart</translation>
     </message>
 </context>
 <context>

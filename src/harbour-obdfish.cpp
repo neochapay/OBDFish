@@ -29,6 +29,9 @@
 
 int main(int argc, char *argv[])
 {
+    QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    app->setApplicationVersion(QString(APP_VERSION));
+
     qmlRegisterType<PlotWidget,1>("harbour.obdfish", 1, 0, "PlotWidget");
     qmlRegisterType<BluetoothConnection,1>("harbour.obdfish", 1, 0, "BluetoothConnection");
     qmlRegisterType<BluetoothData,1>("harbour.obdfish", 1, 0, "BluetoothData");

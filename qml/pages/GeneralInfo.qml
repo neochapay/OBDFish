@@ -136,6 +136,7 @@ Page
                         sReadValue = OBDDataObject.fncEvaluateVINQuery(sReceiveBuffer);
                         if (sReadValue !== null)
                         {
+                            sDebugFileBuffer = sDebugFileBuffer + "VIN: " + sReadValue + "\r\n";
                             sVIN = sReadValue;
                             bWaitForCommandSequenceEnd = false; //Finish by halting timer
                         }

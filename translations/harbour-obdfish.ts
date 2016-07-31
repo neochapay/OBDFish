@@ -117,6 +117,21 @@
     </message>
 </context>
 <context>
+    <name>GeneralSettingsPage</name>
+    <message>
+        <source>General settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Write debug file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Communication with car is saved to /home/nemo/Documents/obd_log.txt. Data is saved when disconnect button is pressed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainPage</name>
     <message>
         <source>Welcome to OBDFish</source>
@@ -216,6 +231,10 @@
     </message>
     <message>
         <source>Found adapters (press to connect):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -413,11 +432,32 @@
         <source>Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>SettingsDataObject</name>
     <message>
-        <source>Empty</source>
+        <source>Battery voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Short term fuel trim, Bank 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Long term fuel trim, Bank 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Short term fuel trim, Bank 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Long term fuel trim, Bank 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuel pressure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run time since engine start</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

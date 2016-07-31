@@ -1,28 +1,20 @@
 -------------BUGS/ERRORS-------------------
-- Settings page: multiple errors:
-	- if only one parameter is used and is changed, the change is not accepted and saved
-	- the last parameter is somehow crap. There is even an error. This has something to do with supported values.
-- Bluetooth devices: there is one saved as a ,																	-> fixed
+- Sometimes there is a segmentation fault when connecting via bluetooth
+	bash: line 1:  6071 Segmentation fault      DISPLAY=':0.0' QT_NO_JOURNALD_LOG='1' /usr/bin/harbour-obdfish
 
 
 --------------ToDo's for immediate future (before next release)---------------
-- Repeat VIN request if not all data packets arrived. VW Caddy sometimes leaves out packet number 4!!!			-> should work now. Need to check this out...
-- Each dynamic parameters page should have it's own settings page reachable via pull menu.						-> should work now. Need to check this out...
-- In settings page, mark the supported/unsupported settings														-> should work now. Need to check this out...
-- plot widget C++ library, check usage...
+- Check if bluetooth is activated on smartphone
 
 
 --------------ToDo's for near future---------------
 - general settings page: query parameters in init routine on main page. Make parameters global.
 - Check MIL in init process on mainpage. If it is set, show a warning.
-- Voltage should be choosable as parameter for dynamic pages.
 - Add more PID's
-- Add debug file which holds errors and problems detected by the software
-- Add global settings page:
-	- save communication with ELM327 to a file
 
 
 --------------ToDo's for far future---------------
+- Add debug file which holds errors and problems detected by the software
 
 - Don't know what informations to view on the cover page. Need input from users...
 

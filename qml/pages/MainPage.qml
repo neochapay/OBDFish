@@ -47,6 +47,7 @@ Page
             var sGetPIDsPage3 = id_ProjectSettings.sLoadProjectData("PIDsPage3");
             var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
             var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
+            var sGetSaveDataToDebugFile = id_ProjectSettings.sLoadProjectData("WriteDebugFile");
 
             //DEBUG TODO
             //sGetUsedAdaptersNames = "Neuer Adapter v1.5#,#Adapter v2.1#,#Alter Adapter v1.5";
@@ -59,6 +60,8 @@ Page
                 arPIDsPagesArray[1] = sGetPIDsPage2;
                 arPIDsPagesArray[2] = sGetPIDsPage3;
             }
+
+            if (sGetSaveDataToDebugFile.length > 0) bSaveDataToDebugFile=(sGetSaveDataToDebugFile === "true");
 
             //Check if there are used devices. If there are, show them.
             if (sGetUsedAdaptersNames.length > 0 && sGetUsedAdaptersAddresses.length > 0)
@@ -229,6 +232,10 @@ Page
                     {
                         fncShowMessage(2,qsTr("Successfully connected to car computer!"), 6000);
 
+                        //Save supported PID's to debug file
+                        sDebugFileBuffer = sDebugFileBuffer + "Supported PID's 0100: " + OBDDataObject.sSupportedPIDs0100 + "\r\n";
+                        sDebugFileBuffer = sDebugFileBuffer + "Supported PID's 0900: " + OBDDataObject.sSupportedPIDs0900 + "\r\n";
+
                         //Save adapter as used adapter. Only do this if the adapter is not in the list of used devies.
                         if (sCurrentBTAddress !== "" && SharedResources.fncAddUsedDevice(sCurrentBTName, sCurrentBTAddress))
                         {
@@ -291,13 +298,12 @@ Page
 
         PullDownMenu
         {
-            /*
+
             MenuItem
             {
                 text: qsTr("Settings")
-                onClicked: {pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))}
-            }
-            */
+                onClicked: {pageStack.push(Qt.resolvedUrl("GeneralSettingsPage.qml"))}
+            }            
             MenuItem
             {
                 text: qsTr("About")
@@ -326,7 +332,7 @@ Page
                     color: "red"
                     anchors.top: parent.top
                     anchors.topMargin: 18
-                    visible: (bConnecting && bConnected)
+                    visible: (bConnecting || bConnected)
                 }               
                 GlassItem
                 {
@@ -355,7 +361,7 @@ Page
                         repeat: true
                         running: (iInit > 0)
                         interval: 100
-                        onTriggered: id_GlassItem_Green.visible = !id_GlassItem_Green.visible
+                        onTriggered: id_GlassItem_Green.dimmed = !id_GlassItem_Green.dimmed
                     }
                 }
             }           
@@ -413,7 +419,8 @@ Page
                 onClicked:
                 {
                     //Save received data to file
-                    id_FileWriter.vWriteData(sDebugFileBuffer);
+                    if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Version: " + Qt.application.version + "\r\n" + "Date: " + Date() + "\r\n-------------------------------\r\n" + sDebugFileBuffer);
+
                     id_BluetoothData.disconnect();
                 }
                 Image
@@ -483,6 +490,7 @@ Page
                     {
                         //Connect here. Prepeare some things.
                         OBDDataObject.sSupportedPIDs0100 = "";
+                        OBDDataObject.sSupportedPIDs0900 = "";
                         sDebugFileBuffer= "";
                         sELMVersion= "";
                         bConnecting = true;                                               
@@ -524,6 +532,7 @@ Page
                     {
                         //Connect here. Prepeare some things.
                         OBDDataObject.sSupportedPIDs0100 = "";
+                        OBDDataObject.sSupportedPIDs0900 = "";
                         sDebugFileBuffer= "";
                         sELMVersion= "";
                         bConnecting = true;

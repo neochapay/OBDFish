@@ -19,6 +19,6 @@
 
 //Need this tables here as helpers. They are used from the SettingsPage(s).
 //Stupid QML arrays can't do anything, they suck big time!!! You can't even change values on runtime, what are they good for?
-var arPIDarray = [{text: qsTr("Empty"), pid: "0000", index: 0}];
+var arPIDarray = {};
 var arLookupPID = {};
 var arLookupINDEX = {};

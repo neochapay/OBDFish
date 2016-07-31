@@ -17,6 +17,8 @@ CONFIG += sailfishapp
 QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_LFLAGS += -std=c++0x
 
+DEFINES += APP_VERSION=\"\\\"$${VERSION}\\\"\"
+
 SOURCES += src/harbour-obdfish.cpp \
     src/bluetoothconnection.cpp \
     src/bluetoothdata.cpp \
@@ -72,5 +74,6 @@ DISTFILES += \
     qml/icon-lock-ok.png \
     qml/icon-lock-warning.png \
     qml/elm327.png \
-    qml/jp_logo.png
+    qml/jp_logo.png \
+    qml/pages/GeneralSettingsPage.qml
 

@@ -137,6 +137,16 @@ function fncEvaluateVINQuery(sData)
 
 function fncEvaluatePIDQuery(sData, sPID)
 {
+    //There is one special case, this is the request for battery voltage.
+    //In order to do this generically on the dynamic pages, battery voltage request is treated like a PID request.
+    //Fake PID for th9is is 1234. If this is the case here, send AT command for voltage request: ATRV
+    //Check if this special case is given.
+    if (sPID === "1234")
+    {
+        return sData;
+    }
+
+
     //Make search pattern out of the query PID
     var sSearchPattern = parseInt(sPID.substr(0,2));
     sSearchPattern = (sSearchPattern + 40).toString();
@@ -176,7 +186,7 @@ function fncGetFoundSupportedPIDs()
 {
     for (var i = 0; i < arrayPIDs.length; i++)
     {
-        if (arrayPIDs[i].supported === true)
+        if (arrayPIDs[i].supported === true && arrayPIDs[i].pid !== "1234")
             return true;
     }
 
@@ -193,7 +203,12 @@ var arrayPIDs =
     { pid: "0101", supported: false, bytescount: 4, labeltext: qsTr("Engine light, error number"), unittext: " ", fncConvert: fncConvertDTCCheck },
     { pid: "0103", supported: false, bytescount: 2, labeltext: qsTr("Fuel system 1 and 2"), unittext: " ", fncConvert: fncConvertFuelSystem },
     { pid: "0104", supported: false, bytescount: 1, labeltext: qsTr("Engine Load"), unittext: "%", fncConvert: fncConvertLoad },
-    { pid: "0105", supported: false, bytescount: 1, labeltext: qsTr("Engine Temp"), unittext: "C°", fncConvert: fncConvertTemp },
+    { pid: "0105", supported: false, bytescount: 1, labeltext: qsTr("Engine Temp"), unittext: "C°", fncConvert: fncConvertTemp },            
+    { pid: "0106", supported: false, bytescount: 1, labeltext: qsTr("Short term fuel trim, Bank 1"), unittext: "%", fncConvert: fncConvertFuelTrim },
+    { pid: "0107", supported: false, bytescount: 1, labeltext: qsTr("Long term fuel trim, Bank 1"), unittext: "%", fncConvert: fncConvertFuelTrim },
+    { pid: "0108", supported: false, bytescount: 1, labeltext: qsTr("Short term fuel trim, Bank 2"), unittext: "%", fncConvert: fncConvertFuelTrim },
+    { pid: "0109", supported: false, bytescount: 1, labeltext: qsTr("Long term fuel trim, Bank 2"), unittext: "%", fncConvert: fncConvertFuelTrim },
+    { pid: "010a", supported: false, bytescount: 1, labeltext: qsTr("Fuel pressure"), unittext: "kPa", fncConvert: fncConvertFuelPressure },
     { pid: "010b", supported: false, bytescount: 1, labeltext: qsTr("Intake Air Pressure"), unittext: "kPa", fncConvert: fncConvertIntakePressure },
     { pid: "010c", supported: false, bytescount: 2, labeltext: qsTr("Engine RPM"), unittext: qsTr("rpm"), fncConvert: fncConvertRPM },
     { pid: "010d", supported: false, bytescount: 1, labeltext: qsTr("Vehicle Speed"), unittext: "km/h", fncConvert: fncConvertSpeed },
@@ -201,10 +216,12 @@ var arrayPIDs =
     { pid: "010f", supported: false, bytescount: 1, labeltext: qsTr("Intake Air Temp"), unittext: "C°", fncConvert: fncConvertTemp },
     { pid: "0110", supported: false, bytescount: 2, labeltext: qsTr("Air Flow Rate"), unittext: qsTr("grams/sec"), fncConvert: fncConvertAirFlow },
     { pid: "0111", supported: false, bytescount: 1, labeltext: qsTr("Throttle Position"), unittext: "%", fncConvert: fncConvertThrottlePosition },
-    { pid: "011c", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertOBDStandard },
+    { pid: "011c", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertOBDStandard },            
+    { pid: "011f", supported: false, bytescount: 2, labeltext: qsTr("Run time since engine start"), unittext: "s", fncConvert: fncConvertRuntime },
     { pid: "0151", supported: false, bytescount: 1, labeltext: qsTr("Fuel Type"), unittext: " ", fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertVINCount },
-    { pid: "0902", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" }
+    { pid: "0902", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" },
+    { pid: "1234", supported: true,  bytescount: 1, labeltext: qsTr("Battery voltage"), unittext: "V", fncConvert: "" } //This is a fake PID for reading voltage
 ];
 
 //Here come some enums for PID data
@@ -420,4 +437,19 @@ function fncConvertFuelSystem(data)
     }
 
     return sSystem1 + ", " + sSystem2;
+}
+function fncConvertFuelTrim(data)
+{
+    return ((parseInt(data, 16) - 128) * (100 / 128)).toString();
+}
+function fncConvertFuelPressure(data)
+{
+    return (parseInt(data, 16) * 3).toString();
+}
+function fncConvertRuntime(data)
+{
+    //We expect two bytes here. Extract them from data.
+    var sByte1 = data.substr(0, 2);
+    var sByte2 = data.substr(2, 2);
+    return ((parseInt(sByte1, 16) * 256.0) + parseInt(sByte2, 16)).toString();
 }
