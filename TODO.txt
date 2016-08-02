@@ -2,10 +2,10 @@
 - Sometimes there is a segmentation fault when connecting via bluetooth
 	bash: line 1:  6071 Segmentation fault      DISPLAY=':0.0' QT_NO_JOURNALD_LOG='1' /usr/bin/harbour-obdfish
 
-
 --------------ToDo's for immediate future (before next release)---------------
 - Check if bluetooth is activated on smartphone
-
+- Dynamic pages: some texts are too wide. Do something about it...
+- Cover page: show if connected or connecting ...
 
 --------------ToDo's for near future---------------
 - general settings page: query parameters in init routine on main page. Make parameters global.

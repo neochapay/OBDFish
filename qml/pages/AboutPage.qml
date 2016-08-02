@@ -80,6 +80,11 @@ Page
                     iCountWhtRbbt++;
                 }
             }
+            Item
+            {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
             Label
             {
                 width: parent.width
@@ -114,7 +119,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryColor
-                text: qsTr("Date: ") + "27.07.2016";
+                text: qsTr("Date: ") + "02.08.2016";
             }
             Label
             {
@@ -122,26 +127,11 @@ Page
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryColor
                 text: qsTr("License: GPLv3")
-            }
-            SectionHeader
+            }            
+            Item
             {
-                text: "Credits"
-            }
-            Label
-            {
-                font.pixelSize: Theme.fontSizeExtraSmall
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Plotwidget: Thomas Kolb"
-            }
-            Label
-            {
-                font.pixelSize: Theme.fontSizeExtraSmall
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Messagebox: Kimmo Lindholm"
-            }
-            SectionHeader
-            {
-                text: "Links"
+                width: parent.width
+                height: Theme.paddingLarge
             }
             Label
             {

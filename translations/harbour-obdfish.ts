@@ -237,6 +237,10 @@
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Disconnect from bluetooth adapter</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OBDDataObject</name>
@@ -413,26 +417,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open loop due to insufficient engine temperature</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Closed loop, using oxygen sensor feedback to determine fuel mix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open loop due to engine load OR fuel cut due to deceleration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open loop due to system failure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Battery voltage</source>
         <translation type="unfinished"></translation>
     </message>
@@ -458,6 +442,26 @@
     </message>
     <message>
         <source>Run time since engine start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Open loop due to insufficient engine temperature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Closed loop, using O2 sensor for fuel mix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Open loop due to engine load OR fuel cut due to deceleration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Open loop due to system failure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

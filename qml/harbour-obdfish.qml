@@ -60,7 +60,7 @@ ApplicationWindow
         mainPageNotification.category = (sCategory === "error")
             ? "x-sailfish.sailfish-utilities.error"
             : "x-sailfish.sailfish-utilities.info";
-        mainPageNotification.previewBody = "MythOBD";
+        mainPageNotification.previewBody = "OBDFish";
         mainPageNotification.previewSummary = sMessage;
         mainPageNotification.close();
         mainPageNotification.publish();

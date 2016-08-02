@@ -237,6 +237,10 @@
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
+    <message>
+        <source>Disconnect from bluetooth adapter</source>
+        <translation>Bluetooth-Verbindung trennen</translation>
+    </message>
 </context>
 <context>
     <name>OBDDataObject</name>
@@ -413,26 +417,6 @@
         <translation>JOBD, EOBD, und OBD II</translation>
     </message>
     <message>
-        <source>Open loop due to insufficient engine temperature</source>
-        <translation>Offene Schleife aufgrund unzureichender Motortemperatur</translation>
-    </message>
-    <message>
-        <source>Closed loop, using oxygen sensor feedback to determine fuel mix</source>
-        <translation>Geschlossene Schleife, nutze Sauerstoff-Sensor-Feedback um Brennstoff-Mix zu bestimmen</translation>
-    </message>
-    <message>
-        <source>Open loop due to engine load OR fuel cut due to deceleration</source>
-        <translation>Offene Schleife aufgrund von Motorlast oder Kraftstoffunterbrechung wegen Verzögerung</translation>
-    </message>
-    <message>
-        <source>Open loop due to system failure</source>
-        <translation>Offene Schleife wegen Systemausfall</translation>
-    </message>
-    <message>
-        <source>Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
-        <translation>Geschlossene Schleife, mindestens ein Sauerstoffsensor wird verwendet, aber es gibt einen Fehler im Rückkopplungssystem.</translation>
-    </message>
-    <message>
         <source>Battery voltage</source>
         <translation>Batteriespannung</translation>
     </message>
@@ -459,6 +443,26 @@
     <message>
         <source>Run time since engine start</source>
         <translation>Laufzeit seit Motorstart</translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Open loop due to insufficient engine temperature</source>
+        <translation>&lt;br&gt;Offene Schleife aufgrund unzureichender Motortemperatur</translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Closed loop, using O2 sensor for fuel mix</source>
+        <translation>&lt;br&gt;Geschlossene Schleife, nutze O2 Sensor für Gemischaufbereitung</translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Open loop due to engine load OR fuel cut due to deceleration</source>
+        <translation>&lt;br&gt;Offene Schleife aufgrund von Motorlast oder Kraftstoffunterbrechung wegen Verzögerung</translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Open loop due to system failure</source>
+        <translation>&lt;br&gt;Offene Schleife wegen Systemausfall</translation>
+    </message>
+    <message>
+        <source>&lt;br&gt;Closed loop, using at least one oxygen sensor but there is a fault in the feedback system</source>
+        <translation>&lt;br&gt;Geschlossene Schleife, mindestens ein Sauerstoffsensor wird verwendet, aber es gibt einen Fehler im Rückkopplungssystem.</translation>
     </message>
 </context>
 <context>

@@ -49,6 +49,10 @@ Page
             var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
             var sGetSaveDataToDebugFile = id_ProjectSettings.sLoadProjectData("WriteDebugFile");
 
+            console.log("sGetPIDsPage1" + sGetPIDsPage1);
+            console.log("sGetPIDsPage2" + sGetPIDsPage2);
+            console.log("sGetPIDsPage3" + sGetPIDsPage3);
+
             //DEBUG TODO
             //sGetUsedAdaptersNames = "Neuer Adapter v1.5#,#Adapter v2.1#,#Alter Adapter v1.5";
             //sGetUsedAdaptersAddresses = "12:34:56:88:C7:B1#,#88:18:56:68:98:EB#,#98:76:54:32:10:00";
@@ -56,9 +60,15 @@ Page
             //Check project data
             if (sGetPIDsPage1.length > 0 && sGetPIDsPage2.length > 0 && sGetPIDsPage3.length > 0)
             {
-                arPIDsPagesArray[0] = sGetPIDsPage1;
-                arPIDsPagesArray[1] = sGetPIDsPage2;
-                arPIDsPagesArray[2] = sGetPIDsPage3;
+                //Save loaded configuration to global array variable
+                //For stupid crap QML arrays, have to use a JS array as middle man...
+                var arTempArray = arPIDsPagesArray;
+
+                arTempArray[0] = sGetPIDsPage1;
+                arTempArray[1] = sGetPIDsPage2;
+                arTempArray[2] = sGetPIDsPage3;
+
+                arPIDsPagesArray = arTempArray;
             }
 
             if (sGetSaveDataToDebugFile.length > 0) bSaveDataToDebugFile=(sGetSaveDataToDebugFile === "true");
@@ -368,6 +378,7 @@ Page
             SectionHeader
             {
                 text: qsTr("Scan for Bluetooth devices...")
+                visible: !bBluetoothScanning && !bConnecting && !bConnected
             }
             Button
             {
@@ -411,11 +422,16 @@ Page
                     }
                 }
             }
+            SectionHeader
+            {
+                text: qsTr("Disconnect from bluetooth adapter")
+                visible: (bConnected && !bConnecting && iInit === 0)
+            }
             Button
             {
                 width: parent.width
                 text: qsTr("Disconnect")
-                visible: bConnected
+                visible: (bConnected && !bConnecting && iInit === 0)
                 onClicked:
                 {
                     //Save received data to file

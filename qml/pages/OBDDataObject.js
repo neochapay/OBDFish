@@ -293,11 +293,11 @@ var OBDStandards =
 
 var FuelSystem =
 {
-    1: qsTr("Open loop due to insufficient engine temperature"),
-    2: qsTr("Closed loop, using oxygen sensor feedback to determine fuel mix"),
-    4: qsTr("Open loop due to engine load OR fuel cut due to deceleration"),
-    8: qsTr("Open loop due to system failure"),
-    16: qsTr("Closed loop, using at least one oxygen sensor but there is a fault in the feedback system")
+    1: qsTr("<br>Open loop due to insufficient engine temperature"),
+    2: qsTr("<br>Closed loop, using O2 sensor for fuel mix"),
+    4: qsTr("<br>Open loop due to engine load OR fuel cut due to deceleration"),
+    8: qsTr("<br>Open loop due to system failure"),
+    16: qsTr("<br>Closed loop, using at least one oxygen sensor but there is a fault in the feedback system")
 }
 
 //Create lookup table for PID's.
@@ -387,7 +387,11 @@ function fncConvertOBDStandard(data)
 }
 function fncConvertFuelType(data)
 {
-    data = parseInt(data);
+    //console.log("Fueltype: " + data);
+
+    data = parseInt(data,16);
+
+    //console.log("Fueltype: " + data);
 
     if (data >= 0 && data <= 23)
        return FuelTypes[data];
@@ -430,17 +434,25 @@ function fncConvertFuelSystem(data)
     var sSystem1 = "";
     var sSystem2 = "";
 
-    sSystem1 = FuelSystem[bitDecoder(sByte1)];
-    if( sByte2 )
-    {
-        sSystem2 = FuelSystem[bitDecoder(sByte2)];
-    }
+    //console.log("Fuelsystem1: " + sByte1);
+    //console.log("Fuelsystem2: " + sByte2);
+
+    sByte1 = parseInt(sByte1);
+    sByte2 = parseInt(sByte2);
+
+    //console.log("Fuelsystem1: " + sByte1);
+    //console.log("Fuelsystem2: " + sByte2);
+
+    if (sByte1 > 0)
+        sSystem1 = FuelSystem[sByte1];
+    if (sByte2 > 0)
+        sSystem2 = FuelSystem[sByte2];
 
     return sSystem1 + ", " + sSystem2;
 }
 function fncConvertFuelTrim(data)
 {
-    return ((parseInt(data, 16) - 128) * (100 / 128)).toString();
+    return ((parseInt(data, 16) - 128) * (100 / 128)).toFixed(1);
 }
 function fncConvertFuelPressure(data)
 {
