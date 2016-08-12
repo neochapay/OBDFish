@@ -13,18 +13,20 @@ Name:       harbour-obdfish
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    harbour-obdfish
-Version:    0.9
-Release:    1
+Version:    0.91
+Release:    2
 Group:      Qt/Qt
 License:    LICENSE
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-obdfish.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
+Requires:   qt5-qtconnectivity-qtbluetooth >= 5.2.0
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5Bluetooth)
 BuildRequires:  desktop-file-utils
 
 %description
