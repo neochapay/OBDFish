@@ -11,6 +11,7 @@
 - general settings page: query parameters in init routine on main page. Make parameters global.
 - Check MIL in init process on mainpage. If it is set, show a warning.
 - Add more PID's
+- switch between metric/imperial units
 
 
 --------------ToDo's for far future---------------

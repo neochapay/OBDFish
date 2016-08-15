@@ -31,7 +31,6 @@ ApplicationWindow
     property bool bConnecting: false;
     property bool bCommandRunning: false;
     property string sReceiveBuffer: "";
-    property string sDebugFileBuffer: "";
     property string sELMVersion: "";
     property bool bSaveDataToDebugFile: false;
     property variant arPIDsPagesArray : [ "010d,0000,0000,0000,0000,0000", "0104,0105,010c,010d,010e,0111", "0104,0105,010c,010d,010e,0111" ]
@@ -109,8 +108,10 @@ ApplicationWindow
             sCommand = "ATRV";
         }
 
+        //Save command to debug file
+        if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Send: " + sCommand + "\r\n");
+
         //Send the AT command via bluetooth
-        sDebugFileBuffer = sDebugFileBuffer + "Send: " + sCommand + "\r\n";
         id_BluetoothData.sendHex(sCommand);        
 
         return true;
@@ -118,9 +119,7 @@ ApplicationWindow
 
     //Data which is received via bluetooth is passed into this function
     function fncGetData(sData)
-    {
-        sDebugFileBuffer = sDebugFileBuffer + "Receive: " + sData + "\r\n";
-
+    {        
         //WARNING: Don't trim here. ELM might send leading/trailing spaces/carriage returns.
         //They might get lost but are needed!!!
 
@@ -136,6 +135,9 @@ ApplicationWindow
         {
             //The ELM has completely answered the command.
             //Received data is now in sReceiveBuffer.
+
+            //Save received data to debug file
+            if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Receive: " + sReceiveBuffer + "\r\n");
 
             //Cut off the end characters
             if (sReceiveBuffer.search(/\r>/g) !== -1)
@@ -183,7 +185,7 @@ ApplicationWindow
         width: Math.abs(rotationSensor.angle) == 90 ? parent.height : parent.width
         Behavior on rotation { SmoothedAnimation { duration: 500 } }
         Behavior on width { SmoothedAnimation { duration: 500 } }
-    }
+    }        
 
     initialPage: Component { MainPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")

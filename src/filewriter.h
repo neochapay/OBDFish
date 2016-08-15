@@ -12,6 +12,7 @@ class FileWriter : public QObject
     public:
         explicit FileWriter(QObject *parent = 0);
         Q_INVOKABLE void vWriteData(const QString &msg);
+        Q_INVOKABLE void vWriteStart(const QString &msg);
 };
 
 #endif // FILEWRITER

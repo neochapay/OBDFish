@@ -78,7 +78,10 @@ Page
             {
                  SharedResources.fncFillUsedAdaptersArray(sGetUsedAdaptersNames, sGetUsedAdaptersAddresses);
                 id_LV_UsedDevices.model = iUsedDevicesCount = SharedResources.fncGetUsedDevicesNumber();
-            }            
+            }
+
+            //Init debug file. Save first string.
+            if (bSaveDataToDebugFile) id_FileWriter.vWriteStart("Version: " + Qt.application.version + "\r\n" + "Date: " + Date() + "\r\n-------------------------------\r\n");
         }
     }
 
@@ -243,8 +246,7 @@ Page
                         fncShowMessage(2,qsTr("Successfully connected to car computer!"), 6000);
 
                         //Save supported PID's to debug file
-                        sDebugFileBuffer = sDebugFileBuffer + "Supported PID's 0100: " + OBDDataObject.sSupportedPIDs0100 + "\r\n";
-                        sDebugFileBuffer = sDebugFileBuffer + "Supported PID's 0900: " + OBDDataObject.sSupportedPIDs0900 + "\r\n";
+                        if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Supported PID's 0100: " + OBDDataObject.sSupportedPIDs0100 + "\r\nSupported PID's 0900: " + OBDDataObject.sSupportedPIDs0900 + "\r\n");
 
                         //Save adapter as used adapter. Only do this if the adapter is not in the list of used devies.
                         if (sCurrentBTAddress !== "" && SharedResources.fncAddUsedDevice(sCurrentBTName, sCurrentBTAddress))
@@ -434,9 +436,6 @@ Page
                 visible: (bConnected && !bConnecting && iInit === 0)
                 onClicked:
                 {
-                    //Save received data to file
-                    if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Version: " + Qt.application.version + "\r\n" + "Date: " + Date() + "\r\n-------------------------------\r\n" + sDebugFileBuffer);
-
                     id_BluetoothData.disconnect();
                 }
                 Image
@@ -507,7 +506,6 @@ Page
                         //Connect here. Prepeare some things.
                         OBDDataObject.sSupportedPIDs0100 = "";
                         OBDDataObject.sSupportedPIDs0900 = "";
-                        sDebugFileBuffer= "";
                         sELMVersion= "";
                         bConnecting = true;                                               
 
@@ -549,7 +547,6 @@ Page
                         //Connect here. Prepeare some things.
                         OBDDataObject.sSupportedPIDs0100 = "";
                         OBDDataObject.sSupportedPIDs0900 = "";
-                        sDebugFileBuffer= "";
                         sELMVersion= "";
                         bConnecting = true;
 
