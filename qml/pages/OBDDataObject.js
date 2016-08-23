@@ -85,6 +85,36 @@ function fncSetSupportedPIDs(sData, sPID)
     }
 }
 
+function fncEvaluateDTCQuery(sData)
+{
+    var iExpectedDataPackets = arrayLookupPID["03"].bytescount;
+    console.log("fncEvaluateDTCQuery, iExpectedDataPackets: " + iExpectedDataPackets.toString());
+
+
+    //Split data string
+    sData = sData.split(/\r/);
+    var iFoundPackets = 0;
+    var sDTCString = "";
+
+    for (var i = 0; i < sData.length; i++)
+    {
+        if (sData[i].substr(0,2) === "43")
+        {
+            sDTCString = sDTCString + sData[i].substr(3).trim();
+            iFoundPackets++;
+        }
+    }
+
+    console.log("fncEvaluateDTCQuery, iFoundPackets: " + iFoundPackets.toString());
+    console.log("fncEvaluateDTCQuery, sDTCString: " + sDTCString);
+
+    if (iFoundPackets === iExpectedDataPackets)
+        return fncConvertDTCRequest(sDTCString);
+    else
+        return null;
+}
+
+
 function fncEvaluateVINQuery(sData)
 {   
     var iExpectedDataPackets = arrayLookupPID["0902"].bytescount;
@@ -221,7 +251,8 @@ var arrayPIDs =
     { pid: "0151", supported: false, bytescount: 1, labeltext: qsTr("Fuel Type"), unittext: " ", fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertVINCount },
     { pid: "0902", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" },
-    { pid: "1234", supported: true,  bytescount: 1, labeltext: qsTr("Battery voltage"), unittext: "V", fncConvert: "" } //This is a fake PID for reading voltage
+    { pid: "1234", supported: true,  bytescount: 1, labeltext: qsTr("Battery voltage"), unittext: "V", fncConvert: "" }, //This is a fake PID for reading voltage
+    { pid: "03",   supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" }
 ];
 
 //Here come some enums for PID data
@@ -423,7 +454,23 @@ function fncConvertDTCCheck(data)
     }
     numberOfDTCs = byteValue % 128;
 
-    return mil + ", " + numberOfDTCs;
+    //Calculate from the number of errors, how many 03 packets there will be.
+    //Every 03 packet consists of 6 bytes and has up to 3 error packets.
+    if (numberOfDTCs > 0)
+    {
+        var fNumberPackets = Math.ceil(numberOfDTCs / 3);
+
+        arrayLookupPID["03"].supported = true;
+        arrayLookupPID["03"].bytescount = fNumberPackets;
+    }
+    else
+    {
+        arrayLookupPID["03"].supported = false;
+        arrayLookupPID["03"].bytescount = 0;
+    }
+
+
+    return mil + ", " + numberOfDTCs.toString();
 }
 function fncConvertFuelSystem(data)
 {
@@ -464,4 +511,56 @@ function fncConvertRuntime(data)
     var sByte1 = data.substr(0, 2);
     var sByte2 = data.substr(2, 2);
     return ((parseInt(sByte1, 16) * 256.0) + parseInt(sByte2, 16)).toString();
+}
+function fncConvertDTCRequest(data)
+{
+    //We expect six bytes here. Extract them from data.
+    var sByte1 = data.substr(0, 2);
+    var sByte2 = data.substr(2, 2);
+    var sByte3 = data.substr(4, 2);
+    var sByte4 = data.substr(6, 2);
+    var sByte5 = data.substr(8, 2);
+    var sByte6 = data.substr(10, 2);
+
+    var sReturn = "";
+
+    var decodeDTCCode = function (byte1, byte2)
+    {
+        var codeString = "", firstChar;
+
+        //If 00 00 --> No code.
+        if ((byte1 === '00') && (byte2 === '00'))
+        {
+            return "-";
+        }
+
+        var firstByte = parseInt(byte1, 16);
+        var firstCharBytes = firstByte >> 6;
+        switch(firstCharBytes)
+        {
+            case 0:
+                firstChar = 'P';
+                break;
+            case 1:
+                firstChar = 'C';
+                break;
+            case 2:
+                firstChar = 'B';
+                break;
+            case 3:
+                firstChar = 'U';
+                break;
+            default:
+                console.log('Could not decode first char: ' + firstChar.toString());
+                break;
+        }
+        var secondChar = (firstByte >> 4) % 4;
+        var thirdChar = firstByte % 16;
+        codeString = firstChar + secondChar + thirdChar + byte2;
+        return codeString;
+    };
+
+    sReturn = decodeDTCCode(sByte1, sByte2) + "," + decodeDTCCode(sByte3, sByte4) + "," + decodeDTCCode(sByte5, sByte6);
+
+    return sReturn;
 }
