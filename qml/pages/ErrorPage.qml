@@ -24,6 +24,8 @@ Page
     allowedOrientations: Orientation.All
     id: id_page_errorinfo
     property bool bPushErrorInfoPage: true
+    property bool bNotSupported: false
+    property string sNumberOfErrors: ""
     property int iCommandSequence: 0
     property bool bWaitForCommandSequenceEnd: false
     property int iWaitForCommand: 0
@@ -70,31 +72,32 @@ Page
                         else
                             //The requesting of DTC's is not supported.
                             //Show this in a message and don't do anything further.
-
+                            bNotSupported = true;
                         break;
                     case 2:
                         sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0101");
 
+                        //WARNING: THIS IS DEBUG -> REMOVE!!!
                         //DEBUG: typical answer would be: 41 01 81 07 65 04
                         //DEBUG: MIL is set and number of errors is 1.
                         sReadValue = OBDDataObject.fncEvaluatePIDQuery("410181076504", "0101");
 
-
-                        if (sReadValue !== null)
+                        //Error LED is ON if PID 03 is supported.
+                        //This was set by requesting 0101.
+                        if (sReadValue !== null && OBDDataObject.arrayLookupPID["03"].supported)
                         {
                             //Check answer string, e.g. "On, 2" or "Off, 0"
                             var sSplitString = sReadValue.split(',');
-                            if (sSplitString.length == 2 && sSplitString[0] === "On")
-                            {
-                                //Error LED is ON
-                                //Show this on Dialog and resume with reading errors
+                            sNumberOfErrors = sSplitString[1].trim();
 
-                                iCommandSequence++;
-                            }
-                            else
-                            {
-                                //Error LED is OFF
-                            }
+                            iCommandSequence++;
+                        }
+                        else
+                        {
+                            //Error LED is OFF. Don't do anything further.
+
+                            //End sequence here.
+                            bWaitForCommandSequenceEnd = false; //Finish by halting timer
                         }
 
                         break;
@@ -108,72 +111,21 @@ Page
                                                          //43 0102 1120 1220 \r43 1514 1515 0000
                                                          //43 010201130315
 
+                        sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
 
-                        sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0151");
-                        if (sReadValue !== null)
-                            sFuelType = sReadValue;
-                        iCommandSequence++;
-                        break;
-                    case 5:
-                        if (fncStartCommand("ATDP"))
-                            iCommandSequence++;
-                        else
-                            iCommandSequence = iCommandSequence + 2;
-                        break;
-                    case 6:
-                        sOBDProtocol = sReceiveBuffer;
-                        iCommandSequence++;
-                        break;
-                    case 7:
-                        if (fncStartCommand("ATRV"))
-                            iCommandSequence++;
-                        else
-                            iCommandSequence = iCommandSequence + 2;
-                        break;
-                    case 8:
-                        sBatteryVoltage = sReceiveBuffer;
-                        iCommandSequence++;
-                        break;
-                    case 9:
-                        if (fncStartCommand("09011"))
-                            iCommandSequence++;
-                        else
-                            iCommandSequence = iCommandSequence + 2;
-                        break;
-                    case 10:
-                        sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0901");
-                        iCommandSequence++;
-                        break;                    
-                    case 11:
-                        //The number behind the PID is the number of packets expected from ELM
-                        //TODO: get the number of packets from 0901
-                        if (fncStartCommand("0902" + OBDDataObject.arrayLookupPID["0902"].bytescount.toString()))
-                            iCommandSequence++;
-                        else
-                            bWaitForCommandSequenceEnd = false; //Finish by halting timer
-                        break;
-                    case 12:
-                        sReadValue = OBDDataObject.fncEvaluateVINQuery(sReceiveBuffer);
                         if (sReadValue !== null)
                         {
-                            sVIN = sReadValue;
+                            //Split the errors by ,
+                            var sDTCString = sReadValue.split(',');
+
+                            //End sequence here.
                             bWaitForCommandSequenceEnd = false; //Finish by halting timer
                         }
                         else
                         {
-                            if (iWaitForVIN > 0)    //VIN query is repeated 10 times, because cars (VW Caddy) sometimes don't deliver all packets.
-                            {
-                                iWaitForVIN--;
-                                iCommandSequence--;
-                            }
-                            else
-                            {
-                                //End sequence here.
-                                bWaitForCommandSequenceEnd = false; //Finish by halting timer
-                            }
-                        }
 
-                        break;                    
+                        }
+                        break;
                 }
             }            
             else

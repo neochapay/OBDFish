@@ -424,6 +424,15 @@ Page
                     }
                 }
             }
+
+            Button
+            {
+                width: parent.width
+                text: "Error Page"
+                visible: true //bConnected
+                onClicked: {pageStack.push(Qt.resolvedUrl("ErrorPage.qml"))}
+            }
+
             SectionHeader
             {
                 text: qsTr("Disconnect from bluetooth adapter")
