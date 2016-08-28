@@ -40,7 +40,6 @@ Page
         if (status === PageStatus.Active && bPushGeneralInfoPage)
         {
             bPushGeneralInfoPage = false;
-            pageStack.pushAttached(Qt.resolvedUrl("Dyn1Page.qml"));
 
             //Now start with reading static data from ELM
             iCommandSequence = 1;
@@ -71,18 +70,20 @@ Page
                 switch (iCommandSequence)
                 {
                     case 1:
+                        progressBarReadValues.label = "Reading OBD standard...";
                         if (fncStartCommand("011C1"))
                             iCommandSequence++;
                         else
                             iCommandSequence = iCommandSequence + 2;
                         break;
-                    case 2:
+                    case 2:                        
                         sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "011C");
                         if (sReadValue !== null)
                             sOBDStandard = sReadValue;
                         iCommandSequence++;
                         break;
                     case 3:
+                        progressBarReadValues.label = "Reading fuel type...";
                         if (fncStartCommand("01511"))                        
                             iCommandSequence++;                                                   
                         else                       
@@ -95,6 +96,7 @@ Page
                         iCommandSequence++;
                         break;
                     case 5:
+                        progressBarReadValues.label = "Reading OBD protocol...";
                         if (fncStartCommand("ATDP"))
                             iCommandSequence++;
                         else
@@ -105,16 +107,21 @@ Page
                         iCommandSequence++;
                         break;
                     case 7:
+                        progressBarReadValues.label = "Reading battery voltage...";
                         if (fncStartCommand("ATRV"))
                             iCommandSequence++;
                         else
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 8:
+                        sReceiveBuffer.trim();
+                        if (sReceiveBuffer.substr(sReceiveBuffer.length - 1) !== "V" && sReceiveBuffer.substr(sReceiveBuffer.length - 1) !== "v")
+                            sReceiveBuffer = sReceiveBuffer + "V";
                         sBatteryVoltage = sReceiveBuffer;
                         iCommandSequence++;
                         break;
                     case 9:
+                        progressBarReadValues.label = "Reading VIN count...";
                         if (fncStartCommand("09011"))
                             iCommandSequence++;
                         else
@@ -125,6 +132,7 @@ Page
                         iCommandSequence++;
                         break;                    
                     case 11:
+                        progressBarReadValues.label = "Reading VIN, tries left: " + iWaitForVIN.toString();
                         //The number behind the PID is the number of packets expected from ELM
                         //TODO: get the number of packets from 0901
                         if (fncStartCommand("0902" + OBDDataObject.arrayLookupPID["0902"].bytescount.toString()))
@@ -189,6 +197,15 @@ Page
 
             PageHeader { title: qsTr("General Informations") }
 
+            ProgressBar
+            {
+                id: progressBarReadValues
+                width: parent.width
+                visible: bWaitForCommandSequenceEnd
+                indeterminate: true
+                label: qsTr("Reading values...")
+            }
+
             Separator {color: Theme.highlightColor; width: parent.width;}
             Label
             {
@@ -211,7 +228,7 @@ Page
             Label
             {
                 width: parent.width
-                text: qsTr("Battery voltage: ") + sBatteryVoltage + "V";
+                text: qsTr("Battery voltage: ") + sBatteryVoltage;
             }
             Separator {color: Theme.highlightColor; width: parent.width;}
             Label

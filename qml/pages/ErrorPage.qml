@@ -26,6 +26,7 @@ Page
     property bool bPushErrorInfoPage: true
     property bool bNotSupported: false
     property string sNumberOfErrors: ""
+    property string sDTCString: ""
     property int iCommandSequence: 0
     property bool bWaitForCommandSequenceEnd: false
     property int iWaitForCommand: 0
@@ -50,7 +51,7 @@ Page
         //This is called, everytime an AT command is send.
         //The timer waits for ELM to answer the command.
         id: timWaitForCommandSequenceEnd
-        interval: 125
+        interval: 250
         running: bWaitForCommandSequenceEnd
         repeat: true
         onTriggered:
@@ -113,10 +114,16 @@ Page
 
                         sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
 
+                        sReadValue = OBDDataObject.fncEvaluateDTCQuery("43013300000000");
+
+                        sDTCString = sReadValue;
+
                         if (sReadValue !== null)
                         {
                             //Split the errors by ,
-                            var sDTCString = sReadValue.split(',');
+                            //sDTCString = sReadValue.split(',');
+
+
 
                             //End sequence here.
                             bWaitForCommandSequenceEnd = false; //Finish by halting timer
@@ -158,75 +165,37 @@ Page
             spacing: Theme.paddingMedium
             width: parent.width
 
-            PageHeader { title: qsTr("General Informations") }
+            PageHeader { title: qsTr("Error Informations") }
 
-            Separator {color: Theme.highlightColor; width: parent.width;}
             Label
             {
+                visible: bNotSupported
                 width: parent.width
-                text: qsTr("OBD adapter: ELM327 ") + sELMVersion;
+                text: qsTr("Your vehicle does not support the reading of errors.");
             }
-            Separator {color: Theme.highlightColor; width: parent.width;}
+            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
             Label
             {
+                visible: !bNotSupported
                 width: parent.width
-                text: qsTr("OBD standard: ") + sOBDStandard;
+                text: qsTr("Errors: ") + sNumberOfErrors;
             }
-            Separator {color: Theme.highlightColor; width: parent.width;}
+            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
             Label
             {
+                visible: !bNotSupported
                 width: parent.width
-                text: qsTr("OBD protocol: ") + sOBDProtocol;
-            }
-            Separator {color: Theme.highlightColor; width: parent.width;}
+                text: qsTr("Error ID's: ") + sDTCString;
+            }            
+            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
             Label
             {
+                visible: !bNotSupported
                 width: parent.width
-                text: qsTr("Battery voltage: ") + sBatteryVoltage + "V";
-            }
-            Separator {color: Theme.highlightColor; width: parent.width;}
-            Label
-            {
-                width: parent.width
-                text: qsTr("Fuel type: ") + sFuelType;
-            }
-            Separator {color: Theme.highlightColor; width: parent.width;}
-            Label
-            {
-                width: parent.width
-                text: qsTr("Vehicle Identification Number: <br>") + sVIN;
-            }
-            Separator {color: Theme.highlightColor; width: parent.width;}
-            Label
-            {
-                width: parent.width
-                property string urlstring: "https://en.wikipedia.org/wiki/OBD-II_PIDs#Mode_01"
-                text: "Supported PID's, <a href=\"" + urlstring + "\">" +  "Mode 01:" + "<\a>"
-                onLinkActivated: Qt.openUrlExternally(link)
-            }
-            Label
-            {
-                width: parent.width
-                font.pixelSize: Theme.fontSizeExtraSmall
-                wrapMode: Text.WordWrap
-                text: OBDDataObject.sSupportedPIDs0100;
-            }
-            Separator {color: Theme.highlightColor; width: parent.width;}
-            Label
-            {
-                width: parent.width
-                property string urlstring: "https://en.wikipedia.org/wiki/OBD-II_PIDs#Mode_09"
-                text: "Supported PID's, <a href=\"" + urlstring + "\">" +  "Mode 09:" + "<\a>"
-                onLinkActivated: Qt.openUrlExternally(link)
-            }
-            Label
-            {
-                width: parent.width
-                font.pixelSize: Theme.fontSizeExtraSmall
-                wrapMode: Text.WordWrap
-                text: OBDDataObject.sSupportedPIDs0900;
-            }
-            Separator {color: Theme.highlightColor; width: parent.width;}
+                property string urlstring: "http://www.obd-codes.com/trouble_codes/"
+                text: "Error codes, <a href=\"" + urlstring + "\"><\a>"
+                onLinkActivated: Qt.openUrlExternally(link);
+            }            
         }
     }
 }

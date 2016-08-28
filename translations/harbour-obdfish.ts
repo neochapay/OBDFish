@@ -86,6 +86,25 @@
     </message>
 </context>
 <context>
+    <name>ErrorPage</name>
+    <message>
+        <source>Error Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your vehicle does not support the reading of errors.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Errors: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error ID&apos;s: </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeneralInfo</name>
     <message>
         <source>General Informations</source>
@@ -113,6 +132,10 @@
     </message>
     <message>
         <source>Fuel type: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reading values...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -235,10 +258,6 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disconnect from bluetooth adapter</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

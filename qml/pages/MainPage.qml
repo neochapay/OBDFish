@@ -258,8 +258,6 @@ Page
                             id_ProjectSettings.vSaveProjectData("UsedAdaptersAddresses", SharedResources.fncGetUsedDeviceBTAddressesSeparatedString());
                         }
 
-                        pageStack.pushAttached(Qt.resolvedUrl("GeneralInfo.qml"));
-
                         iInit = 0;
                     }
                     else
@@ -327,7 +325,7 @@ Page
             id: id_Column_FirstCol
 
             width: parent.width
-            spacing: Theme.paddingMedium
+            spacing: Theme.paddingLarge
             PageHeader 
             {
                 title: qsTr("Welcome to OBDFish")
@@ -425,19 +423,35 @@ Page
                 }
             }
 
+            Item
+            {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
             Button
             {
                 width: parent.width
-                text: "Error Page"
-                visible: true //bConnected
+                text: "General Informations"
+                visible: (bConnected && !bConnecting && iInit === 0)
+                onClicked: {pageStack.push(Qt.resolvedUrl("GeneralInfo.qml"))}
+            }
+            Separator {color: Theme.highlightColor; width: parent.width; visible: (bConnected && !bConnecting && iInit === 0);}
+            Button
+            {
+                width: parent.width
+                text: "Dynamic Values"
+                visible: (bConnected && !bConnecting && iInit === 0)
+                onClicked: {pageStack.push(Qt.resolvedUrl("Dyn1Page.qml"))}
+            }
+            Separator {color: Theme.highlightColor; width: parent.width; visible: (bConnected && !bConnecting && iInit === 0);}
+            Button
+            {
+                width: parent.width
+                text: "Error Informations"
+                visible: (bConnected && !bConnecting && iInit === 0)
                 onClicked: {pageStack.push(Qt.resolvedUrl("ErrorPage.qml"))}
             }
-
-            SectionHeader
-            {
-                text: qsTr("Disconnect from bluetooth adapter")
-                visible: (bConnected && !bConnecting && iInit === 0)
-            }
+            Separator {color: Theme.highlightColor; width: parent.width; visible: (bConnected && !bConnecting && iInit === 0);}
             Button
             {
                 width: parent.width
