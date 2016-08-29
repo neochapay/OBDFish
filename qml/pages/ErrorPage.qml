@@ -83,13 +83,27 @@ Page
                         //DEBUG: MIL is set and number of errors is 1.
                         sReadValue = OBDDataObject.fncEvaluatePIDQuery("410181076504", "0101");
 
+                        console.log("sReadValue: " + sReadValue);
+                        console.log("03 supported: " + OBDDataObject.arrayLookupPID["03"].supported.toString());
+
                         //Error LED is ON if PID 03 is supported.
                         //This was set by requesting 0101.
                         if (sReadValue !== null && OBDDataObject.arrayLookupPID["03"].supported)
                         {
                             //Check answer string, e.g. "On, 2" or "Off, 0"
                             var sSplitString = sReadValue.split(',');
+
+                            console.log("sSplitString 0: " + sSplitString[0]);
+                            console.log("sSplitString 1: " + sSplitString[1]);
+
                             sNumberOfErrors = sSplitString[1].trim();
+
+                            console.log("sNumberOfErrors: " + sNumberOfErrors);
+
+                            var sFirstString = qsTr("Your vehicle has ");
+                            var sSecondString = qsTr(" errors!");
+
+                            id_LABEL_NumberErrors.text =  sFirstString + sNumberOfErrors + sSecondString;
 
                             iCommandSequence++;
                         }
@@ -174,25 +188,24 @@ Page
                 text: qsTr("Your vehicle does not support the reading of errors.");
             }
 
-            Row
-            {
                 Image
                 {
                     id: id_Image_OBDOK
                     anchors.left: parent.left
                     visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0"
                     anchors.horizontalCenter: parent.horizontalCenter
-                    height: 128
+                    height: 100
                     fillMode: Image.PreserveAspectFit
                     source: "../obd_ok.png"
                 }
                 Image
                 {
+                    //DAS BILD IST KURZ ZU SEHEN!!!
                     id: id_Image_OBDERROR
                     anchors.left: parent.left
                     visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0"
                     anchors.horizontalCenter: parent.horizontalCenter
-                    height: 128
+                    height: 100
                     fillMode: Image.PreserveAspectFit
                     source: "../obd_error.png"
                 }
@@ -204,16 +217,11 @@ Page
                 }
                 Label
                 {
+                    id: id_LABEL_NumberErrors
                     visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0"
-                    width: parent.width - id_Image_OBDERROR.width
-                    text:
-                    {
-                        var sFirstString = qsTr("Your vehicle has ");
-                        var sSecondString = qsTr(" errors!");
-                        text = sFirstString + sNumberOfErrors + sSecondString;
-                    }
+                    width: parent.width - id_Image_OBDERROR.width                   
                 }
-            }
+
             Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
             Label
             {
