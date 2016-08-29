@@ -89,19 +89,31 @@
     <name>ErrorPage</name>
     <message>
         <source>Error Informations</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler Infos</translation>
     </message>
     <message>
         <source>Your vehicle does not support the reading of errors.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Errors: </source>
-        <translation type="unfinished"></translation>
+        <translation>Das Auslesen von Fehlern wird nicht unterstützt.</translation>
     </message>
     <message>
         <source>Error ID&apos;s: </source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler ID&apos;s: </translation>
+    </message>
+    <message>
+        <source>No errors found!</source>
+        <translation>Keine Fehler gefunden!</translation>
+    </message>
+    <message>
+        <source>Error codes:</source>
+        <translation>Fehler Codes:</translation>
+    </message>
+    <message>
+        <source>Your vehicle has </source>
+        <translation>Das Fahrzeug hat </translation>
+    </message>
+    <message>
+        <source> errors!</source>
+        <translation> Fehler!</translation>
     </message>
 </context>
 <context>
@@ -136,7 +148,7 @@
     </message>
     <message>
         <source>Reading values...</source>
-        <translation type="unfinished"></translation>
+        <translation>Lese Werte...</translation>
     </message>
 </context>
 <context>
@@ -150,8 +162,8 @@
         <translation>Logbuchdatei schreiben</translation>
     </message>
     <message>
-        <source>Communication with car is saved to /home/nemo/Documents/obd_log.txt. Data is saved when disconnect button is pressed.</source>
-        <translation>Kommunikation mit Steuergerät wird gespeichert: /home/nemo/Documents/obd_log.txt. Daten werden gespeichert wenn Trennen-Button gedrückt wird.</translation>
+        <source>Communication with vehicle is saved to a file: /home/nemo/Documents/obd_log.txt</source>
+        <translation>Kommunikation mit Fahrzeug wird in Datei gespeichert: /home/nemo/Documents/obd_log.txt</translation>
     </message>
 </context>
 <context>
@@ -259,6 +271,18 @@
     <message>
         <source>Settings</source>
         <translation>Einstellungen</translation>
+    </message>
+    <message>
+        <source>General Informations</source>
+        <translation>Allgemeine Infos</translation>
+    </message>
+    <message>
+        <source>Dynamic Values</source>
+        <translation>Dynamische Werte</translation>
+    </message>
+    <message>
+        <source>Error Informations</source>
+        <translation>Fehler Infos</translation>
     </message>
 </context>
 <context>
@@ -493,6 +517,10 @@
     <message>
         <source>Empty</source>
         <translation>Leer</translation>
+    </message>
+    <message>
+        <source>Dynamic Parameters Page: </source>
+        <translation>Dynamische Werte Seite: </translation>
     </message>
 </context>
 </TS>

@@ -431,7 +431,7 @@ Page
             Button
             {
                 width: parent.width
-                text: "General Informations"
+                text: qsTr("General Informations")
                 visible: (bConnected && !bConnecting && iInit === 0)
                 onClicked: {pageStack.push(Qt.resolvedUrl("GeneralInfo.qml"))}
             }
@@ -439,7 +439,7 @@ Page
             Button
             {
                 width: parent.width
-                text: "Dynamic Values"
+                text: qsTr("Dynamic Values")
                 visible: (bConnected && !bConnecting && iInit === 0)
                 onClicked: {pageStack.push(Qt.resolvedUrl("Dyn1Page.qml"))}
             }
@@ -447,7 +447,7 @@ Page
             Button
             {
                 width: parent.width
-                text: "Error Informations"
+                text: qsTr("Error Informations")
                 visible: (bConnected && !bConnecting && iInit === 0)
                 onClicked: {pageStack.push(Qt.resolvedUrl("ErrorPage.qml"))}
             }

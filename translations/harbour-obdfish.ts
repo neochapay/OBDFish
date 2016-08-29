@@ -96,11 +96,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Errors: </source>
+        <source>Error ID&apos;s: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Error ID&apos;s: </source>
+        <source>No errors found!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error codes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your vehicle has </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> errors!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -150,7 +162,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Communication with car is saved to /home/nemo/Documents/obd_log.txt. Data is saved when disconnect button is pressed.</source>
+        <source>Communication with vehicle is saved to a file: /home/nemo/Documents/obd_log.txt</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -258,6 +270,18 @@
     </message>
     <message>
         <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>General Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic Values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error Informations</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -492,6 +516,10 @@
     </message>
     <message>
         <source>Empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic Parameters Page: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

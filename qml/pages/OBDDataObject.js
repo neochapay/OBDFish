@@ -100,7 +100,7 @@ function fncEvaluateDTCQuery(sData)
     {
         if (sData[i].substr(0,2) === "43")
         {
-            sDTCString = sDTCString + sData[i].substr(3).trim();
+            sDTCString = sDTCString + sData[i].substr(2).trim();
             iFoundPackets++;
         }
     }

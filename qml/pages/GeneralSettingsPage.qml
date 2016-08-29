@@ -71,7 +71,7 @@ Page
             {
                 id: id_TextSwitch_DebugFile
                 text: qsTr("Write debug file")
-                description: qsTr("Communication with car is saved to /home/nemo/Documents/obd_log.txt. Data is saved when disconnect button is pressed.")
+                description: qsTr("Communication with vehicle is saved to a file: /home/nemo/Documents/obd_log.txt")
             }
         }
     }

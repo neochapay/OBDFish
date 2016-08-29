@@ -124,14 +124,14 @@ Page
                             //sDTCString = sReadValue.split(',');
 
 
-
                             //End sequence here.
-                            bWaitForCommandSequenceEnd = false; //Finish by halting timer
+
                         }
                         else
                         {
 
-                        }
+                        }                        
+                        bWaitForCommandSequenceEnd = false; //Finish by halting timer
                         break;
                 }
             }            
@@ -173,12 +173,46 @@ Page
                 width: parent.width
                 text: qsTr("Your vehicle does not support the reading of errors.");
             }
-            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
-            Label
+
+            Row
             {
-                visible: !bNotSupported
-                width: parent.width
-                text: qsTr("Errors: ") + sNumberOfErrors;
+                Image
+                {
+                    id: id_Image_OBDOK
+                    anchors.left: parent.left
+                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 128
+                    fillMode: Image.PreserveAspectFit
+                    source: "../obd_ok.png"
+                }
+                Image
+                {
+                    id: id_Image_OBDERROR
+                    anchors.left: parent.left
+                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 128
+                    fillMode: Image.PreserveAspectFit
+                    source: "../obd_error.png"
+                }
+                Label
+                {
+                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0"
+                    width: parent.width - id_Image_OBDOK.width
+                    text: qsTr("No errors found!");
+                }
+                Label
+                {
+                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0"
+                    width: parent.width - id_Image_OBDERROR.width
+                    text:
+                    {
+                        var sFirstString = qsTr("Your vehicle has ");
+                        var sSecondString = qsTr(" errors!");
+                        text = sFirstString + sNumberOfErrors + sSecondString;
+                    }
+                }
             }
             Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
             Label
@@ -187,13 +221,20 @@ Page
                 width: parent.width
                 text: qsTr("Error ID's: ") + sDTCString;
             }            
-            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
+            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}            
+            Label
+            {
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: Theme.fontSizeExtraSmall
+                color: Theme.secondaryColor
+                text: qsTr("Error codes:")
+            }
             Label
             {
                 visible: !bNotSupported
                 width: parent.width
                 property string urlstring: "http://www.obd-codes.com/trouble_codes/"
-                text: "Error codes, <a href=\"" + urlstring + "\"><\a>"
+                text: "<a href=\"" + urlstring + "\">" +  urlstring + "<\a>"
                 onLinkActivated: Qt.openUrlExternally(link);
             }            
         }

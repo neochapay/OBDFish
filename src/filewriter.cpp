@@ -30,7 +30,7 @@ void FileWriter::vWriteData(const QString &msg)
     if(file.open(QIODevice::Append))
     {
         QTextStream stream(&file);
-        stream << msg << endl;
+        stream << QTime::currentTime().toString() << " " << msg << endl;
     }
 
     file.flush();   //write at once!

@@ -1,15 +1,13 @@
-# Rename this file as harbour-obdfish.changes to include changelog
-# entries in your RPM file.
-#
-# Add new changelog entries following the format below.
-# Add newest entries to the top of the list.
-# Separate entries from eachother with a blank line.
+* Mon Aug 29 2016 Jens Drescher <jens.drescher.lippe@web.de> 0.92.0-3
+- third release to openrepos
+- improved UI user guideance
+- added reading error informations on dedicated error page
+- improved debug file writing behaviour
+- bug fixes
 
-# * date Author's Name <author's email> version-release
-# - Summary of changes
+* Sun Aug 07 2016 Jens Drescher <jens.drescher.lippe@web.de> 0.91.0-2
+- second release to openrepos
+- added dependencies to yaml file
 
-* Sun Apr 13 2014 Jack Tar <jack.tar@example.com> 0.0.1-1
-- Scrubbed the deck
-- Hoisted the sails
-
-
+* Tue Aug 02 2016 Jens Drescher <jens.drescher.lippe@web.de> 0.9.1-1
+- initial release to openrepos

@@ -162,8 +162,12 @@ Page
             PageHeader { title: qsTr("Settings") }
 
             SectionHeader
-            {
-                text: qsTr("Dynamic Parameters Page: " + (iPIDPageIndex + 1).toString())
+            {                
+                text:
+                {
+                    var sFirstString = qsTr("Dynamic Parameters Page: ");
+                    text = sFirstString + (iPIDPageIndex + 1).toString();
+                }
             }
             ComboBox
             {

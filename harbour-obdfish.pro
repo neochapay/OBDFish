@@ -76,5 +76,6 @@ DISTFILES += \
     qml/elm327.png \
     qml/jp_logo.png \
     qml/pages/GeneralSettingsPage.qml \
-    qml/pages/ErrorPage.qml
+    qml/pages/ErrorPage.qml \
+    qml/obd_ok.png
 
