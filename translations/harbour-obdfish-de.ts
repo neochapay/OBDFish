@@ -115,6 +115,10 @@
         <source> errors!</source>
         <translation> Fehler!</translation>
     </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GeneralInfo</name>
@@ -149,6 +153,10 @@
     <message>
         <source>Reading values...</source>
         <translation>Lese Werte...</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

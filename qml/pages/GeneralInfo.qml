@@ -27,12 +27,12 @@ Page
     property int iCommandSequence: 0
     property bool bWaitForCommandSequenceEnd: false
     property int iWaitForCommand: 0
+    property int iWaitForVIN : 10
     property string sOBDStandard: "Not supported"
     property string sOBDProtocol: "Not supported"
     property string sFuelType: "Not supported"
     property string sVIN: "Not supported"
     property string sBatteryVoltage: ""
-    property int iWaitForVIN : 10
 
 
     onStatusChanged:
@@ -42,6 +42,7 @@ Page
             bPushGeneralInfoPage = false;
 
             //Now start with reading static data from ELM
+            iWaitForVIN = 10;
             iCommandSequence = 1;
             iWaitForCommand = 0;
             bWaitForCommandSequenceEnd = true;
@@ -188,6 +189,28 @@ Page
 
         VerticalScrollDecorator {}
 
+        PullDownMenu
+        {
+            MenuItem
+            {
+                text: qsTr("Refresh")
+                onClicked:
+                {
+                    //Set everything to start
+                    sOBDStandard = "Not supported";
+                    sOBDProtocol = "Not supported";
+                    sFuelType = "Not supported";
+                    sVIN = "Not supported";
+                    sBatteryVoltage= "";
+
+                    //Now start with reading static data from ELM
+                    iWaitForVIN = 10;
+                    iCommandSequence = 1;
+                    iWaitForCommand = 0;
+                    bWaitForCommandSequenceEnd = true;
+                }
+            }
+        }
         Column
         {
             id: id_Column_FirstCol

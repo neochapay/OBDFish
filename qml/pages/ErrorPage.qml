@@ -98,12 +98,7 @@ Page
 
                             sNumberOfErrors = sSplitString[1].trim();
 
-                            console.log("sNumberOfErrors: " + sNumberOfErrors);
-
-                            var sFirstString = qsTr("Your vehicle has ");
-                            var sSecondString = qsTr(" errors!");
-
-                            id_LABEL_NumberErrors.text =  sFirstString + sNumberOfErrors + sSecondString;
+                            console.log("sNumberOfErrors: " + sNumberOfErrors);                           
 
                             iCommandSequence++;
                         }
@@ -124,11 +119,11 @@ Page
                     case 4:
                         //Typical response for 03 request: 43 013300000000      -> P0133
                                                          //43 0102 1120 1220 \r43 1514 1515 0000
-                                                         //43 010201130315
+                                                         //43010201130315
 
                         sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
 
-                        sReadValue = OBDDataObject.fncEvaluateDTCQuery("43013300000000");
+                        sReadValue = OBDDataObject.fncEvaluateDTCQuery("43010201130315");
 
                         sDTCString = sReadValue;
 
@@ -146,6 +141,7 @@ Page
 
                         }                        
                         bWaitForCommandSequenceEnd = false; //Finish by halting timer
+                        console.log("Error reading ready!");
                         break;
                 }
             }            
@@ -172,6 +168,24 @@ Page
 
         VerticalScrollDecorator {}
 
+        PullDownMenu
+        {
+            MenuItem
+            {
+                text: qsTr("Refresh")
+                onClicked:
+                {
+                    bNotSupported = false;
+                    sNumberOfErrors = "";
+                    sDTCString = "";
+
+                    //Now start with reading error data from ELM
+                    iCommandSequence = 1;
+                    iWaitForCommand = 0;
+                    bWaitForCommandSequenceEnd = true;
+                }
+            }
+        }
         Column
         {
             id: id_Column_FirstCol
@@ -188,39 +202,47 @@ Page
                 text: qsTr("Your vehicle does not support the reading of errors.");
             }
 
-                Image
+            /*
+            Image
+            {
+                id: id_Image_OBDOK
+                anchors.left: parent.left
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0")
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: 100
+                fillMode: Image.PreserveAspectFit
+                source: "../obd_ok.png"
+            }
+            Image
+            {
+                //DAS BILD IST KURZ ZU SEHEN!!!
+                id: id_Image_OBDERROR
+                anchors.left: parent.left
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0")
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: 100
+                fillMode: Image.PreserveAspectFit
+                source: "../obd_error.png"
+            }
+            */
+
+            Label
+            {
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0")
+                width: parent.width - id_Image_OBDOK.width
+                text: qsTr("No errors found!");
+            }
+            Label
+            {
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0")
+                width: parent.width - id_Image_OBDERROR.width
+                text:
                 {
-                    id: id_Image_OBDOK
-                    anchors.left: parent.left
-                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    height: 100
-                    fillMode: Image.PreserveAspectFit
-                    source: "../obd_ok.png"
+                    var sFirstString = qsTr("Your vehicle has ");
+                    var sSecondString = qsTr(" errors!");
+                    text = sFirstString + sNumberOfErrors + sSecondString;
                 }
-                Image
-                {
-                    //DAS BILD IST KURZ ZU SEHEN!!!
-                    id: id_Image_OBDERROR
-                    anchors.left: parent.left
-                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    height: 100
-                    fillMode: Image.PreserveAspectFit
-                    source: "../obd_error.png"
-                }
-                Label
-                {
-                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0"
-                    width: parent.width - id_Image_OBDOK.width
-                    text: qsTr("No errors found!");
-                }
-                Label
-                {
-                    id: id_LABEL_NumberErrors
-                    visible: !bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0"
-                    width: parent.width - id_Image_OBDERROR.width                   
-                }
+            }
 
             Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
             Label
@@ -244,7 +266,23 @@ Page
                 property string urlstring: "http://www.obd-codes.com/trouble_codes/"
                 text: "<a href=\"" + urlstring + "\">" +  urlstring + "<\a>"
                 onLinkActivated: Qt.openUrlExternally(link);
-            }            
+            }
+
+            Label
+            {
+                width: parent.width
+                text: "Debug, number of errors: " + sNumberOfErrors;
+            }
+            Label
+            {
+                width: parent.width
+                text: "Debug, bNotSupported: " + bNotSupported.toString();
+            }
+            Label
+            {
+                width: parent.width
+                text: "Debug, bWaitForCommandSequenceEnd: " + bWaitForCommandSequenceEnd.toString();
+            }
         }
     }
 }
