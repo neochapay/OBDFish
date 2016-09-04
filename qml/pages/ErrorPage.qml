@@ -76,12 +76,12 @@ Page
                             bNotSupported = true;
                         break;
                     case 2:
-                        sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0101");
+                        //sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0101");
 
                         //WARNING: THIS IS DEBUG -> REMOVE!!!
                         //DEBUG: typical answer would be: 41 01 81 07 65 04
                         //DEBUG: MIL is set and number of errors is 1.
-                        sReadValue = OBDDataObject.fncEvaluatePIDQuery("410181076504", "0101");
+                        sReadValue = OBDDataObject.fncEvaluatePIDQuery("410185076504", "0101");
 
                         console.log("sReadValue: " + sReadValue);
                         console.log("03 supported: " + OBDDataObject.arrayLookupPID["03"].supported.toString());
@@ -91,14 +91,14 @@ Page
                         if (sReadValue !== null && OBDDataObject.arrayLookupPID["03"].supported)
                         {
                             //Check answer string, e.g. "On, 2" or "Off, 0"
-                            var sSplitString = sReadValue.split(',');
-
-                            console.log("sSplitString 0: " + sSplitString[0]);
-                            console.log("sSplitString 1: " + sSplitString[1]);
+                            var sSplitString = sReadValue.split(',');                            
 
                             sNumberOfErrors = sSplitString[1].trim();
 
-                            console.log("sNumberOfErrors: " + sNumberOfErrors);                           
+                            var sFirstString = qsTr("Your vehicle has ");
+                            var sSecondString = qsTr(" errors!");
+
+                            id_LABEL_ErrorNumber.text = sFirstString + sNumberOfErrors + sSecondString;
 
                             iCommandSequence++;
                         }
@@ -117,29 +117,16 @@ Page
 
                         break;
                     case 4:
-                        //Typical response for 03 request: 43 013300000000      -> P0133
-                                                         //43 0102 1120 1220 \r43 1514 1515 0000
+                        //Typical response for 03 request: 43013300000000      -> P0133
+                                                         //43010211201220\r43151415150000
                                                          //43010201130315
 
-                        sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
+                        //sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
 
-                        sReadValue = OBDDataObject.fncEvaluateDTCQuery("43010201130315");
+                        sReadValue = OBDDataObject.fncEvaluateDTCQuery("43010211201220\r43151415150000");
 
                         sDTCString = sReadValue;
 
-                        if (sReadValue !== null)
-                        {
-                            //Split the errors by ,
-                            //sDTCString = sReadValue.split(',');
-
-
-                            //End sequence here.
-
-                        }
-                        else
-                        {
-
-                        }                        
                         bWaitForCommandSequenceEnd = false; //Finish by halting timer
                         console.log("Error reading ready!");
                         break;
@@ -202,12 +189,11 @@ Page
                 text: qsTr("Your vehicle does not support the reading of errors.");
             }
 
-            /*
+
             Image
             {
-                id: id_Image_OBDOK
-                anchors.left: parent.left
-                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0")
+                id: id_Image_OBDOK                
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0" && sNumberOfErrors !== "")
                 anchors.horizontalCenter: parent.horizontalCenter
                 height: 100
                 fillMode: Image.PreserveAspectFit
@@ -215,36 +201,34 @@ Page
             }
             Image
             {
-                //DAS BILD IST KURZ ZU SEHEN!!!
                 id: id_Image_OBDERROR
-                anchors.left: parent.left
-                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0")
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "")
                 anchors.horizontalCenter: parent.horizontalCenter
                 height: 100
                 fillMode: Image.PreserveAspectFit
                 source: "../obd_error.png"
             }
-            */
+            Item
+            {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
 
             Label
             {
                 visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0")
-                width: parent.width - id_Image_OBDOK.width
+                width: parent.width
                 text: qsTr("No errors found!");
             }
             Label
             {
+                id: id_LABEL_ErrorNumber
                 visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0")
-                width: parent.width - id_Image_OBDERROR.width
-                text:
-                {
-                    var sFirstString = qsTr("Your vehicle has ");
-                    var sSecondString = qsTr(" errors!");
-                    text = sFirstString + sNumberOfErrors + sSecondString;
-                }
+                width: parent.width
             }
 
-            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}
+            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}            
+
             Label
             {
                 visible: !bNotSupported
@@ -254,9 +238,8 @@ Page
             Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}            
             Label
             {
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.secondaryColor
+                visible: !bNotSupported
+                width: parent.width
                 text: qsTr("Error codes:")
             }
             Label
@@ -266,22 +249,6 @@ Page
                 property string urlstring: "http://www.obd-codes.com/trouble_codes/"
                 text: "<a href=\"" + urlstring + "\">" +  urlstring + "<\a>"
                 onLinkActivated: Qt.openUrlExternally(link);
-            }
-
-            Label
-            {
-                width: parent.width
-                text: "Debug, number of errors: " + sNumberOfErrors;
-            }
-            Label
-            {
-                width: parent.width
-                text: "Debug, bNotSupported: " + bNotSupported.toString();
-            }
-            Label
-            {
-                width: parent.width
-                text: "Debug, bWaitForCommandSequenceEnd: " + bWaitForCommandSequenceEnd.toString();
             }
         }
     }

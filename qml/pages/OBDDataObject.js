@@ -93,23 +93,30 @@ function fncEvaluateDTCQuery(sData)
 
     //Split data string
     sData = sData.split(/\r/);
-    var iFoundPackets = 0;
+    var arDTCPackets;
     var sDTCString = "";
 
     for (var i = 0; i < sData.length; i++)
     {
         if (sData[i].substr(0,2) === "43")
         {
-            sDTCString = sDTCString + sData[i].substr(2).trim();
-            iFoundPackets++;
+            arDTCPackets.push(sData[i].substr(2).trim());
         }
     }
 
-    console.log("fncEvaluateDTCQuery, iFoundPackets: " + iFoundPackets.toString());
-    console.log("fncEvaluateDTCQuery, sDTCString: " + sDTCString);
+    console.log("fncEvaluateDTCQuery, arDTCPackets.length: " + arDTCPackets.length.toString());
 
-    if (iFoundPackets === iExpectedDataPackets)
-        return fncConvertDTCRequest(sDTCString);
+    if (arDTCPackets.length === iExpectedDataPackets)
+    {
+        for (var j = 0; j < arDTCPackets.length; j++)
+        {
+            sDTCString = sDTCString + fncConvertDTCRequest(arDTCPackets[j]) + "\r\n";
+        }
+
+        sDTCString = sDTCString.trim();
+
+        return sDTCString;
+    }
     else
         return null;
 }
@@ -250,7 +257,7 @@ var arrayPIDs =
     { pid: "011f", supported: false, bytescount: 2, labeltext: qsTr("Run time since engine start"), unittext: "s", fncConvert: fncConvertRuntime },
     { pid: "0151", supported: false, bytescount: 1, labeltext: qsTr("Fuel Type"), unittext: " ", fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertVINCount },
-    { pid: "0902", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" },
+    { pid: "0902", supported: false, bytescount: 3, labeltext: null, unittext: "", fncConvert: "" }, //This is count of VIN packets. Length is set to 3 because of CAN vehicles. CAN vehicles don't tell the length!
     { pid: "1234", supported: true,  bytescount: 1, labeltext: qsTr("Battery voltage"), unittext: "V", fncConvert: "" }, //This is a fake PID for reading voltage
     { pid: "03",   supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" }
 ];

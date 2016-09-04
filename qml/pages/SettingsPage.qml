@@ -165,6 +165,8 @@ Page
             {                
                 text:
                 {
+                    //This thing here is all neat and nice but be aware that it only works on design time.
+                    //If the variable changes during runtime, it will not be refreshed!!!
                     var sFirstString = qsTr("Dynamic Parameters Page: ");
                     text = sFirstString + (iPIDPageIndex + 1).toString();
                 }
