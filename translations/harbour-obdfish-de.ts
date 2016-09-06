@@ -96,10 +96,6 @@
         <translation>Das Auslesen von Fehlern wird nicht unterstützt.</translation>
     </message>
     <message>
-        <source>Error ID&apos;s: </source>
-        <translation>Fehler ID&apos;s: </translation>
-    </message>
-    <message>
         <source>No errors found!</source>
         <translation>Keine Fehler gefunden!</translation>
     </message>
@@ -117,6 +113,11 @@
     </message>
     <message>
         <source>Refresh</source>
+        <translation>Aktualisieren</translation>
+    </message>
+    <message>
+        <source>Error ID&apos;s: 
+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -156,7 +157,7 @@
     </message>
     <message>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktualisieren</translation>
     </message>
 </context>
 <context>

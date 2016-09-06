@@ -93,7 +93,7 @@ function fncEvaluateDTCQuery(sData)
 
     //Split data string
     sData = sData.split(/\r/);
-    var arDTCPackets;
+    var arDTCPackets = new Array;
     var sDTCString = "";
 
     for (var i = 0; i < sData.length; i++)
@@ -132,6 +132,21 @@ function fncEvaluateVINQuery(sData)
     sData = sData.split(/\r/);
     var iFoundPackets = 0;
     var sVINString = "";
+
+    //TODO:
+    //CAN answer maybe:
+    //014 0: 490201575030
+    //01: 5A5A5A39395A54
+    //02: 53333932313234
+    //CAN answer from Subaru:
+    //0: 4902014A4631
+    //1: 4748374C573438
+    //2: 47303137353539
+    //CAN answer:
+    //014
+    //0: 490201314434
+    //1: 47503030523535
+    //2: 42313233343536
 
     for (var i = 0; i < sData.length; i++)
     {
@@ -257,7 +272,7 @@ var arrayPIDs =
     { pid: "011f", supported: false, bytescount: 2, labeltext: qsTr("Run time since engine start"), unittext: "s", fncConvert: fncConvertRuntime },
     { pid: "0151", supported: false, bytescount: 1, labeltext: qsTr("Fuel Type"), unittext: " ", fncConvert: fncConvertFuelType },
     { pid: "0901", supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: fncConvertVINCount },
-    { pid: "0902", supported: false, bytescount: 3, labeltext: null, unittext: "", fncConvert: "" }, //This is count of VIN packets. Length is set to 3 because of CAN vehicles. CAN vehicles don't tell the length!
+    { pid: "0902", supported: false, bytescount: 5, labeltext: null, unittext: "", fncConvert: "" }, //This is count of VIN packets. Length is set to 5 because of CAN vehicles. CAN vehicles don't tell the length!
     { pid: "1234", supported: true,  bytescount: 1, labeltext: qsTr("Battery voltage"), unittext: "V", fncConvert: "" }, //This is a fake PID for reading voltage
     { pid: "03",   supported: false, bytescount: 1, labeltext: null, unittext: "", fncConvert: "" }
 ];

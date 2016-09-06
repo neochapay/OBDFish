@@ -76,15 +76,14 @@ Page
                             bNotSupported = true;
                         break;
                     case 2:
-                        //sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0101");
+                        sReadValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, "0101");
 
-                        //WARNING: THIS IS DEBUG -> REMOVE!!!
                         //DEBUG: typical answer would be: 41 01 81 07 65 04
                         //DEBUG: MIL is set and number of errors is 1.
-                        sReadValue = OBDDataObject.fncEvaluatePIDQuery("410185076504", "0101");
+                        //sReadValue = OBDDataObject.fncEvaluatePIDQuery("410181076504", "0101");
 
-                        console.log("sReadValue: " + sReadValue);
-                        console.log("03 supported: " + OBDDataObject.arrayLookupPID["03"].supported.toString());
+                        //console.log("sReadValue: " + sReadValue);
+                        //console.log("03 supported: " + OBDDataObject.arrayLookupPID["03"].supported.toString());
 
                         //Error LED is ON if PID 03 is supported.
                         //This was set by requesting 0101.
@@ -104,8 +103,8 @@ Page
                         }
                         else
                         {
-                            //Error LED is OFF. Don't do anything further.
-
+                            //Error LED is OFF. Don't do anything further. Number of errors is obviously 0.
+                            sNumberOfErrors = "0";
                             //End sequence here.
                             bWaitForCommandSequenceEnd = false; //Finish by halting timer
                         }
@@ -121,9 +120,9 @@ Page
                                                          //43010211201220\r43151415150000
                                                          //43010201130315
 
-                        //sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
+                        sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
 
-                        sReadValue = OBDDataObject.fncEvaluateDTCQuery("43010211201220\r43151415150000");
+                        //sReadValue = OBDDataObject.fncEvaluateDTCQuery("43010211200000");
 
                         sDTCString = sReadValue;
 
@@ -216,40 +215,40 @@ Page
 
             Label
             {
-                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0")
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors === "0" && sNumberOfErrors !== "")
                 width: parent.width
                 text: qsTr("No errors found!");
             }
             Label
             {
                 id: id_LABEL_ErrorNumber
-                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0")
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "")
                 width: parent.width
             }
 
-            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}            
+            Separator {color: Theme.highlightColor; width: parent.width; visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "")}
 
             Label
             {
-                visible: !bNotSupported
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "")
                 width: parent.width
-                text: qsTr("Error ID's: ") + sDTCString;
+                text: qsTr("Error ID's: \r\n") + sDTCString;
             }            
-            Separator {color: Theme.highlightColor; width: parent.width; visible: !bNotSupported;}            
+            Separator {color: Theme.highlightColor; width: parent.width; visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "");}
             Label
             {
-                visible: !bNotSupported
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "")
                 width: parent.width
                 text: qsTr("Error codes:")
             }
             Label
             {
-                visible: !bNotSupported
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "")
                 width: parent.width
                 property string urlstring: "http://www.obd-codes.com/trouble_codes/"
                 text: "<a href=\"" + urlstring + "\">" +  urlstring + "<\a>"
                 onLinkActivated: Qt.openUrlExternally(link);
-            }
+            }                      
         }
     }
 }

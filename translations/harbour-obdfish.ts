@@ -96,10 +96,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Error ID&apos;s: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No errors found!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -117,6 +113,11 @@
     </message>
     <message>
         <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error ID&apos;s: 
+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
