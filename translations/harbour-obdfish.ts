@@ -230,10 +230,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Switch spaces off...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Set protocol...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -291,6 +287,14 @@
     </message>
     <message>
         <source>Error Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NOTE: if you proceed, all trouble code information is immediately lost!&lt;br&gt;Your vehicle may run poorly for a short time, while it performs a recalibration.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

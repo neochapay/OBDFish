@@ -37,6 +37,10 @@ function fncSetSupportedPIDs(sData, sPID)
 
         console.log("Looking for first byte: " + iFirstByte);
 
+        //I had to turn on spaces in ELM answer. Essentially because old ELM's always send spaces, it cannot be deactivated.
+        //So kill spaces here.
+         sData = sData.replace(/ /g, "");
+
         //Try to find that first byte in the ELM answer.
         sData = sData.substring(sData.indexOf(iFirstByte.toString()));
 
@@ -90,6 +94,7 @@ function fncEvaluateDTCQuery(sData)
     var iExpectedDataPackets = arrayLookupPID["03"].bytescount;
     console.log("fncEvaluateDTCQuery, iExpectedDataPackets: " + iExpectedDataPackets.toString());
 
+    sData = sData.replace(/ /g, "");
 
     //Split data string
     sData = sData.split(/\r/);
@@ -127,6 +132,7 @@ function fncEvaluateVINQuery(sData)
     var iExpectedDataPackets = arrayLookupPID["0902"].bytescount;
     console.log("fncEvaluateVINQuery, iExpectedDataPackets: " + iExpectedDataPackets.toString());
 
+    sData = sData.replace(/ /g, "");
 
     //Split data string
     sData = sData.split(/\r/);
@@ -197,6 +203,8 @@ function fncEvaluatePIDQuery(sData, sPID)
     {
         return sData;
     }
+
+     sData = sData.replace(/ /g, "");
 
 
     //Make search pattern out of the query PID

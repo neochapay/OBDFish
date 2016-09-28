@@ -136,6 +136,9 @@ ApplicationWindow
             //The ELM has completely answered the command.
             //Received data is now in sReceiveBuffer.
 
+            //There are spaces in the answer, we have to get rid of them. Hopefully it is that easy...
+            //sReceiveBuffer = sReceiveBuffer.replace(/ /g, "");
+
             //Save received data to debug file
             if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Receive: " + sReceiveBuffer + "\r\n");
 

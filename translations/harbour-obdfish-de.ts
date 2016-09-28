@@ -230,10 +230,6 @@
         <translation>Schalte header aus...</translation>
     </message>
     <message>
-        <source>Switch spaces off...</source>
-        <translation>Schalte Leerzeichen aus...</translation>
-    </message>
-    <message>
         <source>Set protocol...</source>
         <translation>Setze Protokoll...</translation>
     </message>
@@ -292,6 +288,14 @@
     <message>
         <source>Error Informations</source>
         <translation>Fehler Infos</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NOTE: if you proceed, all trouble code information is immediately lost!&lt;br&gt;Your vehicle may run poorly for a short time, while it performs a recalibration.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -25,6 +25,12 @@ Page
 {
     id: id_page_mainpage
 
+    //Properties for clearing error dialog
+    property bool bPushClearDTCError: true
+    property int iCommandSequenceClearDTC : 0
+    property int iWaitForCommandClearDTC : 0
+    property bool bWaitForCommandSequenceEndClearDTC : false
+
     property bool bFirstPage: true
     property bool bWaitForCommandSequenceEnd: false
     property int iInit: 0
@@ -191,8 +197,9 @@ Page
                 else if (iInit == 4)
                 {
                     iInit = 5;
-                    progressBarInit.label = qsTr("Switch spaces off...");
-                    fncStartCommand("ATS0");
+                    progressBarInit.label = qsTr("Switch echo off...");
+                    //fncStartCommand("ATS0");    //don't switch spaces off, old ELM's can't so this either!!!
+                    fncStartCommand("ATE0");    //better repeat switching echo off. because this is really important.
                 }
                 else if (iInit == 5)
                 {
@@ -423,6 +430,18 @@ Page
                 }
             }
 
+
+
+            Button
+            {
+                id: wizard
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Start wizard"
+                onClicked: pageStack.push(dialogClearDTCError)
+            }
+
+
             Item
             {
                 width: parent.width
@@ -466,7 +485,7 @@ Page
                     anchors.verticalCenter: parent.verticalCenter
                     source: "image://theme/icon-m-dismiss"
                 }
-            }           
+            }
 
             SectionHeader
             {
@@ -583,6 +602,121 @@ Page
                     }
                 }
                 VerticalScrollDecorator {}
+            }
+
+            Component
+            {
+                id: dialogClearDTCError               
+
+                Dialog
+                {
+                    onStatusChanged:
+                    {
+                        if (status === PageStatus.Active && bPushClearDTCError)
+                        {
+                            bPushClearDTCError = false;
+                            console.log("onStatusChanged: dialogClearDTCError");
+                        }
+                    }
+
+                    allowedOrientations: Orientation.All
+
+                    onAccepted:
+                    {
+                        //Start command sequence for clearing DTC error
+                        iCommandSequenceClearDTC = 1;
+                        iWaitForCommandClearDTC = 0;
+                        bWaitForCommandSequenceEndClearDTC = true;
+                    }                    
+
+                    Timer
+                    {
+                        id: timClearDTCError
+                        interval: 500
+                        running: bWaitForCommandSequenceEndClearDTC
+                        repeat: true
+                        onTriggered:
+                        {
+                            var sReadValue = "";
+
+                            //Check if ELM has answered correctly to current AT command
+                            if (bCommandRunning == false)
+                            {
+                                iWaitForCommandClearDTC = 0;
+
+                                console.log("timWaitForCommandSequenceEnd step: " + iCommandSequenceClearDTC);
+
+                                switch (iCommandSequenceClearDTC)
+                                {
+                                    case 1:
+                                        fncStartCommand("ATRV")
+                                        iCommandSequenceClearDTC++;
+                                        break;
+                                    case 2:
+                                        id_lbl_Output.text = sReadValue;
+                                        if (sReadValue !== null)
+                                        {
+                                            console.log("timWaitForCommandSequenceEnd sReadValue: " + sReadValue);                                            
+                                            fncViewMessage("info", "Trouble codes cleared.");
+                                        }
+                                        else
+                                            fncViewMessage("warning", "Could not clear trouble codes.");
+
+                                        bWaitForCommandSequenceEndClearDTC = false; //Finish by halting timer
+                                        break;                                    
+                                }
+                            }
+                            else
+                            {
+                                //ELM has not yet answered. Or the answer is not complete.
+                                //Check if wait time is over.
+                                if (iWaitForCommandClearDTC == 100)
+                                {
+                                    iCommandSequenceClearDTC = 0;
+                                    bWaitForCommandSequenceEndClearDTC = false;
+                                    fncViewMessage("error", "Communication timeout!!!");
+                                }
+                                else
+                                    iWaitForCommandClearDTC++;
+                            }
+                        }
+                    }
+
+                    Flickable
+                    {
+                        width: parent.width
+                        height: parent.height
+                        interactive: false
+
+                        Column
+                        {
+                            width: parent.width
+
+                            DialogHeader
+                            {
+                                title: qsTr("Are you sure?")
+                            }
+
+                            Image
+                            {
+                                fillMode: Image.PreserveAspectFit
+                                source: "image://theme/icon-l-attention"
+                            }
+                            Label
+                            {
+                                width: parent.width
+                                wrapMode: Text.WordWrap
+                                text: qsTr("NOTE: if you proceed, all trouble code information is immediately lost!<br>Your vehicle may run poorly for a short time, while it performs a recalibration.")
+                            }
+                            Label
+                            {
+                                id: id_lbl_Output
+                                width: parent.width
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+                    }
+                }
             }
         }
     }

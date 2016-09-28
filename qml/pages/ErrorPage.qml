@@ -31,8 +31,6 @@ Page
     property bool bWaitForCommandSequenceEnd: false
     property int iWaitForCommand: 0
 
-
-
     onStatusChanged:
     {
         if (status === PageStatus.Active && bPushErrorInfoPage)
