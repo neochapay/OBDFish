@@ -39,7 +39,7 @@ function fncSetSupportedPIDs(sData, sPID)
 
         //I had to turn on spaces in ELM answer. Essentially because old ELM's always send spaces, it cannot be deactivated.
         //So kill spaces here.
-         sData = sData.replace(/ /g, "");
+        sData = sData.replace(/ /g, "");
 
         //Try to find that first byte in the ELM answer.
         sData = sData.substring(sData.indexOf(iFirstByte.toString()));
@@ -141,19 +141,26 @@ function fncEvaluateVINQuery(sData)
 
     //TODO:
     //CAN answer maybe:
-    //014 0: 490201575030
+    //014 0: 490201575030       5750305A5A5A39395A5453333932313234      ->  17
     //01: 5A5A5A39395A54
     //02: 53333932313234
     //CAN answer from Subaru:
     //0: 4902014A4631
     //1: 4748374C573438
     //2: 47303137353539
-    //CAN answer:
+    //Other possible CAN answer:
     //014
     //0: 490201314434
     //1: 47503030523535
     //2: 42313233343536
+    //Normal answer
+    // 49020100000057
+    // 49020256325A5A
+    // 4902035A324B5A
+    // 49020438583035
+    // 49020538353236
 
+    //Look for stamndard answer (non CAN vehicle)
     for (var i = 0; i < sData.length; i++)
     {
         if (sData[i].substr(0,4) === "4902")
@@ -162,6 +169,37 @@ function fncEvaluateVINQuery(sData)
             iFoundPackets++;
         }
     }
+
+    //Now, check if this was successful.
+    //If now this might be a CAN vehicle.
+     if (iFoundPackets !== iExpectedDataPackets)
+     {
+         iExpectedDataPackets = 3;
+         iFoundPackets = 0;
+         sVINString = "";
+
+         for (var j = 0; j < sData.length; j++)
+         {
+            //Search first packet
+            if (sData[j].indexOf("0:490201") !== -1)
+            {
+                sVINString = sVINString + sData[j].substr((sData[j].indexOf("0:490201") + 8)).trim();
+                iFoundPackets++;
+            }
+            //Search second packet
+            if (sData[j].indexOf("1:") !== -1)
+            {
+                sVINString = sVINString + sData[j].substr((sData[j].indexOf("1:") + 2)).trim();
+                iFoundPackets++;
+            }
+            //Search third packet
+            if (sData[j].indexOf("2:") !== -1)
+            {
+                sVINString = sVINString + sData[j].substr((sData[j].indexOf("2:") + 2)).trim();
+                iFoundPackets++;
+            }
+         }
+     }
 
     console.log("fncEvaluateVINQuery, iFoundPackets: " + iFoundPackets.toString());
     console.log("fncEvaluateVINQuery, sVINString: " + sVINString);

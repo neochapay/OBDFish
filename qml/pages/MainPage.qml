@@ -25,12 +25,6 @@ Page
 {
     id: id_page_mainpage
 
-    //Properties for clearing error dialog
-    property bool bPushClearDTCError: true
-    property int iCommandSequenceClearDTC : 0
-    property int iWaitForCommandClearDTC : 0
-    property bool bWaitForCommandSequenceEndClearDTC : false
-
     property bool bFirstPage: true
     property bool bWaitForCommandSequenceEnd: false
     property int iInit: 0
@@ -53,7 +47,8 @@ Page
             var sGetPIDsPage3 = id_ProjectSettings.sLoadProjectData("PIDsPage3");
             var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
             var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
-            var sGetSaveDataToDebugFile = id_ProjectSettings.sLoadProjectData("WriteDebugFile");
+            var sGetSaveDataToDebugFile = id_ProjectSettings.sLoadProjectData("WriteDebugFile");            
+            var sGetDoNotShowDTCWarning = id_ProjectSettings.sLoadProjectData("DoNotShowDTCWarning");
 
             console.log("sGetPIDsPage1" + sGetPIDsPage1);
             console.log("sGetPIDsPage2" + sGetPIDsPage2);
@@ -78,6 +73,8 @@ Page
             }
 
             if (sGetSaveDataToDebugFile.length > 0) bSaveDataToDebugFile=(sGetSaveDataToDebugFile === "true");
+
+            if (sGetDoNotShowDTCWarning.length > 0) bDoNotShowDTCWarning=(sGetDoNotShowDTCWarning === "true");
 
             //Check if there are used devices. If there are, show them.
             if (sGetUsedAdaptersNames.length > 0 && sGetUsedAdaptersAddresses.length > 0)
@@ -136,12 +133,13 @@ Page
             bConnecting = false;
         }
     }
+
     Timer
     {
         //This is called, everytime an AT command is send.
         //The timer waits for ELM to answer the command.
         id: timWaitForCommandSequenceEnd
-        interval: 200
+        interval: 350
         running: bWaitForCommandSequenceEnd
         repeat: true
         onTriggered:
@@ -269,7 +267,7 @@ Page
                     }
                     else
                     {                       
-                        fncShowMessage(0,"No supported PID's found!<br>- turn on ignition/engine<br>- reconnect to OBD adapter", 20000);
+                        fncShowMessage(0,qsTr("No supported PID's found!<br>- turn on ignition/engine<br>- reconnect to OBD adapter"), 20000);
                         id_BluetoothData.disconnect();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
@@ -428,20 +426,7 @@ Page
                       duration: 2000
                     }
                 }
-            }
-
-
-
-            Button
-            {
-                id: wizard
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Start wizard"
-                onClicked: pageStack.push(dialogClearDTCError)
-            }
-
-
+            }            
             Item
             {
                 width: parent.width
@@ -602,122 +587,7 @@ Page
                     }
                 }
                 VerticalScrollDecorator {}
-            }
-
-            Component
-            {
-                id: dialogClearDTCError               
-
-                Dialog
-                {
-                    onStatusChanged:
-                    {
-                        if (status === PageStatus.Active && bPushClearDTCError)
-                        {
-                            bPushClearDTCError = false;
-                            console.log("onStatusChanged: dialogClearDTCError");
-                        }
-                    }
-
-                    allowedOrientations: Orientation.All
-
-                    onAccepted:
-                    {
-                        //Start command sequence for clearing DTC error
-                        iCommandSequenceClearDTC = 1;
-                        iWaitForCommandClearDTC = 0;
-                        bWaitForCommandSequenceEndClearDTC = true;
-                    }                    
-
-                    Timer
-                    {
-                        id: timClearDTCError
-                        interval: 500
-                        running: bWaitForCommandSequenceEndClearDTC
-                        repeat: true
-                        onTriggered:
-                        {
-                            var sReadValue = "";
-
-                            //Check if ELM has answered correctly to current AT command
-                            if (bCommandRunning == false)
-                            {
-                                iWaitForCommandClearDTC = 0;
-
-                                console.log("timWaitForCommandSequenceEnd step: " + iCommandSequenceClearDTC);
-
-                                switch (iCommandSequenceClearDTC)
-                                {
-                                    case 1:
-                                        fncStartCommand("ATRV")
-                                        iCommandSequenceClearDTC++;
-                                        break;
-                                    case 2:
-                                        id_lbl_Output.text = sReadValue;
-                                        if (sReadValue !== null)
-                                        {
-                                            console.log("timWaitForCommandSequenceEnd sReadValue: " + sReadValue);                                            
-                                            fncViewMessage("info", "Trouble codes cleared.");
-                                        }
-                                        else
-                                            fncViewMessage("warning", "Could not clear trouble codes.");
-
-                                        bWaitForCommandSequenceEndClearDTC = false; //Finish by halting timer
-                                        break;                                    
-                                }
-                            }
-                            else
-                            {
-                                //ELM has not yet answered. Or the answer is not complete.
-                                //Check if wait time is over.
-                                if (iWaitForCommandClearDTC == 100)
-                                {
-                                    iCommandSequenceClearDTC = 0;
-                                    bWaitForCommandSequenceEndClearDTC = false;
-                                    fncViewMessage("error", "Communication timeout!!!");
-                                }
-                                else
-                                    iWaitForCommandClearDTC++;
-                            }
-                        }
-                    }
-
-                    Flickable
-                    {
-                        width: parent.width
-                        height: parent.height
-                        interactive: false
-
-                        Column
-                        {
-                            width: parent.width
-
-                            DialogHeader
-                            {
-                                title: qsTr("Are you sure?")
-                            }
-
-                            Image
-                            {
-                                fillMode: Image.PreserveAspectFit
-                                source: "image://theme/icon-l-attention"
-                            }
-                            Label
-                            {
-                                width: parent.width
-                                wrapMode: Text.WordWrap
-                                text: qsTr("NOTE: if you proceed, all trouble code information is immediately lost!<br>Your vehicle may run poorly for a short time, while it performs a recalibration.")
-                            }
-                            Label
-                            {
-                                id: id_lbl_Output
-                                width: parent.width
-                                wrapMode: Text.WordWrap
-                            }
-                        }
-                    }
-                }
-            }
+            }                   
         }
     }
 }

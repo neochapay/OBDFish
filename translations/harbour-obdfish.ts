@@ -116,6 +116,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Trouble codes successfully cleared.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Trouble Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NOTE: if you proceed, all trouble code information is immediately lost!&lt;br&gt;Your vehicle may run poorly for a short time, while it performs a recalibration.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reading values...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do not show this again</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do not show this warning again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not clear trouble codes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Error ID&apos;s: 
 </source>
         <translation type="unfinished"></translation>
@@ -290,11 +322,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Are you sure?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NOTE: if you proceed, all trouble code information is immediately lost!&lt;br&gt;Your vehicle may run poorly for a short time, while it performs a recalibration.</source>
+        <source>No supported PID&apos;s found!&lt;br&gt;- turn on ignition/engine&lt;br&gt;- reconnect to OBD adapter</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

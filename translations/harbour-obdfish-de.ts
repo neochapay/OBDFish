@@ -116,6 +116,38 @@
         <translation>Aktualisieren</translation>
     </message>
     <message>
+        <source>Trouble codes successfully cleared.</source>
+        <translation>Fehlercodes erfolgreich gelöscht.</translation>
+    </message>
+    <message>
+        <source>Clear Trouble Codes</source>
+        <translation>Fehlercodes Löschen</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation>Wirklich löschen?</translation>
+    </message>
+    <message>
+        <source>NOTE: if you proceed, all trouble code information is immediately lost!&lt;br&gt;Your vehicle may run poorly for a short time, while it performs a recalibration.</source>
+        <translation>HINWEIS: Wenn Sie fortfahren, gehen alle Fehler-Informationen verloren!&lt;br&gt;Ihr Fahrzeug kann für eine kurze Zeit schlecht laufen, während es eine Neukalibrierung durchführt.</translation>
+    </message>
+    <message>
+        <source>Reading values...</source>
+        <translation>Lese Werte...</translation>
+    </message>
+    <message>
+        <source>Do not show this again</source>
+        <translation>Nicht wieder anzeigen</translation>
+    </message>
+    <message>
+        <source>Do not show this warning again.</source>
+        <translation>Diesen Warnhinweis nicht wieder anzeigen.</translation>
+    </message>
+    <message>
+        <source>Could not clear trouble codes.</source>
+        <translation>Fehlercodes konnten nicht gelöscht werden.</translation>
+    </message>
+    <message>
         <source>Error ID&apos;s: 
 </source>
         <translation type="unfinished"></translation>
@@ -290,11 +322,7 @@
         <translation>Fehler Infos</translation>
     </message>
     <message>
-        <source>Are you sure?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NOTE: if you proceed, all trouble code information is immediately lost!&lt;br&gt;Your vehicle may run poorly for a short time, while it performs a recalibration.</source>
+        <source>No supported PID&apos;s found!&lt;br&gt;- turn on ignition/engine&lt;br&gt;- reconnect to OBD adapter</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

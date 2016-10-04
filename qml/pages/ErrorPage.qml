@@ -30,6 +30,12 @@ Page
     property int iCommandSequence: 0
     property bool bWaitForCommandSequenceEnd: false
     property int iWaitForCommand: 0
+    property bool bInitPage: true
+
+    //Properties for clearing error dialog
+    property int iCommandSequenceClearDTC : 0
+    property int iWaitForCommandClearDTC : 0
+    property bool bWaitForCommandSequenceEndClearDTC : false
 
     onStatusChanged:
     {
@@ -40,7 +46,65 @@ Page
             //Now start with reading static data from ELM
             iCommandSequence = 1;
             iWaitForCommand = 0;
-            bWaitForCommandSequenceEnd = true;
+            bWaitForCommandSequenceEnd = true;                       
+        }
+    }
+
+    Timer
+    {
+        id: timClearDTCError
+        interval: 500
+        running: bWaitForCommandSequenceEndClearDTC
+        repeat: true
+        onTriggered:
+        {
+            var sReadValue = "";
+
+            //Check if ELM has answered correctly to current AT command
+            if (bCommandRunning == false)
+            {
+                iWaitForCommandClearDTC = 0;
+
+                console.log("timWaitForCommandSequenceEnd step: " + iCommandSequenceClearDTC);
+
+                switch (iCommandSequenceClearDTC)
+                {
+                    case 1:
+                        progressBarReadValues.label = "Clearing DTC's ...";
+                        if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Starting clearing error code...\r\n");
+                        fncStartCommand("04")
+                        iCommandSequenceClearDTC++;
+                        break;
+                    case 2:
+                        progressBarReadValues.label = "Checking if DTC's are cleared...";
+                        if (sReadValue !== null && sReadValue.indexOf("44") !== -1)
+                        {
+                            if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Clearing error ready. Result: " + sReadValue + "\r\n");
+                            fncShowMessage(2,qsTr("Trouble codes successfully cleared."), 6000);
+                        }
+                        else
+                        {
+                            if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Could not error trouble codes. Result: " + sReadValue + "\r\n");
+                            fncShowMessage(3,qsTr("Could not clear trouble codes."), 6000);
+                        }
+
+                        bWaitForCommandSequenceEndClearDTC = false; //Finish by halting timer
+                        break;
+                }
+            }
+            else
+            {
+                //ELM has not yet answered. Or the answer is not complete.
+                //Check if wait time is over.
+                if (iWaitForCommandClearDTC == 100)
+                {
+                    iCommandSequenceClearDTC = 0;
+                    bWaitForCommandSequenceEndClearDTC = false;
+                    fncViewMessage("error", "Communication timeout!!!");
+                }
+                else
+                    iWaitForCommandClearDTC++;
+            }
         }
     }
 
@@ -66,6 +130,7 @@ Page
                 switch (iCommandSequence)
                 {
                     case 1:
+                        progressBarReadValues.label = "Reading DTC infos...";
                         if (fncStartCommand("01011"))
                             iCommandSequence++;
                         else
@@ -87,6 +152,8 @@ Page
                         //This was set by requesting 0101.
                         if (sReadValue !== null && OBDDataObject.arrayLookupPID["03"].supported)
                         {
+                            progressBarReadValues.label = "Checking DTC infos...";
+
                             //Check answer string, e.g. "On, 2" or "Off, 0"
                             var sSplitString = sReadValue.split(',');                            
 
@@ -109,17 +176,20 @@ Page
 
                         break;
                     case 3:
+                        progressBarReadValues.label = "Reading DTC codes...";
                         fncStartCommand("03" + OBDDataObject.arrayLookupPID["03"].bytescount.toString())
                         iCommandSequence++;
 
                         break;
                     case 4:
+                        progressBarReadValues.label = "Checking DTC codes...";
                         //Typical response for 03 request: 43013300000000      -> P0133
                                                          //43010211201220\r43151415150000
                                                          //43010201130315
 
                         sReadValue = OBDDataObject.fncEvaluateDTCQuery(sReceiveBuffer);
 
+                        //DEBUG
                         //sReadValue = OBDDataObject.fncEvaluateDTCQuery("43010211200000");
 
                         sDTCString = sReadValue;
@@ -144,6 +214,7 @@ Page
             }
         }
     }
+
 
     SilicaFlickable
     {
@@ -178,6 +249,15 @@ Page
             width: parent.width
 
             PageHeader { title: qsTr("Error Informations") }
+
+            ProgressBar
+            {
+                id: progressBarReadValues
+                width: parent.width
+                visible: bWaitForCommandSequenceEnd || bWaitForCommandSequenceEndClearDTC
+                indeterminate: true
+                label: qsTr("Reading values...")
+            }
 
             Label
             {
@@ -246,7 +326,108 @@ Page
                 property string urlstring: "http://www.obd-codes.com/trouble_codes/"
                 text: "<a href=\"" + urlstring + "\">" +  urlstring + "<\a>"
                 onLinkActivated: Qt.openUrlExternally(link);
-            }                      
+            }
+            Item
+            {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
+            Button
+            {
+                visible: (!bNotSupported && bWaitForCommandSequenceEnd === false && sNumberOfErrors !== "0" && sNumberOfErrors !== "")
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Clear Trouble Codes")
+                onClicked:
+                {
+                    if (bDoNotShowDTCWarning)
+                    {
+                        //Start command sequence for clearing DTC error
+                        iCommandSequenceClearDTC = 1;
+                        iWaitForCommandClearDTC = 0;
+                        bWaitForCommandSequenceEndClearDTC = true;
+                    }
+                    else
+                        pageStack.push(dialogClearDTCError);
+                }
+            }
+
+            Component
+            {
+                id: dialogClearDTCError
+
+                Dialog
+                {
+                    onStatusChanged:
+                    {
+                        if (status === PageStatus.Active)
+                        {
+                            console.log("onStatusChanged: dialogClearDTCError Active");
+
+                            bInitPage = true;
+                            id_TextSwitch_DoNotShowAgain.checked = bDoNotShowDTCWarning;
+                            bInitPage = false;
+                        }
+
+                        //Save values to project data when page is closed
+                        if (status === PageStatus.Deactivating && !bInitPage)
+                        {
+                            console.log("onStatusChanged: dialogClearDTCError Deactivating");
+
+                            //Check if fields are valid and have changed
+                            if (bDoNotShowDTCWarning != id_TextSwitch_DoNotShowAgain.checked)
+                            {
+                                bDoNotShowDTCWarning = id_TextSwitch_DoNotShowAgain.checked;
+                                id_ProjectSettings.vSaveProjectData("DoNotShowDTCWarning", id_TextSwitch_DoNotShowAgain.checked.toString());
+                            }
+                        }
+                    }
+
+                    allowedOrientations: Orientation.All
+
+                    onAccepted:
+                    {
+                        //Start command sequence for clearing DTC error
+                        iCommandSequenceClearDTC = 1;
+                        iWaitForCommandClearDTC = 0;
+                        bWaitForCommandSequenceEndClearDTC = true;
+                    }
+                    Flickable
+                    {
+                        width: parent.width
+                        height: parent.height
+                        interactive: false
+
+                        Column
+                        {
+                            width: parent.width
+
+                            DialogHeader
+                            {
+                                title: qsTr("Are you sure?")
+                            }
+
+                            Image
+                            {
+                                fillMode: Image.PreserveAspectFit
+                                source: "image://theme/icon-l-attention"
+                            }
+                            Label
+                            {
+                                width: parent.width
+                                wrapMode: Text.WordWrap
+                                text: qsTr("NOTE: if you proceed, all trouble code information is immediately lost!<br>Your vehicle may run poorly for a short time, while it performs a recalibration.")
+                            }
+                            TextSwitch
+                            {
+                                id: id_TextSwitch_DoNotShowAgain
+                                text: qsTr("Do not show this again")
+                                description: qsTr("Do not show this warning again.")
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
