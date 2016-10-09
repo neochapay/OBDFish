@@ -5,6 +5,10 @@ This is an application for Sailfish OS, which connects to an OBD ELM327 car diag
 
 See file TODO.txt for next planned implementation steps.
 
+Disclaimer:
+Each version of the application is testet on multiple vehicles to ensure it is working properly and will not cause any harm.
+I cannot be held responsible for bricking your phone, vehicle, whatever...
+
 
 Credits go to:
 - Messagebox: Kimmo Lindholm, https://github.com/kimmoli/paint/blob/master/qml/components/Messagebox.qml

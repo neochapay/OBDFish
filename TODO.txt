@@ -2,20 +2,20 @@
 - Sometimes there is a segmentation fault when connecting via bluetooth
 	bash: line 1:  6071 Segmentation fault      DISPLAY=':0.0' QT_NO_JOURNALD_LOG='1' /usr/bin/harbour-obdfish
 
+
 --------------ToDo's for immediate future (before next release)---------------
 - Check if bluetooth is activated on smartphone
 - Dynamic pages: some texts are too wide. Do something about it...
 - Cover page: show if connected or connecting ...
+- Add more PID's
+
 
 --------------ToDo's for near future---------------
-- general settings page: query parameters in init routine on main page. Make parameters global.
-- Check MIL in init process on mainpage. If it is set, show a warning.
-- Add more PID's
 - switch between metric/imperial units
 
 
 --------------ToDo's for far future---------------
-- Add debug file which holds errors and problems detected by the software
+- Check MIL in init process on mainpage. If it is set, show a warning.
 
 - Don't know what informations to view on the cover page. Need input from users...
 
@@ -26,14 +26,3 @@
 
 - Build in special PID requests, e.g. only working for Volkswagen
 	- find a list of known PID's and how to deal with them
-
-- Read trouble codes from PID area 0300
-	- Problem is here that these codes might be manufacturer dependent.
-	- I need to find out how to trigger a trouble code with my car.
-	- The trouble codes should be viewed in a new dialog.
-
-- Reset trouble codes
-	- The ELM327 allows to reset triggered trouble codes.
-	- Is this maybe manufacturer dependent? I won't do this if there is some chance of bricking the car controller!!!
-	- Send a mode 04 command to the ELM. Do this only if there are trouble codes.
-
