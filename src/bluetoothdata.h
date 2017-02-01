@@ -2,8 +2,8 @@
 #define BLUETOOTHDATA
 
 #include <QObject>
-#include <QBluetoothSocket>
-#include <QBluetoothAddress>
+#include <QtBluetooth/QBluetoothSocket>
+#include <QtBluetooth/QBluetoothAddress>
 
 class BluetoothData : public QObject
 {

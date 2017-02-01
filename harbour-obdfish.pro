@@ -26,8 +26,6 @@ SOURCES += src/harbour-obdfish.cpp \
     src/projectsettings.cpp \
     src/plotwidget.cpp
 
-QT += bluetooth
-
 OTHER_FILES += qml/harbour-obdfish.qml \
     qml/cover/CoverPage.qml \
     rpm/harbour-obdfish.changes.in \
@@ -79,4 +77,11 @@ DISTFILES += \
     qml/pages/ErrorPage.qml \
     qml/obd_ok.png \
     qml/obd_error.png
+
+lib.files = lib
+lib.path = /usr/share/$${TARGET}
+INSTALLS += lib
+unix:!macx: LIBS += -L$$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/lib/ -lQt5Bluetooth
+INCLUDEPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/include
+DEPENDPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/include
 

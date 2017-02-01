@@ -1,3 +1,9 @@
+* Wed Jan 01 2017 Jens Drescher <jens.drescher.lippe@web.de> 1.0.0-5
+- fifth release to openrepos
+- first release to Jolla harbour (hopefully)
+- first three dynamic values are now viewed on cover page
+- use modified qtbluetooth library to be compatible to Jolla harbour
+
 * Sun Oct 09 2016 Jens Drescher <jens.drescher.lippe@web.de> 0.93.0-4
 - fourth release to openrepos
 - improved UI user guideance

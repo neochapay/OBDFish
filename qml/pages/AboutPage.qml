@@ -105,7 +105,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryColor
-                text: "Copyright \u00A9 2016 Jens Drescher, Germany"
+                text: "Copyright \u00A9 2017 Jens Drescher, Germany"
             }
             Label
             {
@@ -119,7 +119,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryColor
-                text: qsTr("Date: ") + "12.09.2016";
+                text: qsTr("Date: ") + "01.02.2017";
             }
             Label
             {

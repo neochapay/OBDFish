@@ -35,7 +35,41 @@ CoverBackground
         id: id_label_AppName
         anchors.centerIn: parent
         text: "OBDFish"
-    }    
+    }
+    Item
+    {
+        width: parent.width
+        height: Theme.paddingLarge
+    }
+    Item
+    {
+        width: parent.width
+        height: Theme.paddingLarge
+    }
+    Label
+    {
+        id: id_label_CoverParam_1
+        anchors.left: parent.left;
+        anchors.top: id_label_AppName.bottom
+        font { family: Theme.fontFamily; pixelSize: Theme.fontSizeExtraSmall }
+        text: sCoverValue1
+    }
+    Label
+    {
+        id: id_label_CoverParam_2
+        anchors.left: parent.left;
+        anchors.top: id_label_CoverParam_1.bottom
+        font { family: Theme.fontFamily; pixelSize: Theme.fontSizeExtraSmall }
+        text: sCoverValue2
+    }
+    Label
+    {
+        id: id_label_CoverParam_3
+        anchors.left: parent.left;
+        anchors.top: id_label_CoverParam_2.bottom
+        font { family: Theme.fontFamily; pixelSize: Theme.fontSizeExtraSmall }
+        text: sCoverValue3
+    }
 }
 
 

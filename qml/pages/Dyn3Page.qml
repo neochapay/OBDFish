@@ -111,9 +111,8 @@ Page
                         break;
                     case 2:
                         var sValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase());
-                        sParameter1 = OBDDataObject.arrayLookupPID[arPIDPageArray[0]].labeltext + ": " +
-                                sValue +
-                                OBDDataObject.arrayLookupPID[arPIDPageArray[0]].unittext;
+                        sCoverValue1 = sValue + OBDDataObject.arrayLookupPID[arPIDPageArray[0]].unittext;
+                        sParameter1 = OBDDataObject.arrayLookupPID[arPIDPageArray[0]].labeltext + ": " + sCoverValue1;
 
                         if (arPIDPageArray.length == 1)
                         {
@@ -130,9 +129,9 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 4:
-                        sParameter2 = OBDDataObject.arrayLookupPID[arPIDPageArray[1]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[1].toUpperCase()) +
-                                OBDDataObject.arrayLookupPID[arPIDPageArray[1]].unittext;
+                        sCoverValue2 = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[1].toUpperCase()) +
+                                       OBDDataObject.arrayLookupPID[arPIDPageArray[1]].unittext;
+                        sParameter2 = OBDDataObject.arrayLookupPID[arPIDPageArray[1]].labeltext + ": " + sCoverValue2;
                         iCommandSequence++;
                         break;
                     case 5:
@@ -142,9 +141,9 @@ Page
                             iCommandSequence = iCommandSequence + 2;
                         break;
                     case 6:
-                        sParameter3 = OBDDataObject.arrayLookupPID[arPIDPageArray[2]].labeltext + ": " +
-                                OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[2].toUpperCase()) +
-                                OBDDataObject.arrayLookupPID[arPIDPageArray[2]].unittext;
+                        sCoverValue3 = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[2].toUpperCase()) +
+                                       OBDDataObject.arrayLookupPID[arPIDPageArray[2]].unittext;
+                        sParameter3 = OBDDataObject.arrayLookupPID[arPIDPageArray[2]].labeltext + ": " + sCoverValue3;
                         iCommandSequence++;
                         break;
                     case 7:

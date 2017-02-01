@@ -1,5 +1,5 @@
 #include "bluetoothdata.h"
-#include <qbluetoothsocket.h>
+#include <QtBluetooth/qbluetoothsocket.h>
 
 BluetoothData::BluetoothData (QObject *parent):QObject(parent)
 {

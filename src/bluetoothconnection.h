@@ -19,7 +19,7 @@
 #define BLUETOOTHCONNECTION
 
 #include <QObject>
-#include <QBluetoothDeviceDiscoveryAgent>
+#include <QtBluetooth/QBluetoothDeviceDiscoveryAgent>
 
 class BluetoothConnection : public QObject
 {

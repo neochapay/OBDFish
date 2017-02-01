@@ -125,6 +125,10 @@ Page
             fncViewMessage("info", qsTr("Disconnected from adapter"));
             bConnected = false;
             bConnecting = false;
+
+            sCoverValue1 = "";
+            sCoverValue2 = "";
+            sCoverValue3 = "";
         }
         onSigError:             //This is called from C++ if there was an error while establishing a bluetooth connection
         {
