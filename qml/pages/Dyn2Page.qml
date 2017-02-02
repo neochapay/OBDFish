@@ -107,7 +107,10 @@ Page
                         if (arPIDPageArray.length > 0 && fncStartCommand(arPIDPageArray[0] + "1"))
                             iCommandSequence++;
                         else
+                        {
+                            sCoverValue1 = "";
                             iCommandSequence = iCommandSequence + 2;
+                        }
                         break;
                     case 2:                                                
                         var sValue = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[0].toUpperCase());
@@ -126,7 +129,10 @@ Page
                         if (arPIDPageArray.length > 1 && fncStartCommand(arPIDPageArray[1] + "1"))
                             iCommandSequence++;
                         else
+                        {
+                            sCoverValue2 = "";
                             iCommandSequence = iCommandSequence + 2;
+                        }
                         break;
                     case 4:
                         sCoverValue2 = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[1].toUpperCase()) +
@@ -138,7 +144,10 @@ Page
                         if (arPIDPageArray.length > 2 && fncStartCommand(arPIDPageArray[2] + "1"))
                             iCommandSequence++;
                         else
+                        {
+                            sCoverValue3 = "";
                             iCommandSequence = iCommandSequence + 2;
+                        }
                         break;
                     case 6:
                         sCoverValue3 = OBDDataObject.fncEvaluatePIDQuery(sReceiveBuffer, arPIDPageArray[2].toUpperCase()) +

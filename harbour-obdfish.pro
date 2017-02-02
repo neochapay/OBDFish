@@ -85,3 +85,7 @@ unix:!macx: LIBS += -L$$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Re
 INCLUDEPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/include
 DEPENDPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/include
 
+#unix:!macx: LIBS += -L$$PWD/../build-qtconnectivity-MerSDK_SailfishOS_i486-Release/lib/ -lQt5Bluetooth
+#INCLUDEPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_i486-Release/include
+#DEPENDPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_i486-Release/include
+

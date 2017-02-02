@@ -203,7 +203,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Communication with vehicle is saved to a file: /home/nemo/Documents/obd_log.txt</source>
+        <source>Communication with vehicle is saved to a file: $HOME/Documents/obd_log.txt</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

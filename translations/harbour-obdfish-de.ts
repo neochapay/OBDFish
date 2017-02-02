@@ -150,7 +150,8 @@
     <message>
         <source>Error ID&apos;s: 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler ID&apos;s:
+</source>
     </message>
 </context>
 <context>
@@ -203,8 +204,8 @@
         <translation>Logbuchdatei schreiben</translation>
     </message>
     <message>
-        <source>Communication with vehicle is saved to a file: /home/nemo/Documents/obd_log.txt</source>
-        <translation>Kommunikation mit Fahrzeug wird in Datei gespeichert: /home/nemo/Documents/obd_log.txt</translation>
+        <source>Communication with vehicle is saved to a file: $HOME/Documents/obd_log.txt</source>
+        <translation>Kommunikation mit Fahrzeug wird in Datei gespeichert: $HOME/Documents/obd_log.txt</translation>
     </message>
 </context>
 <context>
@@ -323,7 +324,7 @@
     </message>
     <message>
         <source>No supported PID&apos;s found!&lt;br&gt;- turn on ignition/engine&lt;br&gt;- reconnect to OBD adapter</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine unterstützten PID&apos;s gefunden!&lt;br&gt;- Zündung/Motor einschalten&lt;br&gt;- OBD Adapter neu verbinden</translation>
     </message>
 </context>
 <context>

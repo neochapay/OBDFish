@@ -6,6 +6,8 @@
 Name:       harbour-obdfish
 
 # >> macros
+# list here all the libraries your RPM installs
+%define __requires_exclude ^libQt5Bluetooth.*$
 # << macros
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}

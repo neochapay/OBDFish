@@ -8,7 +8,7 @@ FileWriter::FileWriter(QObject *parent) : QObject(parent)
 
 void FileWriter::vWriteStart(const QString &msg)
 {
-    QFile file("/home/nemo/Documents/obd_log.txt");
+    QFile file("$HOME/Documents/obd_log.txt");
 
     if(file.open(QIODevice::WriteOnly))
     {
@@ -24,7 +24,7 @@ void FileWriter::vWriteStart(const QString &msg)
 
 void FileWriter::vWriteData(const QString &msg)
 {
-    QFile file("/home/nemo/Documents/obd_log.txt");
+    QFile file("$HOME/Documents/obd_log.txt");
 
     //if(file.open(QIODevice::WriteOnly))
     if(file.open(QIODevice::Append))
