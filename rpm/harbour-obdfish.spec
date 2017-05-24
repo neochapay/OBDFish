@@ -6,7 +6,7 @@
 Name:       harbour-obdfish
 
 # >> macros
-# list here all the libraries your RPM installs
+%define __provides_exclude_from ^%{_datadir}/.*$
 %define __requires_exclude ^libQt5Bluetooth.*$
 # << macros
 
@@ -15,7 +15,7 @@ Name:       harbour-obdfish
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    harbour-obdfish
-Version:    1.00
+Version:    0.94
 Release:    5
 Group:      Qt/Qt
 License:    LICENSE

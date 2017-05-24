@@ -119,7 +119,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryColor
-                text: qsTr("Date: ") + "01.02.2017";
+                text: qsTr("Date: ") + "24.05.2017";
             }
             Label
             {

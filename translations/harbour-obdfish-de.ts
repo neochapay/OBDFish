@@ -150,8 +150,7 @@
     <message>
         <source>Error ID&apos;s: 
 </source>
-        <translation>Fehler ID&apos;s:
-</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

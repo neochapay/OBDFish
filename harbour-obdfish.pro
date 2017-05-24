@@ -76,16 +76,38 @@ DISTFILES += \
     qml/pages/GeneralSettingsPage.qml \
     qml/pages/ErrorPage.qml \
     qml/obd_ok.png \
-    qml/obd_error.png
+    qml/obd_error.png \
 
-lib.files = lib
-lib.path = /usr/share/$${TARGET}
-INSTALLS += lib
-unix:!macx: LIBS += -L$$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/lib/ -lQt5Bluetooth
-INCLUDEPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/include
-DEPENDPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Release/include
+
+#LIBS+=$$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Debug/lib/libQt5Bluetooth.so.5
+
+#INCLUDEPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Debug/include
+
+#unix:!macx: LIBS += -L$$PWD/../build-libgato-MerSDK_SailfishOS_armv7hl-Debug -lQt5Bluetooth
+#INCLUDEPATH += $$PWD/../build-libgato-MerSDK_SailfishOS_armv7hl-Debug
+#DEPENDPATH += $$PWD/../build-libgato-MerSDK_SailfishOS_armv7hl-Debug
 
 #unix:!macx: LIBS += -L$$PWD/../build-qtconnectivity-MerSDK_SailfishOS_i486-Release/lib/ -lQt5Bluetooth
 #INCLUDEPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_i486-Release/include
 #DEPENDPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_i486-Release/include
 
+#QMAKE_RPATHDIR += /usr/share/harbour-obdfish/lib
+
+#lib.path = /usr/share/harbour-obdfish/lib/
+
+#lib.files += ../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Debug/lib/libQt5Bluetooth.so.5
+
+#INSTALLS += lib
+
+QMAKE_RPATHDIR += /usr/share/harbour-obdfish/lib
+
+unix:!macx: LIBS += -L$$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Debug/lib/ -lQt5Bluetooth
+INCLUDEPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Debug/include
+DEPENDPATH += $$PWD/../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Debug/include
+
+lib.path = /usr/share/harbour-obdfish/lib
+
+#lib.files = lib
+lib.files += ../build-qtconnectivity-MerSDK_SailfishOS_armv7hl-Debug/lib/libQt5Bluetooth.so.5
+
+INSTALLS += lib
