@@ -37,6 +37,8 @@ BackgroundItem
     Image
     {
         id: idImageIcon
+        width: parent.width / 10
+        height: parent.width / 10
         anchors.top: parent.top
         anchors.left: parent.left
         source: "image://theme/icon-lock-warning"
@@ -87,7 +89,7 @@ BackgroundItem
         {
             idRectangleColor.color = "#F9D440";
             idImageIcon.visible = true;
-            idImageIcon.source = "../cd_logo.jpg"
+            idImageIcon.source = "../jp_logo.png"
         }
     }
 

@@ -41,14 +41,14 @@ Page
             {
                 title: qsTr("About OBDFish")
             }
-            Button
+            MouseArea
             {
+                width : parent.width /1.8
+                height: parent.width / 1.8
                 anchors.horizontalCenter: parent.horizontalCenter
-                height: 256
                 Image
                 {
                     anchors.fill: parent
-                    fillMode: Image.PreserveAspectFit
                     source: "../obdfish.png"
                 }
                 onClicked:
@@ -80,6 +80,7 @@ Page
                     iCountWhtRbbt++;
                 }
             }
+
             Item
             {
                 width: parent.width
@@ -105,7 +106,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryColor
-                text: "Copyright \u00A9 2017 Jens Drescher, Germany"
+                text: "Copyright \u00A9 2018 Jens Drescher, Germany"
             }
             Label
             {
@@ -119,7 +120,7 @@ Page
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryColor
-                text: qsTr("Date: ") + "24.05.2017";
+                text: qsTr("Date: ") + "20.10.2018";
             }
             Label
             {

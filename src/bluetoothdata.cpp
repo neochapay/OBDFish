@@ -1,5 +1,5 @@
 #include "bluetoothdata.h"
-#include <../qtconnectivity-5.2_sailfish_backport/src/bluetooth/qbluetoothsocket.h>
+//#include <../qtconnectivity-5.2_sailfish_backport/src/bluetooth/qbluetoothsocket.h>
 
 BluetoothData::BluetoothData (QObject *parent):QObject(parent)
 {

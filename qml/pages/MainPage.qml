@@ -317,18 +317,18 @@ Page
 
         PullDownMenu
         {
-
-            MenuItem
-            {
-                text: qsTr("Settings")
-                onClicked: {pageStack.push(Qt.resolvedUrl("GeneralSettingsPage.qml"))}
-            }            
             MenuItem
             {
                 text: qsTr("About")
                 onClicked: {pageStack.push(Qt.resolvedUrl("AboutPage.qml"))}
             }
-        }                
+            MenuItem
+            {
+                text: qsTr("Settings")
+                onClicked: {pageStack.push(Qt.resolvedUrl("GeneralSettingsPage.qml"))}
+            }                        
+        }       
+
         Column
         {
             id: id_Column_FirstCol
@@ -344,43 +344,81 @@ Page
             {
                 visible: true
                 anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width / 3.2
+                height: (parent.width / 3.2) / 1.666666
                 source: "../elm327.png"
-                GlassItem
+
+                Item
                 {
-                    id: id_GlassItem_Red
-                    color: "red"
+                    //color: "white"
+                    width: parent.width / 14.1176
+                    height: parent.width / 14.1176
                     anchors.top: parent.top
-                    anchors.topMargin: 18
-                    visible: (bConnecting || bConnected)
-                }               
-                GlassItem
-                {
-                    id: id_GlassItem_Yellow
-                    color: "yellow"
-                    anchors.top: parent.top
-                    anchors.topMargin: 42
-                    visible: (iInit > 0)
-                    Timer
+                    anchors.topMargin: parent.height / 2.4407
+                    anchors.left: parent.left
+                    anchors.leftMargin: parent.width / 6
+
+                    GlassItem
                     {
-                        repeat: true
-                        running: (iInit > 0)
-                        interval: 250
-                        onTriggered: id_GlassItem_Yellow.dimmed = !id_GlassItem_Yellow.dimmed
+                        id: id_GlassItem_Red
+                        color: "red"
+                        anchors.centerIn: parent
+                        visible: (bConnecting || bConnected)
+                        //visible: true
                     }
                 }
-                GlassItem
+
+                Item
                 {
-                    id: id_GlassItem_Green
-                    color: "#03EC16"
+                    //color: "white"
+                    width: parent.width / 14.1176
+                    height: parent.width / 14.1176
                     anchors.top: parent.top
-                    anchors.topMargin: 66
-                    visible: (iInit > 0)
-                    Timer
+                    anchors.topMargin: parent.height / 1.6941
+                    anchors.left: parent.left
+                    anchors.leftMargin: parent.width / 6
+
+                    GlassItem
                     {
-                        repeat: true
-                        running: (iInit > 0)
-                        interval: 100
-                        onTriggered: id_GlassItem_Green.dimmed = !id_GlassItem_Green.dimmed
+                        id: id_GlassItem_Yellow
+                        color: "yellow"
+                        anchors.centerIn: parent
+                        visible: (iInit > 0)
+                        //visible: true
+                        Timer
+                        {
+                            repeat: true
+                            running: (iInit > 0)
+                            interval: 250
+                            onTriggered: id_GlassItem_Yellow.id_GlassItem_Reddimmed = !id_GlassItem_Yellow.dimmed
+                        }
+                    }
+                }
+
+                Item
+                {
+                    //color: "white"
+                    width: parent.width / 14.1176
+                    height: parent.width / 14.1176
+                    anchors.top: parent.top
+                    anchors.topMargin: parent.height / 1.2743
+                    anchors.left: parent.left
+                    anchors.leftMargin: parent.width / 6
+
+                    GlassItem
+                    {
+                        id: id_GlassItem_Green
+                        color: "#03EC16"
+                        anchors.centerIn: parent
+                        visible: (iInit > 0)
+                        //visible: true
+                        Timer
+                        {
+                            repeat: true
+                            running: (iInit > 0)
+                            interval: 100
+                            onTriggered: id_GlassItem_Green.dimmed = !id_GlassItem_Green.dimmed
+                        }
                     }
                 }
             }           

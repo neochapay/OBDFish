@@ -41,7 +41,7 @@ CoverBackground
         id: id_label_CoverParam_1
         anchors.left: parent.left;
         anchors.top: id_label_AppName.bottom
-        anchors.leftMargin: 4
+        anchors.leftMargin: Theme.paddingMedium
         anchors.topMargin: 20
         font { family: Theme.fontFamily; pixelSize: Theme.fontSizeSmall }
         text: sCoverValue1
@@ -51,7 +51,7 @@ CoverBackground
         id: id_label_CoverParam_2
         anchors.left: parent.left;
         anchors.top: id_label_CoverParam_1.bottom
-        anchors.leftMargin: 4
+        anchors.leftMargin: Theme.paddingMedium
         font { family: Theme.fontFamily; pixelSize: Theme.fontSizeSmall }
         text: sCoverValue2
     }
@@ -60,7 +60,7 @@ CoverBackground
         id: id_label_CoverParam_3
         anchors.left: parent.left;
         anchors.top: id_label_CoverParam_2.bottom
-        anchors.leftMargin: 4
+        anchors.leftMargin: Theme.paddingMedium
         font { family: Theme.fontFamily; pixelSize: Theme.fontSizeSmall }
         text: sCoverValue3
     }
