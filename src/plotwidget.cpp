@@ -2,12 +2,13 @@
 
 #include "plotwidget.h"
 
-PlotWidget::PlotWidget(QQuickItem *parent) :
-    QQuickPaintedItem(parent), m_scrollStep(3)
+PlotWidget::PlotWidget(QQuickItem* parent)
+    : QQuickPaintedItem(parent)
+    , m_scrollStep(3)
 {
 }
 
-void PlotWidget::paint(QPainter *painter)
+void PlotWidget::paint(QPainter* painter)
 {
     int minX = 0;
 
@@ -16,7 +17,6 @@ void PlotWidget::paint(QPainter *painter)
 
     QPen plotPen(m_plotColor);
     plotPen.setWidth(2);
-
 
     // draw NUM_SCALE_LINES lines for scale indication
     QFont font = painter->font();
@@ -30,7 +30,7 @@ void PlotWidget::paint(QPainter *painter)
 
     qreal step = (m_maxValue - m_minValue) / NUM_SCALE_LINES;
 
-    for(unsigned i = 0; i < NUM_SCALE_LINES; i++) {
+    for (unsigned i = 0; i < NUM_SCALE_LINES; i++) {
         qreal v = m_minValue + (i + 0.5) * step;
 
         int ypos = (1.0 - (i + 0.5) / NUM_SCALE_LINES) * this->height() - 1;
@@ -38,7 +38,7 @@ void PlotWidget::paint(QPainter *painter)
         QString text = QLocale::system().toString(v, 'g', 3);
         int startX = fontMetrics.width(text) + 5;
 
-        if(startX > minX) {
+        if (startX > minX) {
             minX = startX;
         }
 
@@ -52,7 +52,7 @@ void PlotWidget::paint(QPainter *painter)
     // draw the plot
 
     // if there are no values, just return here
-    if(m_values.isEmpty()) {
+    if (m_values.isEmpty()) {
         return;
     }
 
@@ -63,7 +63,7 @@ void PlotWidget::paint(QPainter *painter)
     bool firstPoint = true;
     ValueList::Iterator iter = m_values.end() - 1;
 
-    while((iter != m_values.begin()) && (curPoint.x() > minX)) {
+    while ((iter != m_values.begin()) && (curPoint.x() > minX)) {
         qreal v = *iter;
 
         // normalized value between 0 and 1
@@ -74,7 +74,7 @@ void PlotWidget::paint(QPainter *painter)
         curPoint.setX(curPoint.x() - m_scrollStep);
         curPoint.setY(this->height() * (1 - vnorm));
 
-        if(!firstPoint) {
+        if (!firstPoint) {
             painter->drawLine(prevPoint, curPoint);
         }
 
@@ -90,26 +90,26 @@ void PlotWidget::addValue(qreal v)
 
     int valuesRequired = this->width() / m_scrollStep;
 
-    if(m_values.size() > valuesRequired) {
+    if (m_values.size() > valuesRequired) {
         ValueList::Iterator delRangeEndIter = m_values.end() - valuesRequired;
         m_values.erase(m_values.begin(), delRangeEndIter);
     }
 
     // recalculate minimum and maximum value
-    m_minValue =  1e27;
+    m_minValue = 1e27;
     m_maxValue = -1e27;
 
-    for(const qreal &v: m_values) {
-        if(v < m_minValue) {
+    for (const qreal& v : m_values) {
+        if (v < m_minValue) {
             m_minValue = v;
         }
 
-        if(v > m_maxValue) {
+        if (v > m_maxValue) {
             m_maxValue = v;
         }
     }
 
-    if(m_minValue == m_maxValue) {
+    if (m_minValue == m_maxValue) {
         m_minValue -= 0.5;
         m_maxValue += 0.5;
     }

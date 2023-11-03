@@ -13,30 +13,59 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #ifdef QT_QML_DEBUG
 #include <QtQuick>
 #endif
 
+#include "filewriter.h"
+#include "plotwidget.h"
+#include "projectsettings.h"
+#include "serialportprofile.h"
+
 #include <sailfishapp.h>
-#include "../src/bluetoothconnection.h"
-#include "../src/bluetoothdata.h"
-#include "../src/filewriter.h"
-#include "../src/projectsettings.h"
-#include "../src/plotwidget.h"
 
+#include <KF5/BluezQt/bluezqt/initmanagerjob.h>
+#include <KF5/BluezQt/bluezqt/manager.h>
+#include <KF5/BluezQt/bluezqt/pendingcall.h>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     app->setApplicationVersion(QString(APP_VERSION));
+    app->setApplicationName("obdfish");
+    app->setOrganizationName("org.harbour");
 
-    qmlRegisterType<PlotWidget,1>("harbour.obdfish", 1, 0, "PlotWidget");
-    qmlRegisterType<BluetoothConnection,1>("harbour.obdfish", 1, 0, "BluetoothConnection");
-    qmlRegisterType<BluetoothData,1>("harbour.obdfish", 1, 0, "BluetoothData");
-    qmlRegisterType<FileWriter,1>("harbour.obdfish", 1, 0, "FileWriter");
-    qmlRegisterType<ProjectSettings,1>("harbour.obdfish", 1, 0, "ProjectSettings");
-    return SailfishApp::main(argc, argv);
+    BluezQt::Manager* manager = new BluezQt::Manager();
+    BluezQt::InitManagerJob* initJob = manager->init();
+    initJob->exec();
+
+    if (initJob->error()) {
+        qWarning() << "Error initializing manager:" << initJob->errorText();
+        return 1;
+    }
+
+    SerialPortProfile* profile = new SerialPortProfile(app.data());
+    BluezQt::PendingCall* spp = manager->registerProfile(profile);
+    spp->waitForFinished();
+
+    if (spp->error()) {
+        qWarning() << "Error registering profile" << spp->errorText();
+        return 1;
+    }
+
+    qDebug() << "Profile registered";
+
+    qmlRegisterType<PlotWidget, 1>("harbour.obdfish", 1, 0, "PlotWidget");
+    qmlRegisterType<FileWriter, 1>("harbour.obdfish", 1, 0, "FileWriter");
+    qmlRegisterType<ProjectSettings, 1>("harbour.obdfish", 1, 0, "ProjectSettings");
+
+    QQuickView* view = SailfishApp::createView();
+    view->rootContext()->setContextProperty("obdConnection", profile);
+
+    view->setSource(SailfishApp::pathTo("qml/org.harbour.obdfish.qml"));
+    view->show();
+
+    return app->exec();
 }
-

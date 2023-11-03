@@ -27,7 +27,7 @@ function fncSetSupportedPIDs(sData, sPID)
     if (sData.indexOf("NO DATA") !== -1 || sData.indexOf("UNABLE TO CONNECT") !== -1 || sData.indexOf("BUS INIT: ... ERROR") !== -1)
     {
         //There are no supported PID's
-        //console.log("No supported PID's: " + sPID);
+        console.log("No supported PID's: " + sPID);
     }
     else
     {      

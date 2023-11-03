@@ -10,7 +10,7 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = harbour-obdfish
+TARGET = org.harbour.obdfish
 
 CONFIG += sailfishapp
 
@@ -20,25 +20,27 @@ QMAKE_LFLAGS += -std=c++0x
 DEFINES += APP_VERSION=\"\\\"$${VERSION}\\\"\"
 
 SOURCES += src/harbour-obdfish.cpp \
-    src/bluetoothconnection.cpp \
-    src/bluetoothdata.cpp \
     src/filewriter.cpp \
     src/projectsettings.cpp \
-    src/plotwidget.cpp
+    src/plotwidget.cpp \
+    src/serialportprofile.cpp
 
-OTHER_FILES += qml/harbour-obdfish.qml \
+OTHER_FILES += \
+    org.harbour.obdfish.desktop \
     qml/cover/CoverPage.qml \
+    qml/org.harbour.obdfish.qml \
     rpm/harbour-obdfish.changes.in \
-    rpm/harbour-obdfish.spec \
-    rpm/harbour-obdfish.yaml \
-    translations/*.ts \
-    harbour-obdfish.desktop
+    rpm/org.harbour.obdfish.spec \
+    translations/*.ts
 
-SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
+SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172 256x256
 
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n
+
+QT += dbus
+PKGCONFIG += KF5BluezQt
 
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the
@@ -47,16 +49,12 @@ CONFIG += sailfishapp_i18n
 TRANSLATIONS += translations/harbour-obdfish-de.ts
 
 HEADERS += \
-    src/bluetoothconnection.h \
-    src/bluetoothdata.h \
     src/filewriter.h \
     src/projectsettings.h \
-    src/plotwidget.h
-
-QT += bluetooth
+    src/plotwidget.h \
+    src/serialportprofile.h
 
 DISTFILES += \
-    rpm/harbour-obdfish.spec \
     qml/pages/SharedResources.js \
     qml/pages/OBDDataObject.js \
     qml/pages/GeneralInfo.qml \
@@ -79,4 +77,4 @@ DISTFILES += \
     qml/pages/ErrorPage.qml \
     qml/obd_ok.png \
     qml/obd_error.png \
-    rpm/harbour-obdfish.changes
+    rpm/org.harbour.obdfish.spec

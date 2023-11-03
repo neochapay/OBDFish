@@ -13,20 +13,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #ifndef PROJECTSETTINGS
 #define PROJECTSETTINGS
 
 #include <QObject>
 
-class ProjectSettings : public QObject
-{
+class ProjectSettings : public QObject {
     Q_OBJECT
 public:
-    explicit ProjectSettings(QObject *parent = 0);
-    Q_INVOKABLE void vSaveProjectData(const QString &sKey, const QString &sValue);
-    Q_INVOKABLE QString sLoadProjectData(const QString &sKey);
+    explicit ProjectSettings(QObject* parent = 0);
+    Q_INVOKABLE void vSaveProjectData(const QString& sKey, const QString& sValue);
+    Q_INVOKABLE QString sLoadProjectData(const QString& sKey);
 };
 
 #endif // PROJECTSETTINGS

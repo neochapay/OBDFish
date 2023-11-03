@@ -13,32 +13,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #include "projectsettings.h"
 #include <QtGui>
 
-ProjectSettings::ProjectSettings(QObject *parent) : QObject(parent)
+ProjectSettings::ProjectSettings(QObject* parent)
+    : QObject(parent)
 {
-
 }
 
-void ProjectSettings::vSaveProjectData(const QString &sKey, const QString &sValue)
+void ProjectSettings::vSaveProjectData(const QString& sKey, const QString& sValue)
 {
     QSettings settings;
 
-    //qDebug() << "Save key: " << sKey << ", value: " << sValue;
+    // qDebug() << "Save key: " << sKey << ", value: " << sValue;
 
     settings.setValue(sKey, sValue);
 
     return;
 }
-QString ProjectSettings::sLoadProjectData(const QString &sKey)
+QString ProjectSettings::sLoadProjectData(const QString& sKey)
 {
     QSettings settings;
     QString sMySetting = settings.value(sKey, "").toString();
 
-    //qDebug() << "Load key: " << sKey << ", value: " << sMySetting;
+    // qDebug() << "Load key: " << sKey << ", value: " << sMySetting;
 
     return sMySetting;
 }

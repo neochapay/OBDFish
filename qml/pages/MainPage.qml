@@ -28,15 +28,13 @@ Page
     property bool bFirstPage: true
     property bool bWaitForCommandSequenceEnd: false
     property int iInit: 0
-    property int iWaitForCommand: 0   
-    property bool bBluetoothScanning: false    
-    property string sCurrentBTAddress: ""
-    property string sCurrentBTName: ""
-    property int iScannedDevicesCount: 0
-    property int iUsedDevicesCount: 0
+    property int iWaitForCommand: 0
+    property bool bBluetoothScanning: btManager.usableAdapter && btManager.usableAdapter.discovering
+    property QtObject currentDevice: null
+    property QtObject connectionCall: null
 
     onStatusChanged:
-    {       
+    {
         if (status === PageStatus.Active && bFirstPage)
         {
             bFirstPage = false
@@ -47,7 +45,7 @@ Page
             var sGetPIDsPage3 = id_ProjectSettings.sLoadProjectData("PIDsPage3");
             var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
             var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
-            var sGetSaveDataToDebugFile = id_ProjectSettings.sLoadProjectData("WriteDebugFile");            
+            var sGetSaveDataToDebugFile = id_ProjectSettings.sLoadProjectData("WriteDebugFile");
             var sGetDoNotShowDTCWarning = id_ProjectSettings.sLoadProjectData("DoNotShowDTCWarning");
 
             console.log("sGetPIDsPage1" + sGetPIDsPage1);
@@ -76,39 +74,27 @@ Page
 
             if (sGetDoNotShowDTCWarning.length > 0) bDoNotShowDTCWarning=(sGetDoNotShowDTCWarning === "true");
 
-            //Check if there are used devices. If there are, show them.
-            if (sGetUsedAdaptersNames.length > 0 && sGetUsedAdaptersAddresses.length > 0)
-            {
-                 SharedResources.fncFillUsedAdaptersArray(sGetUsedAdaptersNames, sGetUsedAdaptersAddresses);
-                id_LV_UsedDevices.model = iUsedDevicesCount = SharedResources.fncGetUsedDevicesNumber();
-            }
-
             //Init debug file. Save first string.
             if (bSaveDataToDebugFile) id_FileWriter.vWriteStart("Version: " + Qt.application.version + "\r\n" + "Date: " + Date() + "\r\n-------------------------------\r\n");
         }
     }
-
     Connections
     {
-        target: id_BluetoothConnection
-        onDeviceFound:      //This is called from C++ if a bluetooth device was found
-        {
-            //Add device to data array
-            SharedResources.fncAddDevice(sName, sAddress);
-            id_LV_Devices.model = iScannedDevicesCount = SharedResources.fncGetDevicesNumber();
-        }
-        onScanFinished:
-        {
-            //Scan is finished now
-            bBluetoothScanning = false;
+        target: connectionCall
+        onFinished: {
+            if (connectionCall.error) {
+                bConnecting = false;
+                currentDevice = null;
+                fncShowMessage(3, qsTr("Error while connecting: ") + connectionCall.errorText, 8000);
+            }
+            connectionCall = null;
         }
     }
     Connections
     {
-        target: id_BluetoothData        
-        onSigConnected:         //This is called from C++ if a connection was established
-        {            
-            bConnected = true;
+        target: obdConnection
+        onConnected:         //This is called from C++ if a connection was established
+        {
             bConnecting = false;
 
             //Now start with initialize process
@@ -120,20 +106,20 @@ Page
             fncStartCommand("ATZ");
             bWaitForCommandSequenceEnd = true;
         }
-        onSigDisconnected:      //This is called from C++ if an established bluetooth connection gets disconnected
+        onDisconnected:      //This is called from C++ if an established bluetooth connection gets disconnected
         {
             fncViewMessage("info", qsTr("Disconnected from adapter"));
-            bConnected = false;
+            currentDevice = null;
             bConnecting = false;
 
             sCoverValue1 = "";
             sCoverValue2 = "";
             sCoverValue3 = "";
         }
-        onSigError:             //This is called from C++ if there was an error while establishing a bluetooth connection
+        onError:             //This is called from C++ if there was an error while establishing a bluetooth connection
         {
             fncShowMessage(3, qsTr("Error while connecting: ") + sError, 8000);
-            bConnected = false;
+            currentDevice = null;
             bConnecting = false;
         }
     }
@@ -152,7 +138,7 @@ Page
             if (bCommandRunning == false)
             {
                 iWaitForCommand = 0;
-            
+
                 console.log("timWaitForCommandSequenceEnd step:  " + iInit);
 
                 //Init first step. This is after sending ATZ
@@ -167,7 +153,7 @@ Page
                         //This is not ELM327!!!
                         //Skip now and disconect from bluetooth device
                         fncShowMessage(3, qsTr("Error: unknown adapter. This is no ELM327 device!"), 8000);
-                        id_BluetoothData.disconnect();
+                        currentDevice.disconnectFromDevice();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
                     }
@@ -176,7 +162,7 @@ Page
                         //Now, this is an ELM327. So far so good.
                         //Extract the version number.
                         sELMVersion = (sAnswer.substr(sReceiveBuffer.indexOf(" v"))).trim();
-                        
+
                         //Let's initialize this baby...
                         iInit = 2;
                         progressBarInit.label = qsTr("Switch echo off...");
@@ -258,7 +244,7 @@ Page
                         if (bSaveDataToDebugFile) id_FileWriter.vWriteData("Supported PID's 0100: " + OBDDataObject.sSupportedPIDs0100 + "\r\nSupported PID's 0900: " + OBDDataObject.sSupportedPIDs0900 + "\r\n");
 
                         //Save adapter as used adapter. Only do this if the adapter is not in the list of used devies.
-                        if (sCurrentBTAddress !== "" && SharedResources.fncAddUsedDevice(sCurrentBTName, sCurrentBTAddress))
+                        if (currentDevice.address !== "" && SharedResources.fncAddUsedDevice(currentDevice.friendlyName, currentDevice.address))
                         {
                             var sGetUsedAdaptersNames = id_ProjectSettings.sLoadProjectData("UsedAdaptersNames");
                             var sGetUsedAdaptersAddresses = id_ProjectSettings.sLoadProjectData("UsedAdaptersAddresses");
@@ -270,9 +256,9 @@ Page
                         iInit = 0;
                     }
                     else
-                    {                       
+                    {
                         fncShowMessage(0,qsTr("No supported PID's found!<br>- turn on ignition/engine<br>- reconnect to OBD adapter"), 20000);
-                        id_BluetoothData.disconnect();
+                        currentDevice.disconnectFromDevice();
                         bWaitForCommandSequenceEnd = false;
                         iInit = 0;
                     }
@@ -284,27 +270,27 @@ Page
                 //Check if wait time is over.
                 if (iWaitForCommand == 40)
                 {
-                    //Now it depends on which command we are waiting.                                       
+                    //Now it depends on which command we are waiting.
                     if (iInit == 1)
                     {
-                        //If we wait for ELM to identify itself, break and disconnect.                        
+                        //If we wait for ELM to identify itself, break and disconnect.
                         fncViewMessage("error", "Unknown OBD Adapter!!!");
-                        iInit = 0; 
+                        iInit = 0;
                     }
                     else if (iInit > 1)
                     {
                         //If we are in init procedure, reset init progress
-                        iInit = 0; 
-                    }                    
-                    
-                    //Skip now and disconect from bluetooth device                       
-                    bWaitForCommandSequenceEnd = false;                        
+                        iInit = 0;
+                    }
+
+                    //Skip now and disconect from bluetooth device
+                    bWaitForCommandSequenceEnd = false;
                     fncViewMessage("error", "Communication timeout!!!");
-                    id_BluetoothData.disconnect();                                        
+                    currentDevice.disconnectFromDevice();
                 }
                 else
                     iWaitForCommand++;
-            }            
+            }
         }
     }
 
@@ -326,8 +312,8 @@ Page
             {
                 text: qsTr("Settings")
                 onClicked: {pageStack.push(Qt.resolvedUrl("GeneralSettingsPage.qml"))}
-            }                        
-        }       
+            }
+        }
 
         Column
         {
@@ -335,7 +321,7 @@ Page
 
             width: parent.width
             spacing: Theme.paddingLarge
-            PageHeader 
+            PageHeader
             {
                 title: qsTr("Welcome to OBDFish")
             }
@@ -363,7 +349,7 @@ Page
                         id: id_GlassItem_Red
                         color: "red"
                         anchors.centerIn: parent
-                        visible: (bConnecting || bConnected)
+                        visible: (bConnecting || (currentDevice && currentDevice.connected))
                         //visible: true
                     }
                 }
@@ -421,23 +407,18 @@ Page
                         }
                     }
                 }
-            }           
+            }
             SectionHeader
             {
                 text: qsTr("Scan for Bluetooth devices...")
-                visible: !bBluetoothScanning && !bConnecting && !bConnected
+                visible: !bConnecting && !(currentDevice && currentDevice.connected)
             }
-            Button
-            {
+            Button {
                 width: parent.width
                 text: qsTr("Start Scanning...")
-                visible: !bBluetoothScanning && !bConnecting && !bConnected
-                onClicked:
-                {                    
-                    bBluetoothScanning = true;
-                    SharedResources.fncDeleteDevices();
-                    id_LV_Devices.model = iScannedDevicesCount = SharedResources.fncGetDevicesNumber();
-                    id_BluetoothConnection.vStartDeviceDiscovery();
+                visible: !btManager.usableAdapter.discovering && !bConnecting && !(currentDevice && currentDevice.connected)
+                onClicked:  {
+                    btManager.usableAdapter.startDiscovery()
                 }
                 Image
                 {
@@ -449,10 +430,10 @@ Page
             {
                 width: parent.width
                 text: qsTr("Cancel")
-                visible: bBluetoothScanning
+                visible: btManager.usableAdapter.discovering
                 onClicked:
                 {
-                    id_BluetoothConnection.vStopDeviceDiscovery();
+                    btManager.usableAdapter.stopDiscovery()
                 }
                 Image
                 {
@@ -461,14 +442,14 @@ Page
                     smooth: true
                     NumberAnimation on rotation
                     {
-                      running: bBluetoothScanning
-                      from: 0
-                      to: 360
-                      loops: Animation.Infinite
-                      duration: 2000
+                        running: btManager.usableAdapter.discovering
+                        from: 0
+                        to: 360
+                        loops: Animation.Infinite
+                        duration: 2000
                     }
                 }
-            }            
+            }
             Item
             {
                 width: parent.width
@@ -478,34 +459,34 @@ Page
             {
                 width: parent.width
                 text: qsTr("General Informations")
-                visible: (bConnected && !bConnecting && iInit === 0)
+                visible: ((currentDevice && currentDevice.connected) && !bConnecting && iInit === 0)
                 onClicked: {pageStack.push(Qt.resolvedUrl("GeneralInfo.qml"))}
             }
-            Separator {color: Theme.highlightColor; width: parent.width; visible: (bConnected && !bConnecting && iInit === 0);}
+            Separator {color: Theme.highlightColor; width: parent.width; visible: ((currentDevice && currentDevice.connected) && !bConnecting && iInit === 0);}
             Button
             {
                 width: parent.width
                 text: qsTr("Dynamic Values")
-                visible: (bConnected && !bConnecting && iInit === 0)
+                visible: ((currentDevice && currentDevice.connected) && !bConnecting && iInit === 0)
                 onClicked: {pageStack.push(Qt.resolvedUrl("Dyn1Page.qml"))}
             }
-            Separator {color: Theme.highlightColor; width: parent.width; visible: (bConnected && !bConnecting && iInit === 0);}
+            Separator {color: Theme.highlightColor; width: parent.width; visible: ((currentDevice && currentDevice.connected) && !bConnecting && iInit === 0);}
             Button
             {
                 width: parent.width
                 text: qsTr("Error Informations")
-                visible: (bConnected && !bConnecting && iInit === 0)
+                visible: ((currentDevice && currentDevice.connected) && !bConnecting && iInit === 0)
                 onClicked: {pageStack.push(Qt.resolvedUrl("ErrorPage.qml"))}
             }
-            Separator {color: Theme.highlightColor; width: parent.width; visible: (bConnected && !bConnecting && iInit === 0);}
+            Separator {color: Theme.highlightColor; width: parent.width; visible: ((currentDevice && currentDevice.connected) && !bConnecting && iInit === 0);}
             Button
             {
                 width: parent.width
                 text: qsTr("Disconnect")
-                visible: (bConnected && !bConnecting && iInit === 0)
+                visible: ((currentDevice && currentDevice.connected) && !bConnecting && iInit === 0)
                 onClicked:
                 {
-                    id_BluetoothData.disconnect();
+                    currentDevice.disconnectFromDevice();
                 }
                 Image
                 {
@@ -546,70 +527,39 @@ Page
 
             SectionHeader
             {
-                id: id_SH_UsedDevices
-                text: qsTr("OBD adapters (press to connect):")
-                visible: (iScannedDevicesCount === 0 && iUsedDevicesCount > 0 && !bConnected && !bConnecting && iInit === 0)
-            }
-            SilicaListView
-            {
-                id: id_LV_UsedDevices
-                model: SharedResources.fncGetUsedDevicesNumber();
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: parent.height / 3
-                visible: (iScannedDevicesCount === 0 && iUsedDevicesCount > 0 && !bConnected && !bConnecting && iInit === 0)
-
-                delegate: BackgroundItem
-                {
-                    id: delegateUsedDevices
-
-                    Label
-                    {
-                        x: Theme.paddingLarge
-                        text: SharedResources.fncGetUsedDeviceBTName(index) + ", " + SharedResources.fncGetUsedDeviceBTAddress(index);
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: delegateUsedDevices.highlighted ? Theme.highlightColor : Theme.primaryColor
-                    }
-                    onClicked:
-                    {
-                        //Connect here. Prepeare some things.
-                        OBDDataObject.sSupportedPIDs0100 = "";
-                        OBDDataObject.sSupportedPIDs0900 = "";
-                        sELMVersion= "";
-                        bConnecting = true;                                               
-
-                        //Connect and init
-                        id_BluetoothData.connect(SharedResources.fncGetUsedDeviceBTAddress(index), 1);
-                    }
-                }
-                VerticalScrollDecorator {}
-            }
-
-            SectionHeader
-            {
                 id: id_SC_Devices
                 text: qsTr("Found adapters (press to connect):")
-                visible: (iScannedDevicesCount > 0 &&  !bConnected && !bConnecting && iInit === 0)
+                visible: (btManager.devices.length > 0 &&  !(currentDevice && currentDevice.connected) && !bConnecting && iInit === 0)
             }
             SilicaListView
             {
                 id: id_LV_Devices
-                model: SharedResources.fncGetDevicesNumber();
+                model: btManager.devices
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: parent.height / 3
-                visible: (iScannedDevicesCount > 0 &&  !bConnected && !bConnecting && iInit === 0)
+                visible: (count > 0 &&  !(currentDevice && currentDevice.connected) && !bConnecting && iInit === 0)
 
-                delegate: BackgroundItem
+                delegate: ListItem
                 {
                     id: delegateDevices
+
+                    //function evalEnabled()
+                    //{
+                    //    for (var i = 0; i < modelData.uuids.length; i++)
+                    //        if (modelData.uuids[i].toLowerCase() !== obdConnection.uuid.toLowerCase())
+                    //            return true
+                    //    return false
+                    //}
+                    //
+                    //enabled: modelData.address && evalEnabled()
 
                     Label
                     {
                         x: Theme.paddingLarge
-                        text: SharedResources.fncGetDeviceBTName(index) + ", " + SharedResources.fncGetDeviceBTAddress(index);
+                        text: modelData.friendlyName + " (" + modelData.address + ")";
                         anchors.verticalCenter: parent.verticalCenter
-                        color: delegateDevices.highlighted ? Theme.highlightColor : Theme.primaryColor
+                        //color: delegateDevices.highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                     onClicked:
                     {
@@ -621,15 +571,14 @@ Page
 
                         //Save chosen BT connection data to page variables
                         //They need to be saved in List of used devices. This will be done after successful initializing.
-                        sCurrentBTAddress = SharedResources.fncGetDeviceBTAddress(index);
-                        sCurrentBTName = SharedResources.fncGetDeviceBTName(index);
-
-                        //Connect and init
-                        id_BluetoothData.connect(SharedResources.fncGetDeviceBTAddress(index), 1);
+                        //sCurrentBTAddress = SharedResources.fncGetDeviceBTAddress(index);
+                        //sCurrentBTName = SharedResources.fncGetDeviceBTName(index);
+                        currentDevice = modelData
+                        connectionCall = currentDevice.connectToDevice()
                     }
                 }
                 VerticalScrollDecorator {}
-            }                   
+            }
         }
     }
 }

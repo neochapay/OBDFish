@@ -298,10 +298,6 @@
         <translation>Initialisierung:</translation>
     </message>
     <message>
-        <source>OBD adapters (press to connect):</source>
-        <translation>OBD-Adapter:</translation>
-    </message>
-    <message>
         <source>Found adapters (press to connect):</source>
         <translation>Gefundene Adapter:</translation>
     </message>
