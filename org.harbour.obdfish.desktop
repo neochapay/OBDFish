@@ -7,6 +7,6 @@ Name=OBDFish
 Name[de]=OBDFish
 
 [X-Sailjail]
-Permissions=Internet
+Permissions=Bluetooth
 OrganizationName=org.harbour
 ApplicationName=obdfish
