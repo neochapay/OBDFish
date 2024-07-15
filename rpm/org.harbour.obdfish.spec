@@ -15,7 +15,7 @@ License:    LICENSE
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
-BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
+BuildRequires:  pkgconfig(auroraapp)
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
@@ -46,7 +46,7 @@ desktop-file-install --delete-original       \
    %{buildroot}%{_datadir}/applications/*.desktop
 
 mkdir %{buildroot}%{_datadir}/%{name}/lib -p
-cp /usr/lib/libKF5BluezQt.so.5 %{buildroot}%{_datadir}/%{name}/lib/
+cp /usr/lib/libKF5BluezQt.so.6 %{buildroot}%{_datadir}/%{name}/lib/
 
 %files
 %defattr(-,root,root,-)

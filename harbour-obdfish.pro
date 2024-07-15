@@ -12,7 +12,7 @@
 # The name of your application
 TARGET = org.harbour.obdfish
 
-CONFIG += sailfishapp
+CONFIG += auroraapp
 
 QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_LFLAGS += -std=c++0x
@@ -33,11 +33,11 @@ OTHER_FILES += \
     rpm/org.harbour.obdfish.spec \
     translations/*.ts
 
-SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172 256x256
+AURORAAPP_ICONS = 86x86 108x108 128x128 172x172
 
 # to disable building translations every time, comment out the
 # following CONFIG line
-CONFIG += sailfishapp_i18n
+CONFIG += auroraapp_i18n
 
 QT += dbus
 PKGCONFIG += KF5BluezQt
