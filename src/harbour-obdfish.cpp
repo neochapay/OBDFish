@@ -24,7 +24,7 @@
 #include "projectsettings.h"
 #include "serialportprofile.h"
 
-#include <sailfishapp.h>
+#include <auroraapp.h>
 
 #include <KF5/BluezQt/bluezqt/initmanagerjob.h>
 #include <KF5/BluezQt/bluezqt/manager.h>
@@ -32,10 +32,10 @@
 
 int main(int argc, char* argv[])
 {
-    QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    QScopedPointer<QGuiApplication> app(Aurora::Application::application(argc, argv));
     app->setApplicationVersion(QString(APP_VERSION));
-    app->setApplicationName("obdfish");
-    app->setOrganizationName("org.harbour");
+    app->setApplicationName(QStringLiteral("obdfish"));
+    app->setOrganizationName(QStringLiteral("org.harbour"));
 
     BluezQt::Manager* manager = new BluezQt::Manager();
     BluezQt::InitManagerJob* initJob = manager->init();
@@ -61,10 +61,10 @@ int main(int argc, char* argv[])
     qmlRegisterType<FileWriter, 1>("harbour.obdfish", 1, 0, "FileWriter");
     qmlRegisterType<ProjectSettings, 1>("harbour.obdfish", 1, 0, "ProjectSettings");
 
-    QQuickView* view = SailfishApp::createView();
+    QScopedPointer<QQuickView> view(Aurora::Application::createView());
     view->rootContext()->setContextProperty("obdConnection", profile);
 
-    view->setSource(SailfishApp::pathTo("qml/org.harbour.obdfish.qml"));
+    view->setSource(Aurora::Application::pathTo(QStringLiteral("qml/org.harbour.obdfish.qml")));
     view->show();
 
     return app->exec();

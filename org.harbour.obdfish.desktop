@@ -4,9 +4,10 @@ X-Nemo-Application-Type=silica-qt5
 Icon=org.harbour.obdfish
 Exec=/usr/bin/org.harbour.obdfish
 Name=OBDFish
-Name[de]=OBDFish
+Name[ru]=OBDFish
 
-[X-Sailjail]
+[X-Application]
 Permissions=Bluetooth
 OrganizationName=org.harbour
 ApplicationName=obdfish
+ExecDBus=/usr/bin/org.harbour.obdfish
