@@ -46,7 +46,7 @@ desktop-file-install --delete-original       \
    %{buildroot}%{_datadir}/applications/*.desktop
 
 mkdir %{buildroot}%{_datadir}/%{name}/lib -p
-cp /usr/lib/libKF5BluezQt.so.5 %{buildroot}%{_datadir}/%{name}/lib/
+cp /usr/lib/libKF5BluezQt.so.6 %{buildroot}%{_datadir}/%{name}/lib/
 
 %files
 %defattr(-,root,root,-)
